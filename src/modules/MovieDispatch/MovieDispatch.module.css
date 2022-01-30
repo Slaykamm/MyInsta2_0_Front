@@ -1,0 +1,8 @@
+.ContainerConstruction {
+    display: flex;
+    flex-direction: column;
+}
+
+img {
+    height: 15rem;
+}

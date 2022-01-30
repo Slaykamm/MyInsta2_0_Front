@@ -1,0 +1,41 @@
+.Header {
+    color: whitesmoke;
+    display: flex;
+    justify-content:flex-start;
+    
+    align-items: center;
+
+
+
+}
+
+.Text {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    color: whitesmoke;
+    font-weight: bolder;
+
+    height: 3.5rem;
+    width: 90%;
+    background-color: #685670;
+    border-radius: 10px;
+    font-size: 3rem;
+    
+}
+
+.Logo {
+    height: 3.5rem;
+    display: flex;
+    justify-content: flex-start;
+    width: 150px;
+}
+
+
+.HeaderBody {
+    width: 100%;
+    padding-top: 1rem;
+    display: grid;
+    grid-template-columns: minmax(12%, 13%) minmax(78%,80%);
+    grid-column-gap: 1px;
+}

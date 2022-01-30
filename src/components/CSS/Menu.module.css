@@ -1,0 +1,37 @@
+.Outer {
+    background-color:#444653;
+    margin-top: 30px;
+    display: flex;
+}
+
+.Inner {
+    color:white;
+}
+
+.MenuBody {
+    display: flex;
+    justify-content: flex-start;
+
+}
+
+.menuPanel {
+    display: flex;
+    justify-content: flex-end;
+}
+
+input {
+    width: 40%;
+}
+
+h3 {
+    color: rgb(155, 153, 153);
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 2rem;
+    cursor: pointer;
+}
+
+h3:hover {
+    color: rgb(255, 255, 255);
+    border: 1px white;
+}
