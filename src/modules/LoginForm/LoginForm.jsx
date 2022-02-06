@@ -1,28 +1,36 @@
 import React from 'react';
 import cl from './LoginForm.module.css'
+import { reduxForm, Field} from 'redux-form';
 
-const LoginForm = () => {
+const LoginForm = (props) => {
     return (
         <div className={cl.LoginFormOuterContainer}> 
             <div className={cl.LoginFormInnerContainer}>
-                <form>
+                <form onSubmit={props.handleSubmit}>
                     <div>
-                        <input 
-                                    type='text' 
-                                    placeholder='Login'
-                                /> 
+                        <Field 
+                            name={'UserLogin'}
+                            type='text' 
+                            placeholder='Enter Login'
+                            component={'input'}
+                        /> 
                     </div>
 
                     <div>
-                        <input
-                                    type='password' 
-                                    placeholder='Password'
+                        <Field
+                            name={'UserPassword'}
+                            type='password' 
+                            placeholder='Enter Password'
+                            component={'input'}
                         />
                     </div>
 
                     <div style={{display:'flex'}}>
-                        <input className={cl.InputRemember}
-                                type="checkbox"/>
+                        <Field className={cl.InputRemember}
+                            name={'UserRememberMe'}
+                            type="checkbox"
+                            component={'input'}
+                    />
                                 <span style={{margin:'0px'}}>Remember me</span>                       
                     </div>
                     <br/>

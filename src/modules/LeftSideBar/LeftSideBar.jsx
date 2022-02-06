@@ -1,36 +1,40 @@
 import React from 'react';
-import { useState } from 'react';
+
 import { connect } from 'react-redux'
-import { setLeftSideBarShowAction, setLeftSideBarHideAction } from '../../redux/ActionCreators';
+import { setLeftSideBarHideAction } from '../../redux/ActionCreators';
 
 import Offcanvas from 'react-bootstrap/Offcanvas'
 
 const LeftSideBar = (props) => {
 
 
-
         function handleClose () {
             props.setLeftPanelRedux(false);
-            console.log('from left', props.sideBarShow)
-
         }
-
-
-        const handleShow = () => props.setLeftPanelRedux(true);
+        
       
         return (
           <>
-            {/* <Button variant="primary" onClick={handleShow}>
-              Launch
-            </Button> */}
       
             <Offcanvas show={props.sideBarShow} onHide={handleClose}>
               <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+                <Offcanvas.Title>Личный кабинет</Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
-                Some text as placeholder. In real life you can have the elements you
-                have chosen. Like, text, images, lists, etc.
+                <ul>
+                  <li>
+                    Главное
+                  </li>
+                  <li>
+                    Ваши Видео
+                  </li>
+                  <li>
+                    Перейти в настройки
+                  </li>
+                  <li>
+                    Выйти
+                  </li>
+                </ul>
               </Offcanvas.Body>
             </Offcanvas>
           </>
