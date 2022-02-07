@@ -28,3 +28,23 @@ export const setCookies = (name, value) => {
     document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value);
 }
 
+export const clearOneCookie = (name) => {
+    const forDelCookieValue = getCookies(name);
+    document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(forDelCookieValue)+";max-age=-1";
+
+}
+
+export const cookieTransormToBoolean = (value) =>{
+
+    switch (value){
+        case 'true':
+            return true
+
+        case 'false':
+            return false
+
+    default:
+        window.alert("Ошибка в куке", value)
+    }
+
+}

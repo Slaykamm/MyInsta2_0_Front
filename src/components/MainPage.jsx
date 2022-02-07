@@ -7,6 +7,7 @@ import axios from 'axios';
 import { store } from '../redux/reducers';
 import { useState } from 'react';
 import MovieDispatch from '../modules/MovieDispatch/MovieDispatch';
+import { useEffect } from 'react';
 
 
 
@@ -15,7 +16,6 @@ const MainPage = () => {
 const [listFiles, setListFiles] = useState()
 const [searchQuery, setSearchQuery] = useState('')
 const [filteredPosts, setFilteredPosts] = useState()
-
 
 if (!listFiles) {
     const photosGet = axios.get('https://jsonplaceholder.typicode.com/albums/1/photos')
@@ -26,6 +26,8 @@ if (!listFiles) {
     })
 
 }
+
+
 // Блок фильтрации роликов//////////////////////////////////////////
 function checkTheInput(event){
     setSearchQuery(event.target.value)

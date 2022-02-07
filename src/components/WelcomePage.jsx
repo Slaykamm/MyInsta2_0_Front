@@ -13,7 +13,7 @@ import axios from 'axios';
 import { includes } from 'lodash';
 import { find } from 'lodash';
 import _ from 'lodash'
-import { clearAllCookie, getAllCookie, getCookies, setCookies } from './services/cookieWorks';
+import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie } from './services/cookieWorks';
 
  
 
@@ -27,6 +27,11 @@ const WelcomePage = (props) => {
     const LoginReduxForm = reduxForm({
         form: 'login'
     }) (LoginForm)
+
+
+    useEffect(()=>{
+        clearAllCookie()
+    }, [])
 
     //выводим данные формы
 
@@ -87,26 +92,35 @@ const WelcomePage = (props) => {
 
 // COOOOOOKIE WORKS!!!!!!!!!!!!!!!!!/////////////////////
 
-    clearAllCookie();
-    console.log("Test1", getAllCookie())
+    // clearAllCookie();  // ВСЕ ОЧИСТИТЬ
+    // console.log("Test1", getAllCookie())  //ПОЛУЧИТЬ ВСЕ КУКИ
 
-    setCookies("login", "BoBcAt"+props.isActualUser.UserLogin+"Lobser")
-    console.log("Test2", getAllCookie())
+    // setCookies("login", "BoBcAt"+props.isActualUser.UserLogin+"Lobser")   //ПОСТАВИТЬ КУКУ КЛЮЧ+ЗНАЧЕНИЕ
+    // console.log("Test2", getAllCookie())
 
+    //setCookies("login2", "ELEPHANT")
 
-    const test3 = getCookies('login')
-
-    console.log(test3)
-
-
-    clearAllCookie();
-    console.log("Test4", getAllCookie())
+    //сделать куку где будет имя юзера 
+    setCookies("userName", props.isActualUser.UserLogin)
+    setCookies("isVerificated", true)
 
 
-    console.log(obj);
+    // const test3 = getCookies('login') // ПОЛУЧИТЬ КУКУ ПО ЗНАЧЕНИЕЮ
+
+    // console.log("Test3", test3)
 
 
-      //  return <Navigate to="/main" />
+    // clearOneCookie("login")  //del one cookie
+    
+    
+    // console.log("Test4", getAllCookie())
+
+    // clearOneCookie("login2")  //del one cookie
+
+    // console.log("Test5", getAllCookie())
+
+
+    return <Navigate to="/main" />
     }
 
 

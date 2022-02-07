@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux'
 import { setLeftSideBarShowAction, setLeftSideBarHideAction} from '../redux/ActionCreators'
 
@@ -14,15 +14,24 @@ import Col from 'react-bootstrap/Col'
 import LeftSideBar from '../modules/LeftSideBar/LeftSideBar';
 import _ from 'lodash'
 import axios from 'axios';
-
+import { Navigate } from 'react-router-dom';
+import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorks';
 
 
 const Menu = (props) => {
-
     const [namerFilter, setNameFilter] = useState('')
+    const [user, setUser] = useState('')
+    const [isUserVerificated, setIsUserVerificated] = useState(false)
+    
 
-
-
+    ///////cookie USER
+    useEffect(()=>{
+        setUser(getCookies('userName'))
+        setIsUserVerificated(cookieTransormToBoolean(getCookies('isVerificated')))
+    
+    },[])
+    
+    console.log("test", user, isUserVerificated)
 
 
 
@@ -32,8 +41,6 @@ const Menu = (props) => {
         if (name.length >3 && name.length<10){
             console.log("name", name)
 // устанавливаю лоадаш. получаю тут массив с картинками. фильтрую в них название.
-
-
 
         }
     }
@@ -84,7 +91,7 @@ const Menu = (props) => {
                                         <Nav.Link href="/">LogIn</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href="main/" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {props.isActualUser.UserLogin} </span></Nav.Link>
+                                        <Nav.Link href="main/" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {isUserVerificated ? user : <span>Log</span>} </span></Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link eventKey="disabled" disabled>
