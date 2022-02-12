@@ -1,0 +1,19 @@
+.OuterInput {
+    margin-bottom: 1rem;
+}
+
+.Input{
+    margin-bottom: 0;    
+    width: 100%;
+    font-size: 1.2rem;
+}
+
+.MyError {
+    font-size: smaller;
+    color: black;
+
+
+}
+
+
+

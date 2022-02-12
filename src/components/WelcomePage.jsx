@@ -13,121 +13,92 @@ import axios from 'axios';
 import { includes } from 'lodash';
 import { find } from 'lodash';
 import _ from 'lodash'
-import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie } from './services/cookieWorks';
-
+import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorksService';
+import { userCheckProcessingService } from './services/loginUserService';
  
 
 
 const WelcomePage = (props) => {
-
-    const [verified, setVerfied] = useState(false)
-    const [formData2, setFormData2] = useState()
     const [userInfo, setUserInfo] = useState()
 
+
+//получаем массив юзеров для проверки
+
+if (!userInfo){
+
+    const usersList = axios.get('https://jsonplaceholder.typicode.com/users');
+    usersList.then(responce => 
+            {
+                setUserInfo(responce.data)
+            })
+}
+
+    //работа с формой
     const LoginReduxForm = reduxForm({
         form: 'login'
     }) (LoginForm)
 
-
-    useEffect(()=>{
-        clearAllCookie()
-    }, [])
-
-    //выводим данные формы
-
+    
 
     const onSubmit = (formData) => {
-        if (!props.isActualUser.isVerifyed){       
-        props.setUnveryfyedUserStatus(formData)
+        if (!props.isActualUser.isVerifyed){  
+            props.setUnveryfyedUserStatus(formData)
         }
-
-        setFormData2(formData)
-
-    }
-
-
-
-    if (!userInfo){
-
-        const usersList = axios.get('https://jsonplaceholder.typicode.com/users');
-        usersList.then(responce => 
-                {
-                    setUserInfo(responce.data)
-                })
-
-    }
-
-    // проверка логин пароль
-
+ 
         if (userInfo) {
-            const checkUserLogin = userInfo.filter(userName=>(userName.username == (props.isActualUser['UserLogin'])))
-            if (checkUserLogin.length){
-                console.log('логин есть!', checkUserLogin)
-                const checkUserPassword = _.get(checkUserLogin,[0, 'id']) == props.isActualUser['UserPassword']
-                if (checkUserPassword) {
-                    console.log("И пароль есть!")
-                    props.setVeryfyedUserStatus(props.isActualUser)
-                }
-                else {
-                    console.log("Пароль не верный!")
-                }
-
-
-
+            const userCheck = userCheckProcessingService(userInfo, formData)
+            if (userCheck){
+                props.setVeryfyedUserStatus(formData) 
+                setCookies('isVerificated', true)
+                setCookies("userName", formData.UserLogin)
+                setCookies("isVerificated", true)
+                console.log(' COOKIE',(getAllCookie()))
+                console.log(' USER', props.isActualUser)
+                return <Navigate to="/main" />
             }
-            else{
-                console.log("Данный пользователь отстутствует")
+            else {
+                setCookies('isVerificated', false)
+                console.log(' COOKIE',(getAllCookie()))
             }
         }
+    }
+
+/////////////////////////////////////
+
+/////////////РАБОТА С КУКАМИ//////////////////////////
+
+    useEffect(()=>{
+        clearAllCookie(),
+        props.setUnveryfyedUserStatus()
+    }, [])
 
 
+    ///////cookie USER
+    // useEffect(()=>{
+    //     setUser(getCookies('userName'))
+    //     if (getCookies('isVerificated')){
+    //         setIsUserVerificated(cookieTransormToBoolean(getCookies('isVerificated')))
+    //     }
+    // },[])
+    
 
+
+    // cookie моя структура:
+    // LongStorageLogin 
+    // userNameBret = userName+Bret = 'Login'
+    // userPasswordBret = userPassword+Bret = 'password'
+    //
+    // sessionCookie:
+    // SessionLogin
+
+
+//TODO убрать этот костыль в Thunk когда будет бек
     function fetchUser () {
         props.setVeryfyedUserStatus(props.isActualUser)
         return <Navigate to="/main" />
     }
 
 
-    if (props.isActualUser.isVerifyed){
-
-// COOOOOOKIE WORKS!!!!!!!!!!!!!!!!!/////////////////////
-
-    // clearAllCookie();  // ВСЕ ОЧИСТИТЬ
-    // console.log("Test1", getAllCookie())  //ПОЛУЧИТЬ ВСЕ КУКИ
-
-    // setCookies("login", "BoBcAt"+props.isActualUser.UserLogin+"Lobser")   //ПОСТАВИТЬ КУКУ КЛЮЧ+ЗНАЧЕНИЕ
-    // console.log("Test2", getAllCookie())
-
-    //setCookies("login2", "ELEPHANT")
-
-    //сделать куку где будет имя юзера 
-    setCookies("userName", props.isActualUser.UserLogin)
-    setCookies("isVerificated", true)
-
-
-    // const test3 = getCookies('login') // ПОЛУЧИТЬ КУКУ ПО ЗНАЧЕНИЕЮ
-
-    // console.log("Test3", test3)
-
-
-    // clearOneCookie("login")  //del one cookie
-    
-    
-    // console.log("Test4", getAllCookie())
-
-    // clearOneCookie("login2")  //del one cookie
-
-    // console.log("Test5", getAllCookie())
-
-
-    return <Navigate to="/main" />
-    }
-
-
-    
-
-
-//вот тут подумать. как залогиненного юзера выслать. вообще по идее надо эту хню выкидывать отсюда в экшн.
 
     return (
         <div>
@@ -138,7 +109,7 @@ const WelcomePage = (props) => {
                 onSubmit={onSubmit}/>
             <Footer/>
 
-
+            {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p>Ждем Верных данныех</p>}
 
         </div>
     );

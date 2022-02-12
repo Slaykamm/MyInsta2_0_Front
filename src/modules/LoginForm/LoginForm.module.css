@@ -20,18 +20,11 @@
 
 }
 
-form input {
-    margin-bottom: 1rem;
-    width: 100%;
-    font-size: 1.2rem;
-
-}
-
-
-
 .InputRemember {
     width: 10px;
     cursor: pointer;
+    transform: scale(1.4);
+
 }
 
 .Button {
@@ -39,4 +32,9 @@ form input {
     color: whitesmoke;
     cursor: pointer;
     border-radius: 8px;
+}
+
+.Button:hover {
+    background-color: whitesmoke;
+    color: #4446;
 }

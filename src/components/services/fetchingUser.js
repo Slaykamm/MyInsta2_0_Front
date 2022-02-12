@@ -1,4 +1,5 @@
-export const fetchResult = () => false
+export const fetchResult = () => 
+false
 
 
 console.log("from", fetchResult())

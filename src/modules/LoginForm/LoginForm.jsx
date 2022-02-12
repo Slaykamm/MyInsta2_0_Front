@@ -1,6 +1,7 @@
 import React from 'react';
 import cl from './LoginForm.module.css'
 import { reduxForm, Field} from 'redux-form';
+import MyInput from './MyInput';
 
 const LoginForm = (props) => {
     return (
@@ -12,7 +13,9 @@ const LoginForm = (props) => {
                             name={'UserLogin'}
                             type='text' 
                             placeholder='Enter Login'
-                            component={'input'}
+                            component={MyInput}
+                            validationMessage="Логин не верный"
+
                         /> 
                     </div>
 
@@ -21,7 +24,9 @@ const LoginForm = (props) => {
                             name={'UserPassword'}
                             type='password' 
                             placeholder='Enter Password'
-                            component={'input'}
+                            component={MyInput}
+                            validationMessage="Пароль не верный"
+
                         />
                     </div>
 
@@ -30,11 +35,13 @@ const LoginForm = (props) => {
                             name={'UserRememberMe'}
                             type="checkbox"
                             component={'input'}
+                            
+                            
                     />
-                                <span style={{margin:'0px'}}>Remember me</span>                       
+                    <span style={{marginLeft:'5px', marginTop:'-5px'}}>Запомнить меня</span>                       
                     </div>
                     <br/>
-                    <button className={cl.Button}>Submit</button>
+                    <button className={cl.Button}>Логин</button>
                 </form>
 
 

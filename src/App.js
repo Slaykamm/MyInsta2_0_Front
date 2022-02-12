@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import MainPage from './components/MainPage';
-
 import WelcomePage from './components/WelcomePage';
+import MainPage from './components/MainPage';
+import VideoPostPage from './components/pages/videoPage/videoPostPage';
 
 
 const App = () => {
@@ -12,6 +12,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<WelcomePage/>}/>
         <Route path="/main" element={<MainPage/>} />
+        <Route path="/video" element={<VideoPostPage/>} />
 
       </Routes>
 

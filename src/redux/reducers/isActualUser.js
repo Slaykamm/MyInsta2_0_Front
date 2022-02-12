@@ -7,13 +7,10 @@ function isActualUser(state=initialState, action) {
 
     switch (action.type) {
         case UNVERIFYED_USER_ADD:
-
-
+            console.log("tet", {...action.payload, isVerifyed: false})
             return {...action.payload, isVerifyed: false};
     
         case VERIFYED_USER_ADD:
-            console.log('here', action.payload)
-
             return {...action.payload, isVerifyed: true};
     
     default:
@@ -21,4 +18,4 @@ function isActualUser(state=initialState, action) {
     }
 }
 
-export default isActualUser
+export default isActualUser 

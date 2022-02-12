@@ -15,7 +15,7 @@ import LeftSideBar from '../modules/LeftSideBar/LeftSideBar';
 import _ from 'lodash'
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
-import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorks';
+import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorksService';
 
 
 const Menu = (props) => {
@@ -31,19 +31,8 @@ const Menu = (props) => {
     
     },[])
     
-    console.log("test", user, isUserVerificated)
+   
 
-
-
-    function nameFilterProc(name) {
-
-        setNameFilter(name)
-        if (name.length >3 && name.length<10){
-            console.log("name", name)
-// устанавливаю лоадаш. получаю тут массив с картинками. фильтрую в них название.
-
-        }
-    }
 
 
     function panelCall(){
@@ -52,7 +41,7 @@ const Menu = (props) => {
         return <LeftSideBar/>
 
     }
-    console.log('props', props.isActualUser)
+
 
 
     return (
@@ -88,15 +77,13 @@ const Menu = (props) => {
                             <div className={cl.menuPanel}>
                                 <Nav className="justify-content-end"  variant="pills" defaultActiveKey="/home">
                                     <Nav.Item>
-                                        <Nav.Link href="/">LogIn</Nav.Link>
+                                        <Nav.Link href="/"><span style={{color:'white'}}>Сменить пользователя</span></Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link href="main/" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {isUserVerificated ? user : <span>Log</span>} </span></Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="disabled" disabled>
-                                        Disabled
-                                        </Nav.Link>
+                                        <Nav.Link href="/video"><span style={{color:'white'}}>VIDEO</span></Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </div>
