@@ -45,7 +45,7 @@ const Menu = (props) => {
 
 
     return (
-        <div>
+        <div className={cl.SpaceLayer}>
             <div className={cl.Outer}>
 
 
@@ -66,9 +66,11 @@ const Menu = (props) => {
                                 value={props.value}
                                 onChange={props.onChange}
                                 placeholder="название" 
-                                style={{marginRight:'7px', marginTop:'5px'}}/>  
+                                style={{marginRight:'7px', marginTop:'5px'}}
+
+                                />  
                             
-                            <input placeholder="дата" />
+                            {/* <input placeholder="дата" /> */}
                             <button>Фильтр</button>
                         </div>
 

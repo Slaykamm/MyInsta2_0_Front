@@ -1,9 +1,10 @@
 .Header {
+
     color: whitesmoke;
     display: flex;
     justify-content:flex-start;
-    
     align-items: center;
+    z-index:1;
 
 
 
@@ -33,9 +34,12 @@
 
 
 .HeaderBody {
+    position: fixed;
     width: 100%;
     padding-top: 1rem;
     display: grid;
     grid-template-columns: minmax(12%, 13%) minmax(78%,80%);
     grid-column-gap: 1px;
+    
+    z-index:1;
 }

@@ -6,6 +6,7 @@ import image from '../../img/KASATKA.jpg'
 import cl from './videoPostPage.module.css'
 import { Field } from 'redux-form';
 import Button from 'react-bootstrap/Button'
+import CommentOutput from '../commentOutput/CommentOutput'
 
 function VideoPostPage() {
     return (
@@ -39,21 +40,15 @@ function VideoPostPage() {
                                 <a href='/video'>Название:</a>
                     </p> 
                 </div>
-                <form>
-                    <div className={cl.CommentField}>
-                        <p>первый коммент. Маппим Ваши комменты</p>
-                    </div>
-                    <div className={cl.EnterCommentField}>
-                        <input  placeholder="вводим Ваши комменты" />
-                        <br/>
-                        <button>Комментировать</button>
-                    </div>
-                </form>
+                
+{/* Дописать логику на форму ввода и сделать саму форму.  */}
+
+
 
 
 
             </div>
-
+            <CommentOutput/>
             <Footer/>   
             
         </>

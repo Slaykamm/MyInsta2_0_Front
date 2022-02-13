@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.25.0",
     "bootstrap": "^5.1.3",
+    "gettime": "^1.0.53",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.1",

@@ -10,6 +10,7 @@ import MovieDispatch from '../modules/MovieDispatch/MovieDispatch';
 import { useEffect } from 'react';
 import { arrayRemoveAll } from 'redux-form';
 import { filterQuery } from './services/filterQuery';
+import cl from './CSS/MainPage.module.css'
 
 
 
@@ -17,7 +18,7 @@ const MainPage = () => {
 
 const [listFiles, setListFiles] = useState()
 const [searchQuery, setSearchQuery] = useState('')
-const [filteredPosts, setFilteredPosts] = useState()
+
 
 if (!listFiles) {
     const photosGet = axios.get('https://jsonplaceholder.typicode.com/albums/1/photos')
@@ -37,32 +38,42 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
 
     return (
         <div>
-            <Header/>
-            <Menu 
-                value={searchQuery}
-                onChange={checkTheInput}/>
-            
+
             <div>
-                Hello World!
+                        <Header/>
+                        <Menu 
+                            value={searchQuery}
+                            onChange={checkTheInput}
+                        />
+                        
+                        <div  className={cl.BaseLayer}>
+                            <div className={cl.BaseFrame}>
+                                Hello World!
 
-                { listFiles ? 
-                    <div className="container">
-                        <div className="row">
-                            { filteredVideo.map(photo =>
-                            
-                            <div key={photo.id} className="col-6 col-md-4">
-                            <MovieDispatch url={photo.url} id={photo.id} title={photo.title}/>    
+                                { listFiles ? 
+                                    <div className="container">
+                                        <div className="row">
+                                            { filteredVideo.map(photo =>
+                                            
+                                            <div key={photo.id} className="col-6 col-md-4">
+                                            <MovieDispatch url={photo.url} id={photo.id} title={photo.title}/>    
+                                            </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                : <p>Waiting for Data</p>
+                                }
+
                             </div>
-                            )}
                         </div>
-                    </div>
-                : <p>Waiting for Data</p>
-                }
 
+                        <Footer/>
             </div>
 
-            <Footer/>
+
+
         </div>
+
     );
 };
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import Menu from './Menu';
+import cl from '../components/CSS/WelcomePage.module.css'
 import LoginForm from '../modules/LoginForm/LoginForm';
 import { reduxForm } from 'redux-form';
 import { connect } from  'react-redux';
@@ -30,6 +31,7 @@ if (!userInfo){
     usersList.then(responce => 
             {
                 setUserInfo(responce.data)
+                console.log(responce.data)
             })
 }
 
@@ -73,25 +75,6 @@ if (!userInfo){
     }, [])
 
 
-    ///////cookie USER
-    // useEffect(()=>{
-    //     setUser(getCookies('userName'))
-    //     if (getCookies('isVerificated')){
-    //         setIsUserVerificated(cookieTransormToBoolean(getCookies('isVerificated')))
-    //     }
-    // },[])
-    
-
-
-    // cookie моя структура:
-    // LongStorageLogin 
-    // userNameBret = userName+Bret = 'Login'
-    // userPasswordBret = userPassword+Bret = 'password'
-    //
-    // sessionCookie:
-    // SessionLogin
-
-
 //TODO убрать этот костыль в Thunk когда будет бек
     function fetchUser () {
         props.setVeryfyedUserStatus(props.isActualUser)
@@ -103,13 +86,13 @@ if (!userInfo){
     return (
         <div>
             <Header/>
-            <p></p>
-            <button onClick={fetchUser}>CONFIRM USER</button>
-            <LoginReduxForm 
-                onSubmit={onSubmit}/>
-            <Footer/>
-
-            {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p>Ждем Верных данныех</p>}
+            <div className={cl.BaseLayer}>
+                <button onClick={fetchUser}>CONFIRM USER</button>
+                <LoginReduxForm 
+                    onSubmit={onSubmit}/>
+                <Footer/>
+                {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p></p>}
+            </div>
 
         </div>
     );

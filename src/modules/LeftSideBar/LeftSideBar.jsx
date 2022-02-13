@@ -23,13 +23,13 @@ const LeftSideBar = (props) => {
               <Offcanvas.Body>
                 <ul>
                   <li>
-                    Главное
+                    Ваш профиль
                   </li>
                   <li>
                     Ваши Видео
                   </li>
                   <li>
-                    Перейти в настройки
+                    Ваши сообщения
                   </li>
                   <li>
                     Выйти

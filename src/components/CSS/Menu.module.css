@@ -1,7 +1,18 @@
+.SpaceLayer {
+    padding: 4rem 0 1rem 0;
+    position: fixed;
+    width: 100%;
+    background-color: white;
+
+
+
+}
 .Outer {
+
     background-color:#444653;
     margin-top: 30px;
     display: flex;
+    
 }
 
 .Inner {

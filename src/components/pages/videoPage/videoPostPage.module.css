@@ -2,6 +2,7 @@
     width: 50%;
 
     margin-left: 25%;
+    padding-top: 8rem;
 
 }
 
@@ -20,8 +21,8 @@
 
 .VideoMenuOptions {
 
-    list-style: none;	/* Убираем маркеры списка */
-    padding: 5px;		/* Поля вокруг текста */
+    list-style: none;	
+    padding: 5px;		
     display: flex;
     justify-content: space-between;
 
@@ -39,35 +40,3 @@
     border: 1px white;
 }
 
-.CommentField {
-    background-color: aquamarine;
-    height: auto;
-    width: 100%;
-    display:flex;
-    justify-content: flex-start;
-
-}
-
-.EnterCommentField {
-    padding: 2rem 0 2rem;
-    width: 100%;
-}
-
-.EnterCommentField input {
-    width: 100%;
-    height: 3rem;
-}
-
-
-
-.EnterCommentField button {
-    margin-top: 1rem;
-    background-color:#444653;
-    color: whitesmoke;
-    cursor: pointer;
-    border-radius: 8px;
-}
-.EnterCommentField button:hover {
-    background-color: whitesmoke;
-    color: #4446;
-}
