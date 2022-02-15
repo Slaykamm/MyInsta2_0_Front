@@ -1,39 +1,46 @@
 import React, { useEffect } from 'react';
 import Footer from './Footer';
 import Header from './Header';
-import Menu from './Menu';
 import cl from '../components/CSS/WelcomePage.module.css'
 import LoginForm from '../modules/LoginForm/LoginForm';
 import { reduxForm } from 'redux-form';
 import { connect } from  'react-redux';
-import { setUnverifyedUser, setVerifyedUser } from '../redux/ActionCreators';
+import { setUnverifyedUser, setVerifyedUser, setThunkResteredUsersData } from '../redux/ActionCreators';
 import { useState } from 'react';
-import { fetchResult } from './services/fetchingUser';
 import { Navigate } from 'react-router-dom'
 import axios from 'axios';
-import { includes } from 'lodash';
-import { find } from 'lodash';
 import _ from 'lodash'
 import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorksService';
 import { userCheckProcessingService } from './services/loginUserService';
+import { getRegisteredUsersAPI } from '../API/getRegisteredUsersAPI'
  
 
 
 const WelcomePage = (props) => {
     const [userInfo, setUserInfo] = useState()
+    const [getUsers, setGetUsers] = useState([])
+
+
+
+//TODO перевести на async await и не заниматься херней
+    useEffect(()=>
+    {
+            // тут дергаем функию снизу из mapDispatchToProps
+            //т.к. получили в пропсах результат дергания - кладем его в стейт
+        props.getUsersThunk()
+    },[])
+
+    useEffect(()=>{
+        setUserInfo(props.getUsers2) 
+
+    },[props.getUsers2])
+    
+
 
 
 //получаем массив юзеров для проверки
 
-if (!userInfo){
 
-    const usersList = axios.get('https://jsonplaceholder.typicode.com/users');
-    usersList.then(responce => 
-            {
-                setUserInfo(responce.data)
-                console.log(responce.data)
-            })
-}
 
     //работа с формой
     const LoginReduxForm = reduxForm({
@@ -92,6 +99,9 @@ if (!userInfo){
                     onSubmit={onSubmit}/>
                 <Footer/>
                 {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p></p>}
+                
+
+
             </div>
 
         </div>
@@ -101,7 +111,8 @@ if (!userInfo){
 export default connect(
     //mapStateToProps
     state => ({
-        isActualUser: state.isActualUser
+        isActualUser: state.isActualUser,
+        getUsers2: state.asyncUsersRequest  //кладем в пропс из редюсера результат
 
         }),
 
@@ -111,6 +122,9 @@ export default connect(
         },
         setVeryfyedUserStatus: (value) =>{
             dispatch(setVerifyedUser(value))
+        },
+        getUsersThunk: () => {    //это просто ф-ция которую для запроса будем дергать 
+            dispatch(getRegisteredUsersAPI())   //а вот это функция которая у нас в THUNK достаем через диспатч
         }
     })
 
