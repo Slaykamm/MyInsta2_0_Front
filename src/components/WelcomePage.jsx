@@ -12,14 +12,13 @@ import axios from 'axios';
 import _ from 'lodash'
 import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorksService';
 import { userCheckProcessingService } from './services/loginUserService';
-import { getRegisteredUsersAPI } from '../API/getRegisteredUsersAPI'
+import { getRegisteredUsersAPI } from '../API/getRegisteredUsersAPI';
+import { getUserDictAPI } from '../API/getUserDictAPI';
  
 
 
 const WelcomePage = (props) => {
     const [userInfo, setUserInfo] = useState()
-    const [getUsers, setGetUsers] = useState([])
-
 
 
 //TODO перевести на async await и не заниматься херней
@@ -27,7 +26,8 @@ const WelcomePage = (props) => {
     {
             // тут дергаем функию снизу из mapDispatchToProps
             //т.к. получили в пропсах результат дергания - кладем его в стейт
-        props.getUsersThunk()
+        props.getUsersThunk(),
+        props.getUsersDict()
     },[])
 
     useEffect(()=>{
@@ -36,6 +36,7 @@ const WelcomePage = (props) => {
     },[props.getUsers2])
     
 
+    console.log('USER_DICT', props.usersDict)
 
 
 //получаем массив юзеров для проверки
@@ -112,7 +113,8 @@ export default connect(
     //mapStateToProps
     state => ({
         isActualUser: state.isActualUser,
-        getUsers2: state.asyncUsersRequest  //кладем в пропс из редюсера результат
+        getUsers2: state.asyncUsersRequest,  //кладем в пропс из редюсера результат
+        usersDict: state.usersDict
 
         }),
 
@@ -125,6 +127,9 @@ export default connect(
         },
         getUsersThunk: () => {    //это просто ф-ция которую для запроса будем дергать 
             dispatch(getRegisteredUsersAPI())   //а вот это функция которая у нас в THUNK достаем через диспатч
+        },
+        getUsersDict: () => {
+            dispatch(getUserDictAPI())
         }
     })
 

@@ -1,10 +1,24 @@
+
+
+
+.HeaderBody {
+    position: fixed;
+    width: 100%;
+    padding-top: 1rem;
+    display: grid;
+    grid-template-columns: minmax(12%, 13%) minmax(78%,80%);
+    grid-column-gap: 1px;
+    
+    z-index:3;
+}
+
 .Header {
 
     color: whitesmoke;
     display: flex;
     justify-content:flex-start;
     align-items: center;
-    z-index:1;
+    z-index:3;
 
 
 
@@ -30,16 +44,4 @@
     display: flex;
     justify-content: flex-start;
     width: 150px;
-}
-
-
-.HeaderBody {
-    position: fixed;
-    width: 100%;
-    padding-top: 1rem;
-    display: grid;
-    grid-template-columns: minmax(12%, 13%) minmax(78%,80%);
-    grid-column-gap: 1px;
-    
-    z-index:1;
 }

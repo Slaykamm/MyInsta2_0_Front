@@ -2,30 +2,37 @@ import React from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import Menu from './Menu';
+import { connect } from  'react-redux';
+import { getVideoPreviewsAPI } from '../API/getPreviewAPI'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { store } from '../redux/reducers';
-import { useState } from 'react';
+import { useState} from 'react';
 import MovieDispatch from '../modules/MovieDispatch/MovieDispatch';
 import { useEffect } from 'react';
 import { arrayRemoveAll } from 'redux-form';
 import { filterQuery } from './services/filterQuery';
 import cl from './CSS/MainPage.module.css'
+import Nav from 'react-bootstrap/Nav'
+import { Routes, Route } from 'react-router-dom';
 
 
 
-const MainPage = () => {
+const MainPage = (props) => {
 
 const [listFiles, setListFiles] = useState()
 const [searchQuery, setSearchQuery] = useState('')
 
 
-if (!listFiles) {
-    const photosGet = axios.get('https://jsonplaceholder.typicode.com/albums/1/photos')
-    photosGet.then(responce =>{
-        setListFiles(responce.data)
-    })
-}
+//TODO какгохо хрена надо 2 раза дергать
+useEffect(()=>{
+    props.getPreviewAPI()
+},[])
+
+useEffect(()=>{
+    setListFiles(props.videoPreviews)
+},[props.videoPreviews])
+
 
 // Блок фильтрации роликов//////////////////////////////////////////
 function checkTheInput(event){
@@ -44,6 +51,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                         <Menu 
                             value={searchQuery}
                             onChange={checkTheInput}
+                            placeholder='Поиск в названиях'
                         />
                         
                         <div  className={cl.BaseLayer}>
@@ -53,11 +61,20 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                                 { listFiles ? 
                                     <div className="container">
                                         <div className="row">
-                                            { filteredVideo.map(photo =>
+                                            { filteredVideo.map(video =>
                                             
-                                            <div key={photo.id} className="col-6 col-md-4">
-                                            <MovieDispatch url={photo.url} id={photo.id} title={photo.title}/>    
+                                            <div key={video.id} className="col-6 col-md-4">
+                                                {/* <Routes>
+                                                    <Route path='/video/:id' element={<MovieDispatch/>}/>
+                                                </Routes> */}
+
+                                                    <MovieDispatch url={video.image} id={video.id} title={video.title}/>      
+
                                             </div>
+
+
+
+                                           
                                             )}
                                         </div>
                                     </div>
@@ -77,4 +94,23 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
     );
 };
 
-export default MainPage;
+
+
+export default connect(
+    // mapStateToProps
+    state => ({
+        videoPreviews: state.getPreview
+    }),
+
+    //mapDispatchToProps
+    dispatch => ({
+        getPreviewAPI: () =>{
+            dispatch(getVideoPreviewsAPI())
+        },
+
+    })
+
+
+
+
+)(MainPage); 

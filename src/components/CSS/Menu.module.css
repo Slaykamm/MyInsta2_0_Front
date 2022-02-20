@@ -3,7 +3,7 @@
     position: fixed;
     width: 100%;
     background-color: white;
-
+    z-index:2;
 
 
 }
@@ -12,6 +12,7 @@
     background-color:#444653;
     margin-top: 30px;
     display: flex;
+    z-index:2;
     
 }
 

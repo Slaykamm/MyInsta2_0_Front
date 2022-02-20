@@ -11,8 +11,9 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<WelcomePage/>}/>
-        <Route path="/main" element={<MainPage/>} />
-        <Route path="/video" element={<VideoPostPage/>} />
+        <Route path="main/" element={<MainPage/>} />
+        {/* <Route path="main/video/" element={<VideoPostPage/>} /> */}
+        <Route path="main/video/:id" element={<VideoPostPage/>}/>
 
       </Routes>
 

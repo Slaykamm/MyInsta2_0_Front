@@ -65,7 +65,7 @@ const Menu = (props) => {
                             <input 
                                 value={props.value}
                                 onChange={props.onChange}
-                                placeholder="название" 
+                                placeholder={props.placeholder} 
                                 style={{marginRight:'7px', marginTop:'5px'}}
 
                                 />  

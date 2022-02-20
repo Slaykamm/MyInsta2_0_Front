@@ -2,6 +2,10 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import sideBarShow from './sideBarReducer'
 import isActualUser from './isActualUser'
 import asyncUsersRequest from './asyncUsersRequest'
+import getPreview from './getPreview'
+import getComments from './getComments'
+import usersDict from "./usersDict";
+import getVideo from "./getVideo";
 import {reducer as formReducer} from 'redux-form'
 import thunk from 'redux-thunk'
 
@@ -10,6 +14,10 @@ const rootReducer = combineReducers({
     sideBarShow,
     isActualUser,
     asyncUsersRequest,
+    getPreview,
+    getComments,
+    usersDict,
+    getVideo,
     form: formReducer
 })
 
