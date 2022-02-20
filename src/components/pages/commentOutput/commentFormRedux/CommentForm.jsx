@@ -10,7 +10,7 @@ function CommentForm(props) {
 
     return (
         <>
-        <p>Hello World!</p>
+
         <form onSubmit={props.handleSubmit}>
             <div className={cl.EnterCommentField}>
 

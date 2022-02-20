@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { getCommentsThunkAPI } from '../../../API/getCommentsAPI'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
 import { filter } from 'lodash'
+import Comment from '../comment/Comment'
 
 
 
@@ -22,15 +23,14 @@ function CommentOutput(props) {
     let currentTime = new Intl.DateTimeFormat('ru-RU', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(Date.now())
 
     const [comments, setComments] = useState([
-        {id: 1, date: currentTime, authorId: 35, authorName: 'Steve', content: 'Really good video.Really good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good videoReally good video'},
-        {id: 2, date: currentTime, authorId: 14, authorName: 'Olga', content: 'Really good video.'},
-        {id: 3, date: currentTime, authorId: 22, authorName: 'Pit', content: 'Really good video.'},
+
 
     ])
 
+
     //TODO сделать рефактор. передавать словарь в пропсах
     useEffect(()=>{
-        props.getCommentsAPI(),
+        props.getCommentsAPI(props.videoID),
         props.getUsersDict()
     },[])
 
@@ -53,43 +53,49 @@ function CommentOutput(props) {
 
     //видимо тут должен быть POST на сервер. TODO thunk POST 
  
-
+   if (comments.length && props.usersDict.length) {
+         comments.map(comment =>
+            
+            {
+            console.log('comments', comments)
+            console.log('comment', comment)
+            console.log('key', comment.id)
+            console.log('date', comment.create_at)
+            console.log('props.usersDict', props.usersDict)
+            console.log('comment.author', comment.author)
+            console.log('filter, ', filter(props.usersDict, {'id': comment.author})[0])
+            console.log('user', filter(props.usersDict, {'id': comment.author})[0].name)
+            console.log('avatar', (filter(props.usersDict, {'id': comment.author})[0].avatar))
+            console.log('text', comment.id)
+            }
+         )
+           
+   }
+    
 
 
     return (
         <div className={cl.BaseLine}>
-            <p>Hello World</p>
+            
+            {comments.length && props.usersDict.length 
+                    ?   <div>
+                            <h3 style={{color:'grey'}}>Ваши комментарии</h3>
+                            {comments.map(
+                                comment => <Comment 
+                                                key={comment.id} 
+                                                date={comment.create_at} 
+                                                user={filter(props.usersDict, {'id': comment.author})[0].name} 
+                                                avatar={filter(props.usersDict, {'id': comment.author})[0].avatar} 
+                                                text={comment.text}
+                                            />
+                            )}
+                        </div>
+                    : <h3>Пока нет комментариев к данному видео</h3>
+            }
 
 
-                <div className={cl.CommentField}>
 
-                {comments && props.usersDict.length
-                    ?  
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>Дата:</th>
-                                    <th>Автор:</th>
-                                    <th>Текст:</th>
-                                </tr>
-                            </thead>
 
-                            <tbody>
-                                        {comments.map(
-                                            comment => <tr key={comment.id}>
-                                                <td>{Date(comment.create_at)}</td>
-                                                <td>{filter(props.usersDict, {'id': comment.author})[0].name}</td>
-                                                <td>{comment.text}</td>
-                                        </tr>
-                                        
-                                        )}
-
-                                
-                            </tbody>
-                        </Table>
-                    : <p>Пока нет комментариев.</p>
-                }
-                </div>
             <CommentReduxForm
                 onSubmit={addComment}/>
 
@@ -107,8 +113,8 @@ export default connect(
     }),
     //mapDispatchToProps
     dispatch => ({
-        getCommentsAPI: () => {
-            dispatch(getCommentsThunkAPI())
+        getCommentsAPI: (value) => {
+            dispatch(getCommentsThunkAPI(value))
         },
         getUsersDict: () => {
             dispatch(getUserDictAPI())

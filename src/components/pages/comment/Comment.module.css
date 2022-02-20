@@ -1,0 +1,76 @@
+
+.containerPost {
+    width: 100%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flex;
+    padding: 15px;
+    border: 2px solid #c9c9c9;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.containerPost:hover {
+    border: 2px solid #7e7d7d;
+}
+
+
+
+.commentContainer {
+    width: 110%;
+    display: grid;
+    grid-template-columns: minmax(8%, 10%) minmax(82%,83%) minmax(5%, 5%);
+    grid-column-gap: 3px;
+    border: 2px solid #c9c9c9;
+    border-radius: 10px;
+}
+
+.userInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.commentContainer:hover {
+    border: 2px solid #7e7d7d;
+}
+
+.userInfo img {
+    height: 50px;
+}
+
+.userInfo span {
+    font-size: larger;
+    font-weight: bolder;
+    word-break: break-all;
+}
+
+.postDate {
+    color: grey;
+    font-style: italic;
+    font-size: smaller;
+    
+}
+
+
+.ButtonCollection {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 10px;
+    transform: scale(0.8);    
+
+}
+
+
+
+
+.commentContainer2 {
+    width: 110%;
+    display: grid;
+    grid-template-areas: 
+    "userInfo Context ButtonCollection"
+    "userInfo Context Context";
+}

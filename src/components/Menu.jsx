@@ -82,7 +82,7 @@ const Menu = (props) => {
                                         <Nav.Link href="/"><span style={{color:'white'}}>Сменить пользователя</span></Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href="main/" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {isUserVerificated ? user : <span>Log</span>} </span></Nav.Link>
+                                        <Nav.Link href="/main" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {isUserVerificated ? user : <span>Log</span>} </span></Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
                                         <Nav.Link href="/video"><span style={{color:'white'}}>VIDEO</span></Nav.Link>
