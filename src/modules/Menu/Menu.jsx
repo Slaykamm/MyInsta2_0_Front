@@ -50,7 +50,9 @@ const Menu = (props) => {
                 <h3 
                     onClick={panelCall}
                     className={cl.SidePanelCall}
-                > = </h3>
+                > 
+                <span>  =  </span> 
+                </h3>
 
                 { props.sideBarShow 
                     ? <LeftSideBar/>

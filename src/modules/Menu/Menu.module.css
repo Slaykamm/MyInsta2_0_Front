@@ -17,7 +17,7 @@
 
 .SidePanelCall {
     font-size: large;
-    padding-left: 10%;  
+ 
 }
 
 .Inner {
@@ -35,24 +35,26 @@
     justify-content: flex-end;
 }
 
-input {
+.searchPanel input {
     width: 60%;
     margin-left: 10rem;
 }
 
-h3 {
+.Outer h3 {
     color: rgb(204, 204, 204);
     display: flex;
     justify-content: flex-start;
-    margin-left: 10rem;
+    margin-left: 7rem;
     cursor: pointer;
+    font-size: 1.6rem;
+    margin-top:5px;
 }
 
-h3:hover{
-    transform: scale(1.5);
-}
 
-h3:hover {
+.Outer h3:hover {
     color: rgb(255, 255, 255);
     border: 1px white;
+    border-radius: 20px; /* Радиус скругления */
+    background-color: #7d7d7e;
 }
+

@@ -1,6 +1,7 @@
 import React from 'react'
 import cl from './Comment.module.css'
 import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton'
 import { convertedTime, convertedDate, convertedFullDate } from '../../../services/dataConverter'
 
 
@@ -29,8 +30,36 @@ function Comment(props) {
                 </div>
 
                 <div className={cl.ButtonCollection}>
-                    <Dropdown>
-                        <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary" style={{background:'#444653', zIndex:'2', backgroundColor:'transparent', color:'#444653'}} >
+
+                    <div className="mb-2" >
+                        {['start'].map((direction) => (
+                        <DropdownButton
+                            
+                            key={direction}
+                            id={`dropdown-button-drop-${direction}`}
+                            drop={direction}
+                            variant="secondary"
+                            title='...'
+  
+                        >
+
+                            <Dropdown.Item eventKey="1">Action</Dropdown.Item>
+                            <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
+                            <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item eventKey="4">Отправить личное сообщение автору</Dropdown.Item>
+                        </DropdownButton>
+                        ))}
+                    </div>
+
+                    {/* <Dropdown>
+                        <Dropdown.Toggle 
+                            id={`dropdown-button-drop-start`}
+                            drop={'start'}
+                            variant="secondary" 
+                            style={{background:'#444653', zIndex:'2', backgroundColor:'transparent', color:'#444653'}} 
+                            key={'start'}
+                        >
                     ...
                         </Dropdown.Toggle>
 
@@ -43,7 +72,7 @@ function Comment(props) {
                         <Dropdown.Divider />
                         <Dropdown.Item href="#/action-4">Написать личное сообщение автору</Dropdown.Item>
                         </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
                 </div>
 
             </div>        
