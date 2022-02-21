@@ -4,7 +4,7 @@ import cl from './СommentOutput.module.css'
 import Table from 'react-bootstrap/Table'
 import { reduxForm } from 'redux-form';
 import CommentForm from './commentFormRedux/CommentForm';
-import { getCookies } from '../../services/cookieWorksService';
+import { getCookies } from '../../../services/cookieWorksService';
 import { useEffect } from 'react';
 import { connect } from 'react-redux'
 import { getCommentsThunkAPI } from '../../../API/getCommentsAPI'
@@ -79,7 +79,7 @@ function CommentOutput(props) {
             
             {comments.length && props.usersDict.length 
                     ?   <div>
-                            <h3 style={{color:'grey'}}>Ваши комментарии</h3>
+                            <h2 style={{color:'grey'}}>Ваши комментарии</h2>
                             {comments.map(
                                 comment => <Comment 
                                                 key={comment.id} 

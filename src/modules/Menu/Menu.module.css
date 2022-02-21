@@ -13,7 +13,11 @@
     margin-top: 30px;
     display: flex;
     z-index:2;
-    
+}
+
+.SidePanelCall {
+    font-size: large;
+    padding-left: 10%;  
 }
 
 .Inner {
@@ -32,15 +36,20 @@
 }
 
 input {
-    width: 40%;
+    width: 60%;
+    margin-left: 10rem;
 }
 
 h3 {
-    color: rgb(155, 153, 153);
+    color: rgb(204, 204, 204);
     display: flex;
     justify-content: flex-start;
-    margin-left: 2rem;
+    margin-left: 10rem;
     cursor: pointer;
+}
+
+h3:hover{
+    transform: scale(1.5);
 }
 
 h3:hover {

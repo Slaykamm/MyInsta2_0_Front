@@ -1,7 +1,7 @@
 import React from 'react'
-import Header from '../../Header'
-import Menu from '../../Menu'
-import Footer from '../../Footer'
+import Header from '../header/Header'
+import Menu from '../../../modules/Menu/Menu'
+import Footer from '../footer/Footer'
 import image from '../../img/KASATKA.jpg'
 import cl from './videoPostPage.module.css'
 import { connect } from 'react-redux'
@@ -93,17 +93,14 @@ function VideoPostPage(props) {
                                     </li>
                                     <li>
                                         Лайки:
+                                        Лайкнуть
                                     </li>
                                     <li>
                                         Дизлайки:
+                                        Дизлайкнуть
                                     </li>
-                                    <li>
-                                    </li>
-
                                 </ul>
-                                <p>
-                                            <a href='/video'>Название:</a>
-                                </p> 
+
                             </div>
                             
                             {/* Дописать логику на форму ввода и сделать саму форму.  */}

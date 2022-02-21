@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
-import Footer from './Footer';
-import Header from './Header';
-import cl from '../components/CSS/WelcomePage.module.css'
-import LoginForm from '../modules/LoginForm/LoginForm';
+import Footer from '../../components/pages/footer/Footer';
+import Header from '../../components/pages/header/Header';
+import cl from './WelcomePage.module.css'
+import LoginForm from '../LoginForm/LoginForm';
 import { reduxForm } from 'redux-form';
 import { connect } from  'react-redux';
-import { setUnverifyedUser, setVerifyedUser, setThunkResteredUsersData } from '../redux/ActionCreators';
+import { setUnverifyedUser, setVerifyedUser, setThunkResteredUsersData } from '../../redux/ActionCreators';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom'
 import axios from 'axios';
 import _ from 'lodash'
-import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from './services/cookieWorksService';
-import { userCheckProcessingService } from './services/loginUserService';
-import { getRegisteredUsersAPI } from '../API/getRegisteredUsersAPI';
-import { getUserDictAPI } from '../API/getUserDictAPI';
+import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from '../../services/cookieWorksService';
+import { userCheckProcessingService } from '../../services/loginUserService';
+import { getRegisteredUsersAPI } from '../../API/getRegisteredUsersAPI';
+import { getUserDictAPI } from '../../API/getUserDictAPI';
  
 
 

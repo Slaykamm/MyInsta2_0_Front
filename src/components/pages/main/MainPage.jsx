@@ -1,18 +1,18 @@
 import React from 'react';
-import Footer from './Footer';
-import Header from './Header';
-import Menu from './Menu';
+import Footer from '../footer/Footer';
+import Header from '../header/Header';
+import Menu from '../../../modules/Menu/Menu';
 import { connect } from  'react-redux';
-import { getVideoPreviewsAPI } from '../API/getPreviewAPI'
+import { getVideoPreviewsAPI } from '../../../API/getPreviewAPI'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import { store } from '../redux/reducers';
+import { store } from '../../../redux/reducers';
 import { useState} from 'react';
-import MovieDispatch from '../modules/MovieDispatch/MovieDispatch';
+import MovieDispatch from '../MovieDispatch/MovieDispatch';
 import { useEffect } from 'react';
 import { arrayRemoveAll } from 'redux-form';
-import { filterQuery } from './services/filterQuery';
-import cl from './CSS/MainPage.module.css'
+import { filterQuery } from '../../../services/filterQuery';
+import cl from './MainPage.module.css'
 import Nav from 'react-bootstrap/Nav'
 import { Routes, Route } from 'react-router-dom';
 
@@ -56,7 +56,6 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                         
                         <div  className={cl.BaseLayer}>
                             <div className={cl.BaseFrame}>
-                                Hello World!
 
                                 { listFiles ? 
                                     <div className="container">
@@ -64,12 +63,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                                             { filteredVideo.map(video =>
                                             
                                             <div key={video.id} className="col-6 col-md-4">
-                                                {/* <Routes>
-                                                    <Route path='/video/:id' element={<MovieDispatch/>}/>
-                                                </Routes> */}
-
                                                     <MovieDispatch url={video.image} id={video.id} title={video.title}/>      
-
                                             </div>
 
 

@@ -44,7 +44,7 @@ export const cookieTransormToBoolean = (value) =>{
             return false
 
     default:
-        window.alert("Ошибка в куке", value, typeof(value))
+        console.log('ошибка в куках')
     }
 
 }

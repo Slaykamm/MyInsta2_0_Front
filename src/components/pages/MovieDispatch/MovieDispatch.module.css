@@ -1,0 +1,20 @@
+.ContainerConstruction {
+    display: flex;
+    flex-direction: column;
+}
+
+.InnerBlock {
+    display: flex;
+    justify-content: center;
+}
+
+img {
+    object-fit: contain;
+    height: 15rem;
+}
+
+
+.InnerText {
+    display: flex;
+    justify-content: center;
+}

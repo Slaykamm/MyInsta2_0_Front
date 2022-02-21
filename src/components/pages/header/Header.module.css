@@ -45,3 +45,8 @@
     justify-content: flex-start;
     width: 150px;
 }
+
+
+.Logo:hover{
+    transform:scale(1.18);
+}

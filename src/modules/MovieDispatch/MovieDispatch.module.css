@@ -1,9 +1,0 @@
-.ContainerConstruction {
-    display: flex;
-    flex-direction: column;
-}
-
-img {
-    object-fit: contain;
-    height: 15rem;
-}
