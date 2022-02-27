@@ -48,39 +48,31 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
         <div>
 
             <div>
-                        <Header/>
-                        <Menu 
-                            value={searchQuery}
-                            onChange={checkTheInput}
-                            placeholder='Поиск в названиях'
-                        />
+                <Header/>
+                <Menu 
+                    value={searchQuery}
+                    onChange={checkTheInput}
+                    placeholder='Поиск в названиях'
+                />
 
-                        <div  className={cl.BaseLayer}>
-
-                            <div className={cl.BaseFrame}>
-
-                                { listFiles ? 
-                                    <div className="container">
-                                        <div className="row">
-                                            { filteredVideo.map(video =>
-                                            
-                                            <div key={video.id} className="col-6 col-md-4">
-                                                    <MovieDispatch url={video.image} id={video.id} title={video.title} create_at={video.create_at} author={video.author}/>      
-                                            </div>
-
-
-
-                                           
-                                            )}
-                                        </div>
+                <div  className={cl.BaseLayer}>
+                    <div className={cl.BaseFrame}>
+                        { listFiles ? 
+                            <div className="container">
+                                <div className="row">
+                                    { filteredVideo.map(video =>
+                                    
+                                    <div key={video.id} className="col-6 col-md-4">
+                                            <MovieDispatch url={video.image} id={video.id} title={video.title} create_at={video.create_at} author={video.author}/>      
                                     </div>
-                                : <p>Waiting for Data</p>
-                                }
-
+                                    )}
+                                </div>
                             </div>
-                        </div>
-
-                        <Footer/>
+                        : <p>Waiting for Data</p>
+                        }
+                    </div>
+                </div>
+                <Footer/>
             </div>
 
 

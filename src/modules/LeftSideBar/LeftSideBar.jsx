@@ -9,6 +9,7 @@ import { filter, get } from 'lodash'
 import Nav from 'react-bootstrap/Nav'
 
 
+
 const LeftSideBar = (props) => {
 
   const [userInfo, setUserInfo] = useState()
@@ -23,7 +24,9 @@ const LeftSideBar = (props) => {
       props.getUsersDict()
     },[])
 
+    //TODO исправить это. сделать чтобы то что ниже клало ай ди юзера
     useEffect(()=>{
+      console.log('props.', props.usersDict[1])
       setUserInfo(props.usersDict[1])
     },[props.usersDict])
 
@@ -53,7 +56,12 @@ const LeftSideBar = (props) => {
               </li>
               
               <li>
-                Страница Вашего Профиля
+              
+
+              <Nav.Item>
+                  <Nav.Link href="/lk"><span style={{color:'black'}}>Страница Вашего Профиля</span></Nav.Link>
+              </Nav.Item>
+                
               </li>
               <li>
                 Ваши Видео

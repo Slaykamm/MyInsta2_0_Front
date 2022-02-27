@@ -81,8 +81,11 @@ const WelcomePage = (props) => {
                     onSubmit={onSubmit} 
                     isError={isError}
                 />
-                <Footer/>
-                {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p></p>}
+                <div className={cl.FooterDown}>
+                    <Footer/>
+                    {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p></p>}
+                </div>
+
                 
 
 
