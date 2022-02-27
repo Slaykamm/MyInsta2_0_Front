@@ -1,13 +1,27 @@
 import React from 'react';
+import { useEffect } from 'react';
 import cl from './MovieDispatch.module.css'
 import { connect } from 'react-redux'
 import { getVideoAPI } from '../../../API/getVideoAPI';
 import { NavLink } from 'react-router-dom';
+import { convertedFullDate } from '../../../services/dataConverter';
+import { getUserDictAPI } from '../../../API/getUserDictAPI';
+import { filter, get } from 'lodash'
 
 
 
-const movieDispatch = ({url, title, id, ...props}) => {
+const movieDispatch = ({url, title, id, author, ...props}) => {
 
+    useEffect(()=>{ 
+        props.getUsersDict()
+    },[])
+// TODO сделать тут чтобы было имя автора. Для этого доделать словарь юзеров сюда. И потомотфильтровать по id видео там есть ай ди автора.
+    
+
+    const test = get(filter(props.usersDict, {'id': author}),[0, 'username'])
+   //console.log('userDict', props.usersDict)
+
+    
 
     return (
         <div className={cl.ContainerConstruction}>
@@ -18,15 +32,17 @@ const movieDispatch = ({url, title, id, ...props}) => {
             </div>
 
             <div className={cl.InnerText}>
-                <p>Title:{title}</p>
+                <h5>Название:{title}</h5>
             </div>
             <div className={cl.InnerText}>
-                <p>Description:{id}</p> 
+                <p>Автор:{get(filter(props.usersDict, {'id': author}),[0, 'username'])}</p> 
             </div>
             <div className={cl.InnerText}>          
                 <p>Likes:{id}</p>
             </div>
-
+            <div className={cl.InnerText}>          
+                <p>Загружено: {convertedFullDate(props.create_at)}</p>
+            </div>
 
         </div>
     );
@@ -35,13 +51,18 @@ const movieDispatch = ({url, title, id, ...props}) => {
 export default connect(
     //mapStateToProps
     state => ({
-       videoObject: state.getVideo 
+       videoObject: state.getVideo,
+       usersDict: state.usersDict
+
     }),
     //mapDispatchToProps
     dispatch => ({
         getVideoFile: () => {
             dispatch(getVideoAPI(id))
         },
+        getUsersDict: () => {
+            dispatch(getUserDictAPI())
+        }
         
     })
 

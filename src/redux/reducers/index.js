@@ -6,6 +6,8 @@ import getPreview from './getPreview'
 import getComments from './getComments'
 import usersDict from "./usersDict";
 import getVideo from "./getVideo";
+import IsErrorAPI from "./isErrorAPI";
+import UserToken from "./userToken";
 import {reducer as formReducer} from 'redux-form'
 import thunk from 'redux-thunk'
 
@@ -18,6 +20,8 @@ const rootReducer = combineReducers({
     getComments,
     usersDict,
     getVideo,
+    IsErrorAPI,  //так и не нашел применения пока. потом можно удалить TODO
+    UserToken,
     form: formReducer
 })
 

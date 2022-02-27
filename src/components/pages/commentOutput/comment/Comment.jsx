@@ -2,7 +2,7 @@ import React from 'react'
 import cl from './Comment.module.css'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import { convertedTime, convertedDate, convertedFullDate } from '../../../services/dataConverter'
+import { convertedTime, convertedDate, convertedFullDate } from '../../../../services/dataConverter'
 
 
 function Comment(props) {
@@ -25,7 +25,7 @@ function Comment(props) {
 
                 <div className={cl.Context}>
                     <div className={cl.postDate}>Опубликовано: {convertedFullDate(props.date)}</div>
-                    <div>{props.text}</div>
+                    <div><span>{props.text}</span></div>
                     
                 </div>
 

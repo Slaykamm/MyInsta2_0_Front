@@ -6,7 +6,7 @@ import { setLeftSideBarShowAction, setLeftSideBarHideAction} from '../../redux/A
 import cl from './Menu.module.css'
 
 
-
+import { Navigate } from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -21,24 +21,12 @@ const Menu = (props) => {
     const [isUserVerificated, setIsUserVerificated] = useState(false)
     
 
-    ///////cookie USER
-    useEffect(()=>{
-        setUser(getCookies('userName'))
-        setIsUserVerificated(cookieTransormToBoolean(getCookies('isVerificated')))
-    
-    },[])
-    
-   
-
-
-
     function panelCall(){
         
         props.setLeftPanelRedux(true)
         return <LeftSideBar/>
 
     }
-
 
 
     return (
@@ -81,13 +69,10 @@ const Menu = (props) => {
                             <div className={cl.menuPanel}>
                                 <Nav className="justify-content-end"  variant="pills" defaultActiveKey="/home">
                                     <Nav.Item>
-                                        <Nav.Link href="/"><span style={{color:'white'}}>Сменить пользователя</span></Nav.Link>
+                                        <Nav.Link href="/" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {localStorage.getItem('SLNUserName') ? localStorage.getItem('SLNUserName') : <span>Login</span>} </span></Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href="/" eventKey="link-1"><span style={{color:'white'}}>Пользователь: {isUserVerificated ? user : <span>Log</span>} </span></Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/video"><span style={{color:'white'}}>VIDEO</span></Nav.Link>
+                                        <Nav.Link href="/login"><span style={{color:'white'}}>Сменить пользователя (LogOut)</span></Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </div>

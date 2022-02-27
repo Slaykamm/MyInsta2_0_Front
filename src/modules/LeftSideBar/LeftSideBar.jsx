@@ -5,6 +5,8 @@ import { getUserDictAPI } from '../../API/getUserDictAPI'
 import { setLeftSideBarHideAction } from '../../redux/ActionCreators';
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import cl from './LeftSideBar.module.css'
+import { filter, get } from 'lodash'
+import Nav from 'react-bootstrap/Nav'
 
 
 const LeftSideBar = (props) => {
@@ -25,14 +27,12 @@ const LeftSideBar = (props) => {
       setUserInfo(props.usersDict[1])
     },[props.usersDict])
 
-    if (userInfo){
-      console.log('dict', userInfo)
+    console.log('useInfo2', props.usersDict)
+    const test = filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')})
+    console.log('Dict result', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']))
 
-    }
-
-
-
-  
+    
+// Дописать кабинеты  видео сообщений и профиля
   return (
     <>
 
@@ -45,14 +45,15 @@ const LeftSideBar = (props) => {
           <Offcanvas.Body>
             <ul className={cl.userInfo}>
             <li >
-                <img src={userInfo.avatar}/>
+                <img src={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}/>
 
               </li>
               <li>
-                <p>{userInfo.name}</p>
+                <p>{get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'username'])}</p>
               </li>
+              
               <li>
-                Ваш профиль
+                Страница Вашего Профиля
               </li>
               <li>
                 Ваши Видео
@@ -61,7 +62,9 @@ const LeftSideBar = (props) => {
                 Ваши сообщения
               </li>
               <li>
-                Выйти
+              <Nav.Item>
+                  <Nav.Link href="/login"><span style={{color:'black'}}>Выход</span></Nav.Link>
+              </Nav.Item>
               </li>
             </ul>
           </Offcanvas.Body>

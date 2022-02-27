@@ -1,5 +1,7 @@
 import { COMMENTS_VIDEO_THUNK } from "../../constants/constants"
 
+
+
 const initialState = []
 //{id: '', date: '', authorId: '', authorName: '', content: ''}
 
@@ -9,7 +11,7 @@ function getComments(state=initialState, action) {
 
         case COMMENTS_VIDEO_THUNK:
 
-            return [...action.payload]
+            return  [...action.newPayload] //[...action.payload.data]
         default:
             return state
     }

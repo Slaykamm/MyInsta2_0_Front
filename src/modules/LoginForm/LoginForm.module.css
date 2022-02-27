@@ -21,6 +21,10 @@
 
 }
 
+.LoginFormInnerContainer h5 {
+    color: rgb(177, 12, 12)
+}
+
 .InputRemember {
     width: 10px;
     cursor: pointer;

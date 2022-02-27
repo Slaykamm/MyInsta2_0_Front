@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
 import cl from './СommentOutput.module.css'
-import Table from 'react-bootstrap/Table'
 import { reduxForm } from 'redux-form';
 import CommentForm from './commentFormRedux/CommentForm';
 import { getCookies } from '../../../services/cookieWorksService';
@@ -9,8 +8,10 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux'
 import { getCommentsThunkAPI } from '../../../API/getCommentsAPI'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
-import { filter } from 'lodash'
-import Comment from '../comment/Comment'
+import { filter, get} from 'lodash'
+import Comment from './comment/Comment'
+import { useNavigate } from 'react-router-dom'
+
 
 
 
@@ -27,17 +28,29 @@ function CommentOutput(props) {
 
     ])
 
+    const navigate = useNavigate()
+
 
     //TODO сделать рефактор. передавать словарь в пропсах
-    useEffect(()=>{
-        props.getCommentsAPI(props.videoID),
+    useEffect(()=>{ 
+        props.getCommentsAPI(props.videoID, localStorage.getItem('SLNToken')),
         props.getUsersDict()
-    },[])
+    },[localStorage.getItem('SLNToken')])
 
+    //обрабатываем ошибку авториации)
     useEffect(()=>{
-        setComments(props.comments)
-    },[props.comments])
+        if (get(props.comments, [0, 'status']) == 401) {
+            console.log("FROM COMMENTS", get(props.comments, [0, 'status']))
+            //navigate("/login")
+            setComments()  
+        }
+        else {
+            setComments(get(props.comments, [0, 'data']))
 
+        }
+
+
+    },[props.comments])
 
 
     
@@ -53,38 +66,38 @@ function CommentOutput(props) {
 
     //видимо тут должен быть POST на сервер. TODO thunk POST 
  
-   if (comments.length && props.usersDict.length) {
-         comments.map(comment =>
+//    if (comments && props.usersDict.length) {
+//          comments.map(comment =>
             
-            {
-            console.log('comments', comments)
-            console.log('comment', comment)
-            console.log('key', comment.id)
-            console.log('date', comment.create_at)
-            console.log('props.usersDict', props.usersDict)
-            console.log('comment.author', comment.author)
-            console.log('filter, ', filter(props.usersDict, {'id': comment.author})[0])
-            console.log('user', filter(props.usersDict, {'id': comment.author})[0].name)
-            console.log('avatar', (filter(props.usersDict, {'id': comment.author})[0].avatar))
-            console.log('text', comment.id)
-            }
-         )
+//             {
+//             console.log('comments', comments)
+//             console.log('comment', comment)
+//             console.log('key', comment.id)
+//             console.log('date', comment.create_at)
+//             console.log('props.usersDict', props.usersDict)
+//             console.log('comment.author', comment.author)
+//             console.log('filter, ', filter(props.usersDict, {'id': comment.author})[0])
+//             console.log('user', filter(props.usersDict, {'id': comment.author})[0].username)
+//             console.log('avatar', (filter(props.usersDict, {'id': comment.author})[0].avatar))
+//             console.log('text', comment.id)
+//             }
+//          )
            
-   }
+//    }
     
 
 
     return (
         <div className={cl.BaseLine}>
             
-            {comments.length && props.usersDict.length 
+            {comments && props.usersDict.length 
                     ?   <div>
                             <h2 style={{color:'grey'}}>Ваши комментарии</h2>
                             {comments.map(
                                 comment => <Comment 
                                                 key={comment.id} 
                                                 date={comment.create_at} 
-                                                user={filter(props.usersDict, {'id': comment.author})[0].name} 
+                                                user={filter(props.usersDict, {'id': comment.author})[0].username} 
                                                 avatar={filter(props.usersDict, {'id': comment.author})[0].avatar} 
                                                 text={comment.text}
                                             />
@@ -109,12 +122,13 @@ export default connect(
     //mapStateToProps
     state => ({
         comments: state.getComments,
-        usersDict: state.usersDict
+        usersDict: state.usersDict,
+        userToken: state.userToken
     }),
     //mapDispatchToProps
     dispatch => ({
-        getCommentsAPI: (value) => {
-            dispatch(getCommentsThunkAPI(value))
+        getCommentsAPI: (videoID, userToken) => {
+            dispatch(getCommentsThunkAPI(videoID, userToken))
         },
         getUsersDict: () => {
             dispatch(getUserDictAPI())

@@ -55,6 +55,10 @@
     
 }
 
+.Context span{
+    word-break: break-all;
+}
+
 
 .ButtonCollection {
     display: flex;
