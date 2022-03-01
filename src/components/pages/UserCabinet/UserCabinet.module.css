@@ -78,3 +78,11 @@ h5 {
     width: 100px;
 
 }
+
+
+.Button {
+    background-color:#444653;
+    color: whitesmoke;
+    cursor: pointer;
+    border-radius: 8px;
+}

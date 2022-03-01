@@ -1,16 +1,18 @@
 import React from 'react';
 import cl from './LoginForm.module.css'
 import { reduxForm, Field} from 'redux-form';
-import MyInput from './MyInput';
+import MyInput from './MyInput/MyInput';
+import { requiredField, passwordSymbolsValidate, loginSybmolsValidate, minLengthLogin } from './Validators/validatorsLogin';
 
 const LoginForm = (props) => {
-    console.log("isError", props.isError)
+
+
     return (
         <div className={cl.LoginFormOuterContainer}> 
             <div className={cl.LoginFormInnerContainer}>
                 <form onSubmit={props.handleSubmit}>
                     {props.isError 
-                    ?<h5>Не правильно введен логин или пароль!</h5>
+                    ?<h5>Неправильно введен логин или пароль!</h5>
                     :<p></p>
                     }
                     <div>
@@ -19,7 +21,8 @@ const LoginForm = (props) => {
                             type='text' 
                             placeholder='Enter Login'
                             component={MyInput}
-                            validationMessage="Логин не верный"
+                            validationMessage="Логин должен быть длиннее 3х символов и содержать заглавные и прописные латинские буквы"
+                            validate={[requiredField, loginSybmolsValidate]}
 
                         /> 
                     </div>
@@ -30,7 +33,8 @@ const LoginForm = (props) => {
                             type='password' 
                             placeholder='Enter Password'
                             component={MyInput}
-                            validationMessage="Пароль не верный"
+                            validationMessage="Пароль должен быть длиннее 8 символов. Содержать цифры, латинские буквы и спецсимволы"
+                            validate={[requiredField, passwordSymbolsValidate]}
 
                         />
                     </div>

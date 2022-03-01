@@ -1,0 +1,34 @@
+.OuterInput {
+    margin-bottom: 1rem;
+}
+
+.Input{
+    margin-bottom: 0;    
+    width: 100%;
+    font-size: 1.2rem;
+}
+
+.MyError {
+    opacity: 0;
+
+
+
+}
+
+.error input {
+    border: 3px red solid;
+}
+
+
+.error span {
+
+    opacity: 1;
+    color: red;
+    font-size: smaller;
+    
+
+    
+}
+
+
+

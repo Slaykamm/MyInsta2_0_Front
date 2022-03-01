@@ -22,6 +22,7 @@ const WelcomePage = (props) => {
     const [isError, setIsError] = useState(false)
     const navigateMain = useNavigate()
 
+
     localStorage.setItem('SLNUserName', '');
     localStorage.setItem('SLNToken', '')
 
@@ -42,6 +43,7 @@ const WelcomePage = (props) => {
 // в этом блоке мы во первых инфу из формы логин - запрашиваем токен на бек. Второе кладем имя юзера пока в стейт. 
 // если вдруг будет ошибка то просто хрен всем. 
     const onSubmit = (formData) => {
+        console.log("test test")
         props.getUserToken(formData)
         props.setUnveryfyedUserStatus( omit(formData, 'password'))
     }
