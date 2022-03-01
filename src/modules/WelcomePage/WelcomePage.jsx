@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Footer from '../../components/pages/footer/Footer';
 import Header from '../../components/pages/header/Header';
 import cl from './WelcomePage.module.css'
-import LoginForm from '../LoginForm/LoginForm';
+import LoginForm from './LoginForm/LoginForm';
 import { reduxForm } from 'redux-form';
 import { connect } from  'react-redux';
 import { setUnverifyedUser, setVerifyedUser, setThunkResteredUsersData } from '../../redux/ActionCreators';
