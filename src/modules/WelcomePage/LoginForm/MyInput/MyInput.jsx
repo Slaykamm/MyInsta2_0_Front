@@ -3,8 +3,7 @@ import cl from './MyInput.module.css'
 
 function MyInput({input, meta, validationMessage, ...props}) {
     const hasError = meta.touched && meta.error
-    console.log('meta.touched', meta.touched)
-    console.log('meta.error', meta.error)
+
 
     return (
         <div className={cl.OuterInput + " " +(hasError ? cl.error : "") }>
