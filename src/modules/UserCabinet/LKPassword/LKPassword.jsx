@@ -29,7 +29,7 @@ function LKPassword({oldPassword, ...props}) {
             >  
 
                 <div className={cl.UserInfoViewLabel}>
-                    <span>Ваш пароль </span>
+                    <span>Для изменения сначала введите старый пароль </span>
                 </div>
 
                 <div className={cl.UserInfoViewInput}>

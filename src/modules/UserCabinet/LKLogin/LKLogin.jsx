@@ -5,7 +5,7 @@ import MyButton from '../../../UI/MyButton'
 import MyInput from '../MyInput/MyInput'
 
 
-function LKLogin(props) {
+function LKLogin({userLogin, ...props}) {
 
     
 
@@ -16,7 +16,7 @@ function LKLogin(props) {
                 >  
 
                 <div className={cl.UserInfoViewLabel}>
-                    <span>Ваш Логин: <span style={{fontWeight:'bold'}}>{localStorage.getItem('SLNUserName')}</span></span>
+                    <span>Ваш Логин: <span style={{fontWeight:'bold'}}>{userLogin}</span></span>
                 </div>
                 <div className={cl.UserInfoViewInput}>
                     <Field

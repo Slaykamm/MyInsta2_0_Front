@@ -108,6 +108,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
 
                     <LKLoginForm 
                         onSubmit={onSubmitLogin} 
+                        userLogin={userLogin}
                         initialValues={{username: 'test'}}
                         
                         
@@ -118,6 +119,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
 
                     <LKEmailForm 
                         onSubmit={onSubmitEmail} 
+                        userEmail={userEmail}
                         
                         // isError={isError}
                     />

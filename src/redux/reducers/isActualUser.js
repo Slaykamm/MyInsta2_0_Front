@@ -2,7 +2,7 @@ import { UNVERIFYED_USER_ADD, VERIFYED_USER_ADD } from "../../constants/constant
 
 const initialState = {username: 'None'};
 
-
+//TODO вообще это надо убрать будет
 function isActualUser(state=initialState, action) {
 
     switch (action.type) {

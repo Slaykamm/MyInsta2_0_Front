@@ -8,13 +8,15 @@ import { connect } from  'react-redux';
 import { setUnverifyedUser, setVerifyedUser, setThunkResteredUsersData } from '../../redux/ActionCreators';
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom'
-import axios from 'axios';
 import { get, omit } from 'lodash'
 import { clearAllCookie, getAllCookie, getCookies, setCookies, clearOneCookie, cookieTransormToBoolean } from '../../services/cookieWorksService';
 import { userCheckProcessingService } from '../../services/loginUserService';
 import { getRegisteredUsersAPI } from '../../API/getRegisteredUsersAPI';
 import { getUserDictAPI } from '../../API/getUserDictAPI';
 import { getUserTokenAPI } from '../../API/getUserToken';
+import { getCheckUserAPI } from '../../API/getCheckUserAPI';
+import MyButton from '../../UI/MyButton';
+import MenuNew from '../MenuNew/MenuNew';
  
 
 
@@ -23,16 +25,40 @@ const WelcomePage = (props) => {
     const navigateMain = useNavigate()
 
 
-    localStorage.setItem('SLNUserName', '');
-    localStorage.setItem('SLNToken', '')
+console.log('name', localStorage.getItem('SLNUserName'))
+console.log('token', localStorage.getItem('SLNToken'))
+
+
+
 
 //TODO перевести на async await и не заниматься херней
 
-//получаем словари
+//получаем словари проверяем на вход, что юзер уже залогинен
     useEffect(()=>
     {
         props.getUsersDict()
+        setTimeout(()=>{
+            if (localStorage.getItem('SLNUserName') && localStorage.getItem('SLNToken')) {
+                console.log("test here", localStorage.getItem('SLNUserName'))
+                props.checkUser(
+                    {"username":localStorage.getItem('SLNUserName'), "Authorization":localStorage.getItem('SLNToken')}
+                )
+    
+              //  
+            }
+        }, 500)
+
+
     },[])
+
+
+    useEffect(()=>{
+        if ((get(props.userCheckResult, ['0', 'status'])) === 200){
+           navigateMain("/main")
+        }
+        console.log('testest', props.userCheckResult)
+    },[props.userCheckResult])
+
 
     //работа с формой
     const LoginReduxForm = reduxForm({
@@ -43,9 +69,8 @@ const WelcomePage = (props) => {
 // в этом блоке мы во первых инфу из формы логин - запрашиваем токен на бек. Второе кладем имя юзера пока в стейт. 
 // если вдруг будет ошибка то просто хрен всем. 
     const onSubmit = (formData) => {
-        console.log("test test")
         props.getUserToken(formData)
-        props.setUnveryfyedUserStatus( omit(formData, 'password'))
+        props.setUnveryfyedUserStatus(omit(formData, 'password'))
     }
 
 // короче тут получили ответ по токену и проверяем. тут именно логинизация. если код 200 то пишем в локал сторадж логин и пароль. и потом переходим на след страницу
@@ -57,19 +82,18 @@ const WelcomePage = (props) => {
         }
         if (get(props.userToken, [0, 'status']) == 400){
             setIsError(true)
-            
-
-
-        }
+         }
     },[props.userToken])
 
 
 
 // Это просто костыль.
 //TODO убрать этот костыль в Thunk когда будет бек
-    function fetchUser () {
-        props.setVeryfyedUserStatus(props.isActualUser)
-        return <Navigate to="/main" />
+
+
+
+    function RegistrationProcess () {
+        navigateMain('registration/')
     }
 
 
@@ -78,21 +102,16 @@ const WelcomePage = (props) => {
         <div>
             <Header/>
             <div className={cl.BaseLayer}>
-                <button onClick={fetchUser}>CONFIRM USER</button>
-                <LoginReduxForm 
-                    onSubmit={onSubmit} 
-                    isError={isError}
-                />
-                <div className={cl.FooterDown}>
-                    <Footer/>
-                    {props.isActualUser.isVerifyed ? <Navigate to="/main" /> : <p></p>}
+                    <LoginReduxForm 
+                        onSubmit={onSubmit} 
+                        isError={isError}
+                        RegistrationProcess = {RegistrationProcess}
+                    />
+                    <div className={cl.FooterDown}>
+                        <Footer/>
+
+                    </div>
                 </div>
-
-                
-
-
-            </div>
-
         </div>
     );
 };
@@ -103,7 +122,8 @@ export default connect(
         isActualUser: state.isActualUser,
         getUsers2: state.asyncUsersRequest,  //кладем в пропс из редюсера результат
         usersDict: state.usersDict,
-        userToken: state.UserToken
+        userToken: state.UserToken,
+        userCheckResult: state.verifyUser,
 
         }),
 
@@ -122,6 +142,9 @@ export default connect(
         },
         getUserToken: (userData) => {
             dispatch(getUserTokenAPI(userData))
+        },
+        checkUser: (userData) => {
+            dispatch(getCheckUserAPI(userData))
         }
     })
 

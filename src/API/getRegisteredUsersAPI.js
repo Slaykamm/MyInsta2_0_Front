@@ -9,7 +9,6 @@ export const getRegisteredUsersAPI  = () => {
 
             //диспатчим ActionCreator
             dispatch(setThunkResteredUsersData(response.data)) 
-            console.log('ZAEBIS`!', response.data)
         })
     }
 }

@@ -26,13 +26,10 @@ const LeftSideBar = (props) => {
 
     //TODO исправить это. сделать чтобы то что ниже клало ай ди юзера
     useEffect(()=>{
-      console.log('props.', props.usersDict[1])
       setUserInfo(props.usersDict[1])
     },[props.usersDict])
 
-    console.log('useInfo2', props.usersDict)
     const test = filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')})
-    console.log('Dict result', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']))
 
     
 // Дописать кабинеты  видео сообщений и профиля
@@ -64,7 +61,7 @@ const LeftSideBar = (props) => {
                 
               </li>
               <li>
-                Ваши Видео
+                  <Nav.Link href="/userVideoPage"><span style={{color:'black'}}>Ваши видео</span></Nav.Link>
               </li>
               <li>
                 Ваши сообщения

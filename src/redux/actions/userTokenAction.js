@@ -9,7 +9,5 @@ export const userTokenAction = (payload) => {
     const newPayload = [pick(payload, ['data', 'status'])]
     return(
         ({type: IS_USER_TOKEN, newPayload})
-
     )
-
 }

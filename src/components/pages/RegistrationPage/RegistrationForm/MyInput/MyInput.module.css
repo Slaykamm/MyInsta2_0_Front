@@ -1,18 +1,5 @@
-.OuterInput{
-    width: 100%;
-}
-
-.Input{
-    width: 100%;
-}
 
 
-.MyError {
-    opacity: 0;
-
-
-
-}
 
 .aerror input {
     border: 1px red solid;

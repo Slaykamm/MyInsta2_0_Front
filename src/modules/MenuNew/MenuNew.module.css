@@ -1,0 +1,52 @@
+.SpaceLayer {
+    padding: 4rem 0 1rem 0;
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    z-index:2;
+
+
+}
+.Outer {
+    background-color:#444653;
+    margin-top: 30px;
+    z-index:2;
+
+   
+}
+
+.Outer ul { 
+    list-style: none; 
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 3rem;
+    color: white;
+}
+
+.Outer input {
+    width: 300px;
+    align-items: center;
+}
+
+.Transform:hover {
+
+    color: white;
+    transform: scale(1.15);
+    display: flex;
+    border-radius: 20px;
+    align-items: center;
+    cursor: pointer;
+
+}
+
+
+.Transform:active {
+    background-color: green;
+}
+
+
+.Outer ul li span {
+    
+}

@@ -5,11 +5,12 @@ import cl from '../UserCabinet.module.css'
 import MyButton from '../../../UI/MyButton'
 import MyInput from '../MyInput/MyInput'
 
-function LKEmail({value, ...props}) {
+function LKEmail({value, userEmail, ...props}) {
     function changeEmailHandle(event) {
         setUserEmail(event)
     }
 
+    
 
     
     return (
@@ -20,7 +21,7 @@ function LKEmail({value, ...props}) {
             >  
 
             <div className={cl.UserInfoViewLabel}>
-                <span>Ваш емаил: <span style={{fontWeight:'bold'}}>{localStorage.getItem('SLNUserEmail')}</span></span>
+                <span>Ваш емаил: <span style={{fontWeight:'bold'}}>{userEmail}</span></span>
             </div>
 
 

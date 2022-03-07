@@ -13,10 +13,7 @@ import { useEffect } from 'react';
 import { arrayRemoveAll } from 'redux-form';
 import { filterQuery } from '../../../services/filterQuery';
 import cl from './MainPage.module.css'
-import Nav from 'react-bootstrap/Nav'
-import { Routes, Route } from 'react-router-dom';
-import { getAllCookie, setCookies, getCookies, clearAllCookie } from '../../../services/cookieWorksService';
-import { get } from 'lodash'
+import VideoContainer from './VideoContainer/VideoContainer';
 
 
 const MainPage = (props) => {
@@ -49,30 +46,27 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
 
             <div>
                 <Header/>
-                <Menu 
+                {/* <Menu 
                     value={searchQuery}
                     onChange={checkTheInput}
                     placeholder='Поиск в названиях'
+                /> */}
+                <Menu
+                    value={searchQuery}
+                    onChange={checkTheInput}
+                    placeholder='Поиск в названиях'
+
                 />
 
-                <div  className={cl.BaseLayer}>
-                    <div className={cl.BaseFrame}>
-                        { listFiles ? 
-                            <div className="container">
-                                <div className="row">
-                                    { filteredVideo.map(video =>
-                                    
-                                    <div key={video.id} className="col-6 col-md-4">
-                                            <MovieDispatch url={video.image} id={video.id} title={video.title} create_at={video.create_at} author={video.author}/>      
-                                    </div>
-                                    )}
-                                </div>
-                            </div>
-                        : <p>Waiting for Data</p>
-                        }
-                    </div>
-                </div>
+                <VideoContainer
+                listFiles={listFiles}
+                filteredVideo={filteredVideo}
+                
+                />
+
                 <Footer/>
+
+
             </div>
 
 
