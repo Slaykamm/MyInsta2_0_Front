@@ -4,7 +4,7 @@ import Header from '../header/Header'
 import cl from './RegistrationPage.module.css'
 import { reduxForm } from 'redux-form';
 import RegistrationForm from './RegistrationForm/RegistrationForm';
-import MyButton from '../../../UI/MyButton';
+import MyButton from '../../../UI/MyButton/MyButton';
 import { get, filter } from 'lodash'
 
 function RegistrationPage(props) {

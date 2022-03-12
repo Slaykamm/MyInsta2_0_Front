@@ -3,7 +3,7 @@ import { pick } from 'lodash'
 
 
 export const getCommentsAction = (payload) => {
-    const newPayload = [pick(payload, ['data', 'status'])]
+    const newPayload = [pick(payload, ['data', 'status', 'quotedID'])]
     return(
         ({type: COMMENTS_VIDEO_THUNK, newPayload})
 

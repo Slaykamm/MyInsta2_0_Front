@@ -19,14 +19,13 @@ const movieDispatch = ({url, title, id, author, ...props}) => {
     
 
     const test = get(filter(props.usersDict, {'id': author}),[0, 'username'])
-   //console.log('userDict', props.usersDict)
 
     
 
     return (
         <div className={cl.ContainerConstruction}>
             <div className={cl.InnerBlock}>
-                <NavLink to={`video/${id}`}>
+                <NavLink to={`/video/${id}`}>
                     <img src={url}/>
                 </NavLink>
             </div>

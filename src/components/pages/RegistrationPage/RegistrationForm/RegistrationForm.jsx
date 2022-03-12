@@ -3,7 +3,7 @@ import cl from './RegistrationForm.module.css'
 import { Field } from 'redux-form'
 import MyInput from '../../../../modules/UserCabinet/MyInput/MyInput'
 //import MyInput from './MyInput/MyInput'
-import MyButton from '../../../../UI/MyButton'
+import MyButton from '../../../../UI/MyButton/MyButton'
 
 
 function RegistrationForm(props) {

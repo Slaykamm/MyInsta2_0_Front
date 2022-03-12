@@ -7,7 +7,7 @@ import { getUserDictAPI } from '../../API/getUserDictAPI'
 import { filterQuery } from '../../services/filterQuery'
 import Header from '../../components/pages/header/Header'
 import Menu from '../Menu/Menu'
-import MyButton from '../../UI/MyButton'
+import MyButton from '../../UI/MyButton/MyButton'
 import LKLogin from './LKLogin/LKLogin';
 import LKEmail from './LKEmail/LKEmail';
 import LKPassword from './LKPassword/LKPassword';

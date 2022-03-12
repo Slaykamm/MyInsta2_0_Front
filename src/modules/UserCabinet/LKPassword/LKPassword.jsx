@@ -2,7 +2,7 @@ import React from 'react'
 //import cl from '../UserCabinet.module.css'
 import cl from './LKPassword.module.css'
 import { Field } from 'redux-form'
-import MyButton from '../../../UI/MyButton'
+import MyButton from '../../../UI/MyButton/MyButton'
 import MyInputOld from '../MyInputOld/MyInputOld'
 import MyInputNewPassword from '../MyInputNewPassword/MyInputNewPassword'
 

@@ -2,7 +2,7 @@ import React from 'react';
 import cl from './LoginForm.module.css'
 import { reduxForm, Field} from 'redux-form';
 import MyInput from './MyInput/MyInput';
-import MyButton from '../../../UI/MyButton';
+import MyButton from '../../../UI/MyButton/MyButton';
 import { requiredField, passwordSymbolsValidate, loginSybmolsValidate, minLengthLogin } from './Validators/validatorsLogin';
 
 const LoginForm = ({RegistrationProcess, ...props}) => {

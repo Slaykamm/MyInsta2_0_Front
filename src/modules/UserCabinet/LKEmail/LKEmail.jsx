@@ -2,7 +2,7 @@ import React from 'react'
 import { Field } from 'redux-form'
 import cl from '../UserCabinet.module.css'
 
-import MyButton from '../../../UI/MyButton'
+import MyButton from '../../../UI/MyButton/MyButton'
 import MyInput from '../MyInput/MyInput'
 
 function LKEmail({value, userEmail, ...props}) {

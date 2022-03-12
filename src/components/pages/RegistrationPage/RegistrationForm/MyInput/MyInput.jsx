@@ -12,7 +12,7 @@ function MyInput({input, meta, ...props}) {
 
     return (
         <div className={cl.OuterInput + " " +( hasError ? cl.aerror : cl.acorrect) }>
-            <input 
+            <input style={{width:'100%', height:'5rem'}}
                 className={cl.Input} 
                 {...props}
                 {...input}  

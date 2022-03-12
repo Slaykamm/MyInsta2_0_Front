@@ -8,9 +8,11 @@
     justify-content: space-between;
     align-items: center;
     border-radius: 10px;
+
 }
 
 .containerPost:hover {
+    
     border: 2px solid #7e7d7d;
 }
 
@@ -22,9 +24,22 @@
     grid-template-columns: minmax(8%, 10%) minmax(82%,83%) minmax(5%, 5%);
     grid-column-gap: 3px;
     border: 2px solid #c9c9c9;
-    box-shadow: 0 0 7px #666; /* Параметры тени */
+    box-shadow: 0 0 7px rgb(182, 182, 182); /* Параметры тени */
     border-radius: 10px;
+    background-color: #c9c9c9;
+    margin-bottom: 15px;
 }
+
+
+.Quotation{
+    width: 100%;
+    background-color: #f1f1f1;
+    color: grey;
+    margin-top: 1rem;
+    border-radius: 7px;
+}
+
+
 
 .userInfo {
     display: flex;
@@ -79,3 +94,4 @@
     "userInfo Context ButtonCollection"
     "userInfo Context Context";
 }
+

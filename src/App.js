@@ -19,7 +19,7 @@ const App = () => {
         <Route path='/' element={<Navigate replace to='login/'/>}/>
         <Route path='main/' element={<MainPage/>} />
         <Route path='lk/' element={<UserCabinet/>} />
-        <Route path="main/video/:id" element={<VideoPostPage/>}/>
+        <Route path="video/:id" element={<VideoPostPage/>}/>
         <Route path='login/' element={<WelcomePage/>} />
         <Route path='login/registration/' element={<RegistrationPage/>} />
         <Route path='userclean/' element={<ClearUserService/>}/>

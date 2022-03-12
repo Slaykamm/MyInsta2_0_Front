@@ -15,7 +15,7 @@ import { getRegisteredUsersAPI } from '../../API/getRegisteredUsersAPI';
 import { getUserDictAPI } from '../../API/getUserDictAPI';
 import { getUserTokenAPI } from '../../API/getUserToken';
 import { getCheckUserAPI } from '../../API/getCheckUserAPI';
-import MyButton from '../../UI/MyButton';
+import MyButton from '../../UI/MyButton/MyButton';
 import MenuNew from '../MenuNew/MenuNew';
  
 

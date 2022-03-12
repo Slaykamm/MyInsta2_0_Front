@@ -2,12 +2,9 @@ import React from 'react'
 import Header from '../header/Header'
 import Menu from '../../../modules/Menu/Menu'
 import Footer from '../footer/Footer'
-import image from '../../img/KASATKA.jpg'
 import cl from './videoPostPage.module.css'
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { Field } from 'redux-form';
-import Button from 'react-bootstrap/Button'
 import CommentOutput from '../commentOutput/CommentOutput'
 import {
     Player,
@@ -31,8 +28,6 @@ import { getVideoAPI } from '../../../API/getVideoAPI'
 
 function VideoPostPage(props) {
     const params = useParams()
-    console.log(params.id)
-    
     const [videoID, setVideoID] = useState('')
 
     if (!videoID){
@@ -41,8 +36,6 @@ function VideoPostPage(props) {
 
     useEffect(()=>{
         props.getVideo(params.id)
-        
-
     },[videoID])
 
 
@@ -80,10 +73,6 @@ function VideoPostPage(props) {
                                 </Player>
 
 
-
-
-
-
                             </div>
                             <br/>
                             <div>
@@ -107,6 +96,8 @@ function VideoPostPage(props) {
                             {/* Дописать логику на форму ввода и сделать саму форму.  */}
                         </div>
                         <CommentOutput videoID={videoID}/>
+                        <hr/>
+                        
                         <Footer/>   
                     </div>   
                 </div>     
