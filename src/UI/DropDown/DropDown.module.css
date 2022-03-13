@@ -1,0 +1,10 @@
+.ButtonCollection {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 10px;
+    transform: scale(0.8);    
+
+}
+
+

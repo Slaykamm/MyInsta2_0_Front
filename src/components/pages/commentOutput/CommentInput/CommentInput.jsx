@@ -1,17 +1,22 @@
 import React from 'react'
 import MyButton from '../../../../UI/MyButton/MyButton'
+import cl from './CommentInput.module.css'
 
 
-function CommentInput({value, onClick, ...props}) {
+function CommentInput({value, onClick, onClickCancel, ...props}) {
     return (
         <>
         <form>
-            <textarea  
+            <textarea className={cl.InputArea} 
                 style={{width:'100%', height:'5rem'}}
                 value={value}
                 {...props}
             />
-            <MyButton onClick={onClick}>Click Me</MyButton>
+            <div className={cl.ButtonsGroup} >
+                <MyButton onClick={onClick}>Ответить</MyButton>
+                <MyButton onClick={onClickCancel}>Отмена</MyButton>
+            </div>
+
         </form>
         </>
     )

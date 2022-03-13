@@ -1,9 +1,6 @@
 import React, { useRef } from 'react'
 import { useState } from 'react'
 import cl from './СommentOutput.module.css'
-import { reduxForm } from 'redux-form';
-import CommentForm from './commentFormRedux/CommentForm';
-import { getCookies } from '../../../services/cookieWorksService';
 import { useEffect } from 'react';
 import { connect } from 'react-redux'
 import { getCommentsThunkAPI } from '../../../API/getCommentsAPI'
@@ -12,22 +9,16 @@ import { filter, get} from 'lodash'
 import Comment from './comment/Comment'
 import { useNavigate } from 'react-router-dom'
 import CommentInput from './CommentInput/CommentInput';
-import MyModal from '../../../UI/MyModal/MyModal';
-
-
-
-
-
+import { convertedFullDate } from '../../../services/dataConverter';
 
 
 
 function CommentOutput(props) {
-
-    const [userDict, setUserDict] = useState([])
     const [userName, setUserName] = useState('')
     const [comments, setComments] = useState([])
     const [replyComment, setReplyComment] = useState('')
     const [commentQuote, setCommentQuote] = useState({})
+    const [editedComment, setEditedComment] = useState({})
 
 
     const navigate = useNavigate()
@@ -62,21 +53,15 @@ function CommentOutput(props) {
     },[])
 
 
-
-    //видимо тут должен быть POST на сервер. TODO thunk POST 
+    //видимо тут должен быть POST на сервер. TODO thunk POST  ++
 
     
     function commentReply(user, text, date, userReply){
-
-        
-  
-
         const quote = {
             user: user,
             text: text,
-            date: date,
+            date: convertedFullDate(date),
         }
-
 
         let additionWithCommentPost = {
                     id: new Date().toISOString(), 
@@ -86,40 +71,15 @@ function CommentOutput(props) {
                     text: userReply
                 }
         setComments([ ...comments, additionWithCommentPost]) 
-        console.log('COMMENTS', comments)
         setReplyComment('')  
-
-
-        // тут попытка реализовать следующую логику: при нажатии на reply
-        // сюда приходит id коммента который мы хотим отквотить.
-        // далее по этому комменту мы получаем автора и текст.
-        // Вся сложность этого метода том, что в THUNK надо инжектировать квоты к комментам, следующим образом:
-        // есть еще одна одна сущность с 2мя полями 
-        //  1 - base comment - это id того, в который мы будет комментить. 
-        //  2 - quotedCommentID - это тот, который мы будет комментить 
-
-        // далее мы это все передаем в компонент для рендера. 
-
-
-
-        // console.log('commentReply with comment ID', id)
-        // //фильтурем сомменты по айди. получаем оттуда имя автора того. Дату и текст. Это все обрамляем  
-        // setCommentQuote(get(filter(comments, {'id':id}),[0,'text']))
-
-        //идея есть коммента есть комента юзера. Это все проверяем и рендирим в один коммента и это будет одним компонентом, Просто надо разбить на 2 части.
-       // в этом случае у нас будет только 1 квот. да и срать по сути.
-
-       //в итоге догадался добавлять в объект ответ свойство цитата. так просто...
-
-
     }
 
-
-
+    // ++ простой коммент
     function printComment(e){
         e.preventDefault();
 
         console.log('commentQuote', commentQuote)
+
 
         let additionPost = {
                     id: new Date().toISOString(), 
@@ -132,18 +92,26 @@ function CommentOutput(props) {
     }
     
 
+    //EDIT ++
+    function commentEdit(id, user, text, date){
+        const editedComments = filter(comments, {id:id})
+        editedComments[0].text = text
+        setEditedComment(editedComments)
+    }
 
+    // DELETE COMMENT ++
+    function commentDelete(id){
+        const newComments = comments.filter(com => com.id !== id)
+        console.log('commentDelete with comment ID', id, newComments)
+        setComments(comments.filter(com => com.id !== id))
+        
+    }
+
+
+    //PRIVATE --
 
     function commentPrivateMessege(id, user){
         console.log('commentPrivateMessege with comment ID and UserName ', id, user )
-    }
-
-    function commentEdit(id){
-        console.log('commentEdit with comment ID', id)
-    }
-
-    function commentDelete(id){
-        console.log('commentDelete with comment ID', id)
     }
 
 

@@ -7,6 +7,7 @@ import { get, filter, map } from 'lodash'
 import { useState } from 'react'
 import MyModal from '../../../../UI/MyModal/MyModal'
 import CommentInput from '../CommentInput/CommentInput'
+import DropDown from '../../../../UI/DropDown/DropDown'
 
 
 
@@ -22,37 +23,35 @@ function Comment({
                 ...props
             }) {
 
-    const [quotes, setQuotes] = useState([])
-    const [qRender, setQRender] = useState([])
     const [modal, setModal] = useState(false)
     const [quotedCommentReply, setQuotedCommentReply] = useState('')
 
-    const qArt = []
-    
-    useEffect(()=>{
-        setQuotes(get((filter(commentQuote, id={id})),['0', 'quotedCommentID']))
-        console.log('date1',props.date)
-        console.log('date', get(comment, ['quote', 'date']))
-        console.log('user', get(comment, ['quote', 'user']))
-        console.log('text', get(comment, ['quote', 'text']))
+    const [modalEdit, setModalEdit] = useState(false)
+    const [editComment, setEditComment] = useState(props.text)
 
-    },[])
-
-    
-
-
-
+     
+    // useEffect(()=>{
+    //     setQuotes(get((filter(commentQuote, id={id})),['0', 'quotedCommentID']))
+    // },[])
 
     function ReplyTransition(e) {
         e.preventDefault();
         setModal(false)
-        
         commentReply(props.user, props.text, props.date, quotedCommentReply)
+    }
+
+    function EditTransition(e){
+        e.preventDefault();
+        setModalEdit(false)
+        commentEdit(id, props.user, editComment, props.date)
+    }
+
+    function DeleteTransition(e){
+        commentDelete(id)
     }
 
     return (
         <>
-
             <MyModal
                 visible={modal}
                 setVisible={setModal}
@@ -61,9 +60,25 @@ function Comment({
                     value={quotedCommentReply}
                     onChange={e => setQuotedCommentReply(e.target.value)}
                     onClick={e => ReplyTransition(e)}
-              
+                   // onClickCancel={setModal(false)}
                 />
+
             </MyModal>
+
+            <MyModal
+                visible={modalEdit}
+                setVisible={setModalEdit}
+            >
+                <CommentInput
+                    value={editComment}
+                    onChange={e => setEditComment(e.target.value)}
+                    onClick={e => EditTransition(e)}
+                   // onClickCancel={setModalEdit(false)}
+                />
+
+            </MyModal>
+
+
 
 
                 <div className={cl.commentContainer}>
@@ -74,78 +89,45 @@ function Comment({
                         <div>
                             <span>{props.user}</span>                        
                         </div>
-
                 </div>
-
-                
-
 
                 <div className={cl.Context}>
 
                     {comment.quote 
-                    ? <div className={cl.Quotation}>
-                        <span>Цитата</span>
-                        {console.log("test", qArt )}
-                            <p>
-                                Пользователь:  {get(comment, ['quote', 'user']) + ".    "}
-                                Опубликовано:  {get(comment, ['quote', 'date'])}
-                            </p> 
-                            <p>
-                                {get(comment, ['quote', 'text'])}
-                            </p> 
-
-                        </div>
-
-                    : <p></p>
-                    
+                        ? <div className={cl.Quotation}>
+                            <span>Цитата</span>
+                                <p>
+                                    Пользователь:  {get(comment, ['quote', 'user']) + ".    "}
+                                    Опубликовано:  {get(comment, ['quote', 'date'])}
+                                </p> 
+                                <p>
+                                    {get(comment, ['quote', 'text'])}
+                                </p> 
+                            </div>
+                        : <p></p>
                     }
                     
 
                     <div className={cl.postDate}>Опубликовано: {convertedFullDate(props.date)}</div>
                     <div><span>{props.text}</span></div>
-                    
+                    <p></p>
                 </div>
+
 
                 <div className={cl.ButtonCollection}>
 
-                    <div className="mb-2" >
-                        {['start'].map((direction) => (
-                        <DropdownButton
-                            
-                            key={direction}
-                            id={`dropdown-button-drop-${direction}`}
-                            drop={direction}
-                            variant="secondary"
-                            title='...'
-                        >
-                            {/* commentReply(props.user, props.text, props.date) */}
-                            <Dropdown.Item 
-                                onClick={e => setModal(true)}
-                                >
-                                    Ответить
-                            </Dropdown.Item>
-                            { props.user == localStorage.getItem('SLNUserName') 
-                            ?   <div>
-                                    <Dropdown.Item 
-                                        onClick={id => commentEdit(props.id)}
-                                        >
-                                            Редактировать</Dropdown.Item>
-                                    <Dropdown.Item 
-                                        onClick={id => commentDelete(props.id)}
-                                        >
-                                            Удалить</Dropdown.Item>
-                                </div>
-                            :   <div>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item 
-                                        onClick={id => commentPrivateMessege(props.id, props.user)}
-                                        >
-                                            Отправить личное сообщение автору</Dropdown.Item>
-                                </div>
-                        }
-                        </DropdownButton>
-                        ))}
-                    </div>
+                    <DropDown
+                    setModal={setModal}
+                    setModalEdit={setModalEdit}
+                    user={props.user}
+                    id={props.id}
+                    commentEdit={commentEdit}
+                    commentDelete={DeleteTransition}
+                    commentPrivateMessege={commentPrivateMessege}
+
+                    />
+
+ 
                 </div>
 
             </div>        
