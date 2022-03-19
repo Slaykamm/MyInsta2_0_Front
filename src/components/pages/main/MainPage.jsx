@@ -55,24 +55,14 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                     value={searchQuery}
                     onChange={checkTheInput}
                     placeholder='Поиск в названиях'
-
                 />
-
                 <VideoContainer
                 listFiles={listFiles}
                 filteredVideo={filteredVideo}
-                
                 />
-
                 <Footer/>
-
-
             </div>
-
-
-
         </div>
-
     );
 };
 

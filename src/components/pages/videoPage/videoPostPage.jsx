@@ -93,7 +93,6 @@ function VideoPostPage(props) {
 
                             </div>
                             
-                            {/* Дописать логику на форму ввода и сделать саму форму.  */}
                         </div>
                         <CommentOutput videoID={videoID}/>
                         <hr/>

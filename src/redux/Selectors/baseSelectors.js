@@ -1,0 +1,40 @@
+import { createSelector } from "reselect"
+import { filter, get } from 'lodash'
+
+
+
+export const getComments = state => {
+    if (state.getComments){
+        return state.getComments
+    }
+}
+
+
+
+export const getAllCommentsSelectedbyVideo = createSelector(getComments, comments => {
+        return comments
+    }
+)
+
+const selectShopItems = state => state.shop.items
+
+const selectSubtotal = createSelector(selectShopItems, items =>
+    items.reduce((subtotal, item) => subtotal + item.value, 0)
+  )
+
+
+
+export const getUsersDict = (state) => {
+    return state.usersDict
+} 
+
+export const getUsersDictFromBase = createSelector(
+    getUsersDict,
+    
+)
+
+
+export const getUserToken = (state) => {
+    return state.userToken
+} 
+

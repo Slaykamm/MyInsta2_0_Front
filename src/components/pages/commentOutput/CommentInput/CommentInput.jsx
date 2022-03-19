@@ -24,10 +24,3 @@ function CommentInput({value, onClick, onClickCancel, ...props}) {
 
 export default CommentInput
 
-
-const aaaa = (aa) => {
-    return(
-        console.log(aa*2)
-    )
-    
-}

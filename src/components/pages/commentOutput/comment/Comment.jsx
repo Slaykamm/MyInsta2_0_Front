@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import cl from './Comment.module.css'
-import Dropdown from 'react-bootstrap/Dropdown'
-import DropdownButton from 'react-bootstrap/DropdownButton'
+
 import { convertedFullDate } from '../../../../services/dataConverter'
-import { get, filter, map } from 'lodash'
+import { get } from 'lodash'
 import { useState } from 'react'
 import MyModal from '../../../../UI/MyModal/MyModal'
 import CommentInput from '../CommentInput/CommentInput'

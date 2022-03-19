@@ -64,7 +64,8 @@ const LeftSideBar = (props) => {
                   <Nav.Link href="/userVideoPage"><span style={{color:'black'}}>Ваши видео</span></Nav.Link>
               </li>
               <li>
-                Ваши сообщения
+                  <Nav.Link href="/privateMessages"><span style={{color:'black'}}>Ваши личные сообщения</span></Nav.Link>
+                   
               </li>
               <li>
               <Nav.Item>

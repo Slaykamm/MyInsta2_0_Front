@@ -17,6 +17,8 @@ const movieDispatch = ({url, title, id, author, ...props}) => {
     },[])
 // TODO сделать тут чтобы было имя автора. Для этого доделать словарь юзеров сюда. И потомотфильтровать по id видео там есть ай ди автора.
     
+   // console.log('author', author)
+   // console.log('DICT', props.usersDict)
 
     const test = get(filter(props.usersDict, {'id': author}),[0, 'username'])
 
@@ -34,7 +36,7 @@ const movieDispatch = ({url, title, id, author, ...props}) => {
                 <h5>Название:{title}</h5>
             </div>
             <div className={cl.InnerText}>
-                <p>Автор:{get(filter(props.usersDict, {'id': author}),[0, 'username'])}</p> 
+                <p>Автор:{get(filter(props.usersDict, {'author': author}),[0, 'username'])}</p> 
             </div>
             <div className={cl.InnerText}>          
                 <p>Likes:{id}</p>

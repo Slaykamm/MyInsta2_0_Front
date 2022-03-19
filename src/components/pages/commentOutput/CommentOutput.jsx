@@ -10,6 +10,7 @@ import Comment from './comment/Comment'
 import { useNavigate } from 'react-router-dom'
 import CommentInput from './CommentInput/CommentInput';
 import { convertedFullDate } from '../../../services/dataConverter';
+import { getComments, getUsersDict, getUserToken, getAllCommentsSelectedbyVideo } from '../../../redux/Selectors/baseSelectors' 
 
 
 
@@ -155,9 +156,6 @@ function CommentOutput(props) {
                 onClick={printComment}
                 
                 />
-
-
-
         </div>
 
     )
@@ -166,9 +164,9 @@ function CommentOutput(props) {
 export default connect(
     //mapStateToProps
     state => ({
-        comments: state.getComments,
-        usersDict: state.usersDict,
-        userToken: state.userToken
+        comments: getAllCommentsSelectedbyVideo(state),
+        usersDict: getUsersDict(state),
+        userToken: getUserToken(state)
     }),
     //mapDispatchToProps
     dispatch => ({

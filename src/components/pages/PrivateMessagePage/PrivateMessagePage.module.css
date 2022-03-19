@@ -1,0 +1,33 @@
+.BaseLayer {
+    padding-top: 12rem;
+    z-index:1;
+    padding-bottom: 2rem;
+}
+
+.BaseLine {
+    width: 80%;
+    margin-left: 10%;
+}
+
+.Greetings {
+    background-color: bisque;
+}
+
+
+.MessagesLayer {
+    color: black;
+    width: 100%;
+    border: 2px solid #c9c9c9;
+    box-shadow: 0 0 7px #666; /* Параметры тени */
+    border-radius: 10px;
+    padding: 40px 0 60px 40px;
+
+}
+
+.MessagesContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 17%);
+    grid-column-gap: 3%;
+    grid-row-gap: 2rem;
+    margin: 20px;
+}

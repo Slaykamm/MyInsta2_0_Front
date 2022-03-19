@@ -7,6 +7,7 @@ import UserCabinet from './modules/UserCabinet/UserCabinet';
 import RegistrationPage from './components/pages/RegistrationPage/RegistrationPage';
 import ClearUserService from './modules/WelcomePage/ClearUserService/ClearUserService';
 import UserVideoPage from './components/pages/userVideo/userVideoPage';
+import PrivateMessagePage from './components/pages/PrivateMessagePage/PrivateMessagePage';
 
 
 
@@ -24,6 +25,7 @@ const App = () => {
         <Route path='login/registration/' element={<RegistrationPage/>} />
         <Route path='userclean/' element={<ClearUserService/>}/>
         <Route path='userVideoPage/' element={<UserVideoPage/>}/>
+        <Route path='privateMessages/' element={<PrivateMessagePage/>} />
       </Routes>
     </div>
   );
