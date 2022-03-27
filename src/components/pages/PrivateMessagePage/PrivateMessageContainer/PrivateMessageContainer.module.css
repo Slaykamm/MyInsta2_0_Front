@@ -31,3 +31,11 @@
 .textInfo {
     padding: 10px;
 }
+
+.cuttedText {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }

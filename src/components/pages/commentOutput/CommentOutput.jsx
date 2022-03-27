@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom'
 import CommentInput from './CommentInput/CommentInput';
 import { convertedFullDate } from '../../../services/dataConverter';
 import { getComments, getUsersDict, getUserToken, getAllCommentsSelectedbyVideo } from '../../../redux/Selectors/baseSelectors' 
+import { getPrivateRoomNameFromIndexesService, getIndexesFromPrivateRoomNameService} from '../../../services/roomNamesService'
+
 
 
 
@@ -103,7 +105,6 @@ function CommentOutput(props) {
     // DELETE COMMENT ++
     function commentDelete(id){
         const newComments = comments.filter(com => com.id !== id)
-        console.log('commentDelete with comment ID', id, newComments)
         setComments(comments.filter(com => com.id !== id))
         
     }
@@ -112,7 +113,16 @@ function CommentOutput(props) {
     //PRIVATE --
 
     function commentPrivateMessege(id, user){
-        console.log('commentPrivateMessege with comment ID and UserName ', id, user )
+
+        //получаем оба айди
+        console.log('тот кому пишем ', get(filter(props.usersDict, {'username': user}),[0,'id']))
+        console.log('МЫ ', get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
+
+        //отправляем в сервис комнат (правило: оба айти отсортированы по возрастанию и далее название формата "@PRIVATE_АЙДИ1_АЙДИ2")
+        const roomName = getPrivateRoomNameFromIndexesService(get(filter(props.usersDict, {'username': user}),[0,'id']), get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
+        //получаем название комнаты
+        console.log('room', roomName)
+        //пишшем в комнату, если нет создаем ее и пишем
     }
 
 

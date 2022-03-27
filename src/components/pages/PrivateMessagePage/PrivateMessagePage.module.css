@@ -31,3 +31,20 @@
     grid-row-gap: 2rem;
     margin: 20px;
 }
+
+.MessagesContainer:hover {
+    cursor: pointer;
+}
+
+.userList {
+    padding-top: 3rem;
+    height: auto;
+}
+
+.userName:hover{
+    color:rgb(84, 24, 139);
+    font-weight: bold;
+    display: inline;
+    cursor: pointer;
+}
+

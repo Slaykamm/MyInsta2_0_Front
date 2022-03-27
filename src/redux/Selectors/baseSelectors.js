@@ -38,3 +38,6 @@ export const getUserToken = (state) => {
     return state.userToken
 } 
 
+export const getUserRoom = (state) => {
+    return state.postUserRoom
+} 

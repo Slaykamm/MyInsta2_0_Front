@@ -1,6 +1,3 @@
-.userInfo {
-
-}
 
 .userInfo li {
     list-style-type: none; /* Убираем маркеры */
@@ -26,6 +23,6 @@
     font-weight: bold;
 }
 
-.userInfo li:hover {
+.textHover:hover {
     transform: scale(1.2);
 }

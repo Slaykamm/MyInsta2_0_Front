@@ -8,7 +8,8 @@ import { GET_VIDEO } from "../constants/constants";
 import { ERROR_API_PROCESSING } from "../constants/constants";
 import { VIDEO_OWNER_USER } from "../constants/constants";
 import { GET_PRIVATE_ROOMS } from "../constants/constants";
-import { GET_PRIVATE_MESSAGES } from "../constants/constants";
+
+
 
 
 
@@ -35,5 +36,4 @@ export const getVideoOwnerUserAction = (payload) => ({type: VIDEO_OWNER_USER, pa
 export const getPrivateRoomsAction = (payload) => {
     return ({type: GET_PRIVATE_ROOMS, payload})
 }
-export const getPrivateMessagesAction = (payload) => ({type: GET_PRIVATE_MESSAGES, payload})
 

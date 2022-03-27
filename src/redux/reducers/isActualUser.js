@@ -5,9 +5,8 @@ const initialState = {username: 'None'};
 //TODO вообще это надо убрать будет
 function isActualUser(state=initialState, action) {
 
-    switch (action.type) {
+    switch (action.type) { 
         case UNVERIFYED_USER_ADD:
-            console.log("from reducer", action.payload)
             return {...action.payload};
     
         case VERIFYED_USER_ADD:

@@ -12,6 +12,7 @@ import verifyUser from "./verifyUser";
 import videoOwnerUser from "./videoOwnerUser";
 import getPrivateRooms from "./getPrivateRooms";
 import privateRoomMessages from "./privateRoomMessages";
+import postUserRoom from "./postUserRoom";
 import {reducer as formReducer} from 'redux-form'
 import thunk from 'redux-thunk'
 
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
     videoOwnerUser,
     getPrivateRooms,
     privateRoomMessages,
+    postUserRoom,
     IsErrorAPI,  //так и не нашел применения пока. потом можно удалить TODO
     UserToken,
     

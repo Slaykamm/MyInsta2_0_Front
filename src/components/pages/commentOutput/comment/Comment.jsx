@@ -29,10 +29,6 @@ function Comment({
     const [editComment, setEditComment] = useState(props.text)
 
      
-    // useEffect(()=>{
-    //     setQuotes(get((filter(commentQuote, id={id})),['0', 'quotedCommentID']))
-    // },[])
-
     function ReplyTransition(e) {
         e.preventDefault();
         setModal(false)

@@ -46,32 +46,31 @@ const LeftSideBar = (props) => {
             <ul className={cl.userInfo}>
             <li >
                 <img src={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}/>
-
               </li>
               <li>
                 <p>{get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'username'])}</p>
               </li>
               
-              <li>
-              
 
-              <Nav.Item>
-                  <Nav.Link href="/lk"><span style={{color:'black'}}>Страница Вашего Профиля</span></Nav.Link>
-              </Nav.Item>
-                
-              </li>
-              <li>
-                  <Nav.Link href="/userVideoPage"><span style={{color:'black'}}>Ваши видео</span></Nav.Link>
-              </li>
-              <li>
-                  <Nav.Link href="/privateMessages"><span style={{color:'black'}}>Ваши личные сообщения</span></Nav.Link>
-                   
-              </li>
-              <li>
-              <Nav.Item>
-                  <Nav.Link href="/login"><span style={{color:'black'}}>Выход</span></Nav.Link>
-              </Nav.Item>
-              </li>
+                <li className={cl.textHover}>
+                <Nav.Item>
+                    <Nav.Link href="/lk"><span style={{color:'black'}}>Страница Вашего Профиля</span></Nav.Link>
+                </Nav.Item>
+                </li >
+
+                <li className={cl.textHover}>
+                    <Nav.Link href="/userVideoPage"><span style={{color:'black'}}>Ваши видео</span></Nav.Link>
+                </li >
+                <li className={cl.textHover} >
+                    <Nav.Link href="/privateMessages"><span style={{color:'black'}}>Ваши личные сообщения</span></Nav.Link>
+                    
+                </li >
+                <li className={cl.textHover}>
+                <Nav.Item>
+                    <Nav.Link href="/login"><span style={{color:'black'}}>Выход</span></Nav.Link>
+                </Nav.Item>
+                </li>
+
             </ul>
           </Offcanvas.Body>
         </Offcanvas>    

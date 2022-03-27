@@ -3,18 +3,24 @@ import Header from '../header/Header'
 import Menu from '../../../modules/Menu/Menu'
 import cl from './PrivateMessagePage.module.css'
 import Footer from '../footer/Footer'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import PrivateMessageContainer from './PrivateMessageContainer/PrivateMessageContainer'
 import { connect } from 'react-redux'
-import { get, filter } from 'lodash'
+import { get, filter, flatten, remove, omit } from 'lodash'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
-import { getUsersDict} from  '../../../redux/Selectors/baseSelectors'
 import { getPrivateRoomsAPI } from '../../../API/getPrivateRoomsAPI'
 import { getPrivateMessagesAPI } from '../../../API/getPrivateMessagesAPI'
+import { postRoomAPI } from '../../../API/postPrivateRoomAPI'
+import { getUsersDict, getUserRoom} from  '../../../redux/Selectors/baseSelectors'
+
 // import { useSelector } from 'react-redux'
 import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages } from '../../../redux/Selectors/privateRoomsSelector'
-
-import { sortBy, last } from 'lodash'
+import { filterQuery } from '../../../services/filterQuery'
+import { sortBy, last, pick } from 'lodash'
+import PrivateMessageCreation from './PrivateMessageContainer/PrivateMessageCreation/PrivateMessageCreation'
+import MyModal from '../../../UI/MyModal/MyModal'
+import CommentInput from '../../../components/pages/commentOutput/CommentInput/CommentInput'
+import { getPrivateRoomNameFromIndexesService } from '../../../services/roomNamesService'
 // import { store } from '../../../redux/reducers'
 
     // const userToken = useSelector(getUserToken(store.getState()))
@@ -24,6 +30,11 @@ function PrivateMessagePage(props) {
     
     const [usersDict, setUsersDict] = useState([])
     const [userID, setUserID] = useState()
+    const [usersPrivateMessages, setUsersPrivateMessages] = useState()
+    const [replyPrivateMessage, setReplyPrivateMessage] = useState('')
+    const [listUsers, setListUsers] = useState()
+    const [userForNewChat, setUserForNewChat] = useState()
+
 
     useEffect(()=>{
         props.getUsersDict()
@@ -33,6 +44,7 @@ function PrivateMessagePage(props) {
     useEffect(()=>{
         setUsersDict(props.usersDict)
         setUserID(get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
+        setListUsers(props.usersDict.map(user => pick(user, ['id', 'username'])))
     },[props.usersDict])
 
 
@@ -42,20 +54,94 @@ function PrivateMessagePage(props) {
         }
     },[userID])
 
+    
+//тут мы получаем полный список сообщений, которые для юзера, деленный по комнатам.
+    useEffect(()=>{
+        props.getPrivateMessages(props.usersPrivateRooms)
+    },[props.usersPrivateRooms])
 
+    //передаем мессаджи юзера
+    useEffect(()=>{
+      setUsersPrivateMessages(flatten(props.privateMessages))  
+    },[props.privateMessages])
 
+    
     /// TODO Ниже сделать селектором для вывода сообщения
 
-    useEffect(()=>{
-        props.getPrivateMessages(1)
-    }, [props.usersDict])
 
-        console.log('privateMessages', props.privateMessages)
-        const testt = sortBy(props.privateMessages, ['create_at'])
-        console.log('sorted', get(last(testt),['text']))
+    function getLastMessage(roomID){
+        const roomsMessages = flatten(props.privateMessages)
+        const filteredByAuthor = filter(roomsMessages, {'privateRoom':roomID}).filter(post => post.author !== userID)
+        const filterdAndSorted = sortBy(filteredByAuthor, ['create_at'])
+        const roomDate = get(filter(props.usersPrivateRooms, {'id': roomID}),[0,'lastOpenDate'])
+        const newDateFilter = filterdAndSorted.filter(date => {
+            return date.create_at > roomDate
+        })
+        const lastFileteredAndSorted = get(last(filterdAndSorted),['text'])
+        return lastFileteredAndSorted
+    }
 
+    function getNumberNewMessages(roomID){
+        const roomsMessages = flatten(props.privateMessages)
+        const filteredByAuthor = filter(roomsMessages, {'privateRoom':roomID}).filter(post => post.author !== userID)
+        const filterdAndSorted = sortBy(filteredByAuthor, ['create_at'])
 
+        const roomDate = get(filter(props.usersPrivateRooms, {'id': roomID}),[0,'lastOpenDate'])
+        const newDateFilter = filterdAndSorted.filter(date => {
+            return date.create_at > roomDate
+        }) 
+        return newDateFilter.length
+    }
  
+
+    // ф-ция отвечает за ответ юзеру 
+    // TODO через websocketОтправку
+//========================REPLY
+
+    function privateReply(roomID){
+        const username = localStorage.getItem('SLNUserName')
+        const newPrivateMessage = {
+            id: new Date().toISOString(), 
+            create_at: new Date().toISOString(), 
+            author: userID,
+            privateRoom: roomID,
+            text: replyPrivateMessage
+        }
+
+        setUsersPrivateMessages([...usersPrivateMessages, newPrivateMessage])
+        setReplyPrivateMessage('')
+    }
+
+    //===============with QUOTATION
+    function privateReplWithQoutation(user, text, date, userReply){
+        const quote = {
+            user: user,
+            text: text,
+            date: convertedFullDate(date),
+        }
+
+        let additionWithReplyPost = {
+                    id: new Date().toISOString(), 
+                    create_at: new Date().toISOString(), 
+                    author:  filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id, 
+                    quote: quote,
+                    text: userReply
+                }
+        setUsersPrivateMessages([ ...usersPrivateMessages, additionWithReplyPost]) 
+        setReplyPrivateMessage('')  
+    }
+
+//-===========================Delete
+    function privateMessageDelete(id){
+        setUsersPrivateMessages(usersPrivateMessages.filter(message => message.id !== id))
+    }
+
+
+    //EDIT ++
+    function privateMessageEdit(id, text){
+        const editedMessage = filter(usersPrivateMessages, {id:id})
+        editedMessage[0].text = text
+    }
 
     //TODO сделать что если не 200 статус то редирект куда нить на логин.
     //TODO написать сервис по рашифровке "@PRIVATE_1_3" на юзеров, где splin через _ в массив. отрезаем 2 и 3 значение slice. Сортируем его. Берем не юзера. 
@@ -63,13 +149,57 @@ function PrivateMessagePage(props) {
     //заодно уж закодировщик в обратную сторону сделать, чтобы готовил обратно  такую строчку.
      
 
-    //TODO тут реализовать поиск юзеров по 
+        // Блок фильтрации юзеров//////////////////////////////////////////
+        const [searchQuery, setSearchQuery] = useState('')
+        const [filteredUsers, setFilteredUsers] = useState()
+        function checkTheInput(event){
+            setSearchQuery(event.target.value)
+        }
+        
+        const filteredUsersProcess = useMemo(()=>{
+            return filterQuery(listUsers, searchQuery)
+        },[listUsers, searchQuery])
+        
+
+        useEffect(()=>{
+            if (filteredUsersProcess){
+                setFilteredUsers(filteredUsersProcess.filter(user => user.username !== localStorage.getItem('SLNUserName')))
+            }
+        },[filteredUsersProcess])
+        
+
+        // ВСЕ
 
 
+        // пишем личные сообщения найденным юзерам
+
+
+
+
+
+
+
+        function callModalForPrivate (user){
+            setUserForNewChat(user)
+            console.log('user', user)
+        } 
+
+
+
+        
     return (
         <>
+
+
+
+
         <Header/>
-        <Menu/>
+        <Menu
+        value={searchQuery}
+        onChange={checkTheInput}
+        placeholder='Поиск пользователя для отправки сообщений'
+        />
+
         <div>
             <div className={cl.BaseLayer}>
                 <div className={cl.BaseLine}>
@@ -78,7 +208,7 @@ function PrivateMessagePage(props) {
 
 
                         <div>
-                            <p>Добрый день  Юзер</p>
+                            <p>Добрый день</p>
                         </div>
 
 
@@ -86,10 +216,27 @@ function PrivateMessagePage(props) {
                              {props.anotherChatMatesList && usersDict
                             ?   props.anotherChatMatesList.map(messageRoom =>
                                     <PrivateMessageContainer 
-                                        user={filter(usersDict, {'id':messageRoom.anotherChatMate})[0].username}
-                                        text={get(last(testt),['text'])}
-                                        avatar={filter(usersDict, {'id':messageRoom.anotherChatMate})[0].avatar}
                                         key={messageRoom.privateChatID}
+                                        messages={usersPrivateMessages}
+                                        ID={messageRoom.privateChatID}
+                                        user={filter(usersDict, {'id':messageRoom.anotherChatMate})[0].username}
+                                        avatar={filter(usersDict, {'id':messageRoom.anotherChatMate})[0].avatar}
+                                        text={
+                                        getLastMessage(messageRoom.privateChatID)  
+                                        ? getLastMessage(messageRoom.privateChatID)
+                                        : <p></p>
+                                        }
+                                        newMessages={getNumberNewMessages(messageRoom.privateChatID)}
+                                        usersDict={props.usersDict}
+                                        privateReply={privateReply}
+                                        setReplyPrivate={setReplyPrivateMessage}
+                                        replyPrivateMessage={replyPrivateMessage}
+                                        replyPrivateQithQuotation={privateReplWithQoutation}
+                                        privateMessageDelete={privateMessageDelete}
+                                        privateMessageEdit={privateMessageEdit}
+                                        userForNewChat={userForNewChat}
+                                        usersPrivateRooms={props.usersPrivateRooms}
+                                        
                                     />
                                     )
                             : <p></p>
@@ -99,6 +246,31 @@ function PrivateMessagePage(props) {
 
                         </div>
                     </div>
+
+                    <div className={cl.userList}>
+                        <div className={cl.MessagesLayer}>
+                            <h5>Список пользователей, зарегистрированных на портале</h5>
+
+                                { filteredUsers
+                                ?   filteredUsers.map(user =>
+                                        <span
+                                            className={cl.userName}
+                                            key={user.id}
+                                            
+                                        >
+                                            <span
+                                                onClick={() => callModalForPrivate(user)}
+                                                value={user.username}
+                                                
+                                            >{user.username}, </span>
+                                        </span>
+                                    )
+                                : <p>Ожидаем информацию по пользователям.</p>
+                                }
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -108,6 +280,8 @@ function PrivateMessagePage(props) {
 }
 
 
+
+
 export default connect(
     //mapStateToProps
     state => ({
@@ -115,6 +289,9 @@ export default connect(
         usersPrivateRooms: getPrivateRooms(state),
         anotherChatMatesList: getAnotherChatMatesID(state),
         privateMessages: getPrivateMessages(state),
+        userRoom: getUserRoom(state)
+        
+        
 
     }),
     //mapDispatchToProps
@@ -127,6 +304,9 @@ export default connect(
         },
         getPrivateMessages: (value) => {
             dispatch(getPrivateMessagesAPI(value))
+        },
+        postPrivateRoom: (value) => {
+            dispatch(postRoomAPI(value))
         }
     })
 

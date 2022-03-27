@@ -19,7 +19,6 @@ import VideoContainer from './VideoContainer/VideoContainer';
 const MainPage = (props) => {
 
 const [listFiles, setListFiles] = useState()
-const [searchQuery, setSearchQuery] = useState('')
 
 
 //TODO какгохо хрена надо 2 раза дергать
@@ -33,6 +32,7 @@ useEffect(()=>{
 
 
 // Блок фильтрации роликов//////////////////////////////////////////
+const [searchQuery, setSearchQuery] = useState('')
 function checkTheInput(event){
     setSearchQuery(event.target.value)
 }
@@ -40,7 +40,7 @@ function checkTheInput(event){
 const filteredVideo=filterQuery(listFiles, searchQuery)
 // ВСЕ
 
-
+ 
     return (
         <div>
 

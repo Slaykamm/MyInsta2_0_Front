@@ -1,5 +1,5 @@
 import { createSelector } from "reselect"
-import { filter, get, difference } from 'lodash'
+import { filter, get, difference, remove, flatten } from 'lodash'
 
 
 export const getUsersDict = (state) => {
@@ -47,3 +47,41 @@ export const getPrivateMessages = (state) => {
         return state.privateRoomMessages
     }
 } 
+
+export const getPrivateMessageByRoomID = (state, ID) => {
+    const allMessagesArray = state.privateRoomMessages
+    const roomID = ID
+
+    const filtererPickedRoomID = allMessagesArray.map(rooms => {
+            if (get(rooms, [0, 'id']) === roomID){
+                return rooms
+            }
+
+        })
+        return flatten(remove(filtererPickedRoomID, undefined)) 
+
+}
+
+
+// export const getPrivateMessageByRoomID = createSelector(
+//     getPrivateMessages,
+//     (allMessagesArray
+//         )=> {
+            
+
+           
+//             const roomID = 1
+//             const filtererPickedRoomID = allMessagesArray.map(rooms => {
+//                     console.log('rrrrr', rooms)
+//                     console.log('222222', get(rooms, [0, 'id']))
+//                     if (get(rooms, [0, 'id']) === roomID){
+//                         return rooms
+//                     }
+//             })
+
+//          //console.log('filtererPickedRoomID', filtererPickedRoomID.filter(romm => romm !== undefined))
+//          //console.log('123', flatten(remove(filtererPickedRoomID, undefined)))
+//             return flatten(remove(filtererPickedRoomID, undefined))  
+//          //   return   filtererPickedRoomID.filter(romm => romm !== undefined)    
+//         }
+// )

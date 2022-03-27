@@ -8,8 +8,8 @@ function DropDown(
     setModalEdit,
     commentDelete, 
     commentPrivateMessege, 
+    replyPrivateWithQuotation,
     ...props}) {
-
 
     return (
         <div className="mb-2" >
@@ -22,12 +22,16 @@ function DropDown(
                 variant="secondary"
                 title='...'
             >
-              
+                {replyPrivateWithQuotation 
+                ? <span></span>
+                :
                 <Dropdown.Item 
                     onClick={() => setModal(true)}
                     >
                         Цитировать
                 </Dropdown.Item>
+                }
+
                 { props.user == localStorage.getItem('SLNUserName') 
                 ?   <div>
                         <Dropdown.Item 
@@ -37,19 +41,28 @@ function DropDown(
                         </Dropdown.Item>
 
                         <Dropdown.Item 
-                            onClick={() => commentDelete(props.id)}
+                            onClick={(e) => commentDelete(e)}
                             >
                             Удалить
                         </Dropdown.Item>
                     </div>
+            
+
+
                 :   <div>
                         <Dropdown.Divider />
 
-                        <Dropdown.Item 
-                            onClick={id => commentPrivateMessege(props.id, props.user)}
-                            >
-                                Отправить личное сообщение автору
-                        </Dropdown.Item>
+                        {commentPrivateMessege
+                        ?   <Dropdown.Item 
+                                onClick={id => commentPrivateMessege(props.id, props.user)}
+                                >
+                                    Отправить личное сообщение автору
+                            </Dropdown.Item>
+                        :  <span></span>
+                        
+                        }
+
+
                     </div>
             }
             </DropdownButton>
