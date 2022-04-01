@@ -5,9 +5,9 @@ import MyButton from '../../../UI/MyButton/MyButton'
 import MyInput from '../MyInput/MyInput'
 
 
-function LKLogin({userLogin, ...props}) {
+function LKLogin({userLogin, confirmLoginChanged, ...props}) {
 
-    
+    console.log('check', confirmLoginChanged)
 
     return (
             <form  
@@ -16,7 +16,7 @@ function LKLogin({userLogin, ...props}) {
                 >  
 
                 <div className={cl.UserInfoViewLabel}>
-                    <span>Ваш Логин: <span style={{fontWeight:'bold'}}>{userLogin}</span></span>
+                    <span>Ваш Логин: <p style={{fontWeight:'bold'}}>{userLogin}</p></span>
                 </div>
                 <div className={cl.UserInfoViewInput}>
                     <Field
@@ -31,8 +31,11 @@ function LKLogin({userLogin, ...props}) {
                 <div className={cl.UserInfoViewBtn}>
                     <MyButton>Изменить</MyButton>
                 </div>
-                <div className={cl.UserInfoViewBeforeConfirm}>
-                    <span >OK</span>
+                <div className={cl.UserInfoViewConfirm}>
+                    {confirmLoginChanged 
+                    ? <span >OK</span>
+                    : <span></span>
+                    }
                 </div>                       
             </form> 
     )

@@ -2,29 +2,20 @@ import React from 'react'
 import Header from '../header/Header'
 import Menu from '../../../modules/Menu/Menu'
 import cl from './PrivateMessagePage.module.css'
-import Footer from '../footer/Footer'
 import { useState, useEffect, useMemo } from 'react'
 import PrivateMessageContainer from './PrivateMessageContainer/PrivateMessageContainer'
 import { connect } from 'react-redux'
-import { get, filter, flatten, remove, omit } from 'lodash'
+import { get, filter, flatten } from 'lodash'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
 import { getPrivateRoomsAPI } from '../../../API/getPrivateRoomsAPI'
 import { getPrivateMessagesAPI } from '../../../API/getPrivateMessagesAPI'
 import { postRoomAPI } from '../../../API/postPrivateRoomAPI'
-import { getUsersDict, getUserRoom} from  '../../../redux/Selectors/baseSelectors'
-
-// import { useSelector } from 'react-redux'
+import { putToBaseAPI } from '../../../API/putToBaseAPI'
+import { deleteFromBaseAPI } from '../../../API/deleteFromBaseAPI'
+import { getUsersDict, getUserRoom, getPutToBaseResult, getDeleteFromBaseResult} from  '../../../redux/Selectors/baseSelectors'
 import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages } from '../../../redux/Selectors/privateRoomsSelector'
 import { filterQuery } from '../../../services/filterQuery'
 import { sortBy, last, pick } from 'lodash'
-import PrivateMessageCreation from './PrivateMessageContainer/PrivateMessageCreation/PrivateMessageCreation'
-import MyModal from '../../../UI/MyModal/MyModal'
-import CommentInput from '../../../components/pages/commentOutput/CommentInput/CommentInput'
-import { getPrivateRoomNameFromIndexesService } from '../../../services/roomNamesService'
-// import { store } from '../../../redux/reducers'
-
-    // const userToken = useSelector(getUserToken(store.getState()))
-    //     console.log('userToken', userToken)
 
 function PrivateMessagePage(props) {
     
@@ -107,6 +98,7 @@ function PrivateMessagePage(props) {
             privateRoom: roomID,
             text: replyPrivateMessage
         }
+        console.log('TODO через websocketОтправку')
 
         setUsersPrivateMessages([...usersPrivateMessages, newPrivateMessage])
         setReplyPrivateMessage('')
@@ -131,23 +123,37 @@ function PrivateMessagePage(props) {
         setReplyPrivateMessage('')  
     }
 
-//-===========================Delete
+//-===========================Delete++====================
     function privateMessageDelete(id){
         setUsersPrivateMessages(usersPrivateMessages.filter(message => message.id !== id))
+
+        const url = '/prvatemessages'
+        props.deleteFromBase(id, url)
+        
     }
 
+    useEffect(()=>{
+        console.log('props.deleteFromBaseResult', props.deleteFromBaseResult)
+    },[props.deleteFromBaseResult])
 
-    //EDIT ++
+
+
+    //EDIT ++========================================
     function privateMessageEdit(id, text){
         const editedMessage = filter(usersPrivateMessages, {id:id})
         editedMessage[0].text = text
+
+        const url = '/prvatemessages'
+        const message = {
+            "text": text,
+        }
+        props.putToBase(message, id, url)
     }
 
-    //TODO сделать что если не 200 статус то редирект куда нить на логин.
-    //TODO написать сервис по рашифровке "@PRIVATE_1_3" на юзеров, где splin через _ в массив. отрезаем 2 и 3 значение slice. Сортируем его. Берем не юзера. 
-    //Делаем объект где будет собеседник. сообщения. Времена создания.
-    //заодно уж закодировщик в обратную сторону сделать, чтобы готовил обратно  такую строчку.
-     
+    useEffect(()=>{
+        console.log('props.putToBaseResult', props.putToBaseResult)
+    },[props.putToBaseResult])
+
 
         // Блок фильтрации юзеров//////////////////////////////////////////
         const [searchQuery, setSearchQuery] = useState('')
@@ -175,24 +181,13 @@ function PrivateMessagePage(props) {
 
 
 
-
-
-
-
         function callModalForPrivate (user){
             setUserForNewChat(user)
             console.log('user', user)
         } 
 
-
-
-        
     return (
         <>
-
-
-
-
         <Header/>
         <Menu
         value={searchQuery}
@@ -289,7 +284,10 @@ export default connect(
         usersPrivateRooms: getPrivateRooms(state),
         anotherChatMatesList: getAnotherChatMatesID(state),
         privateMessages: getPrivateMessages(state),
-        userRoom: getUserRoom(state)
+        userRoom: getUserRoom(state),
+        putToBaseResult: getPutToBaseResult(state),
+        deleteFromBaseResult: getDeleteFromBaseResult(state)
+
         
         
 
@@ -307,6 +305,12 @@ export default connect(
         },
         postPrivateRoom: (value) => {
             dispatch(postRoomAPI(value))
+        },
+        putToBase: (value, id, url) => {
+            dispatch(putToBaseAPI(value, id, url))
+        },
+        deleteFromBase: (id, url) => {
+            dispatch(deleteFromBaseAPI(id, url))
         }
     })
 

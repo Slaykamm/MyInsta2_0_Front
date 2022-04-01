@@ -5,18 +5,37 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux'
 import { getCommentsThunkAPI } from '../../../API/getCommentsAPI'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
-import { filter, get} from 'lodash'
+import { filter, get, toNumber} from 'lodash'
 import Comment from './comment/Comment'
 import { useNavigate } from 'react-router-dom'
 import CommentInput from './CommentInput/CommentInput';
 import { convertedFullDate } from '../../../services/dataConverter';
-import { getComments, getUsersDict, getUserToken, getAllCommentsSelectedbyVideo } from '../../../redux/Selectors/baseSelectors' 
+import { 
+    getComments, 
+    getUserToken, 
+    getAllCommentsSelectedbyVideo, 
+    getDeleteFromBaseResult, 
+    getPutToBaseResult, 
+    getPostToBaseResult, 
+    getCommentsWithQuotationsResult, 
+    getPostCommentsWithQuotationsResult 
+} from '../../../redux/Selectors/baseSelectors' 
 import { getPrivateRoomNameFromIndexesService, getIndexesFromPrivateRoomNameService} from '../../../services/roomNamesService'
+import MyModal from '../../../UI/MyModal/MyModal';
+import { getPrivateRoomsAPI } from '../../../API/getPrivateRoomsAPI'
+import { getUsersDict, getUserRoom} from  '../../../redux/Selectors/baseSelectors'
+import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages } from '../../../redux/Selectors/privateRoomsSelector'
+import { postRoomAPI } from '../../../API/postPrivateRoomAPI'
+import { postMessageAPI } from '../../../API/postPrivateMessage'
+import { putToBaseAPI } from '../../../API/putToBaseAPI'
+import { deleteFromBaseAPI } from '../../../API/deleteFromBaseAPI'
+import { postToBaseAPI } from '../../../API/postToBaseAPI';
+import { getCommentsWithQuotationAPI } from '../../../API/getCommentsWithQuotationAPI';
+import { postCommentsWithQuotationAPI } from '../../../API/postCommentsWithQuotationAPI'
 
 
 
-
-function CommentOutput(props) {
+function CommentOutput({videoID, ...props}) {
     const [userName, setUserName] = useState('')
     const [comments, setComments] = useState([])
     const [replyComment, setReplyComment] = useState('')
@@ -26,28 +45,27 @@ function CommentOutput(props) {
 
     const navigate = useNavigate()
 
-
     //TODO сделать рефактор. передавать словарь в пропсах
     useEffect(()=>{ 
-        props.getCommentsAPI(props.videoID, localStorage.getItem('SLNToken')),
+        props.getCommentsAPI(videoID, localStorage.getItem('SLNToken')),
         props.getUsersDict()
+        props.getCommentsWithQuotations(videoID)   // <- будущие комменты TODO
     },[localStorage.getItem('SLNToken')])
 
  
 
+
     //обрабатываем ошибку авториации)
     useEffect(()=>{
-        if (get(props.comments, [0, 'status']) == 401) {
-            console.log("FROM COMMENTS", get(props.comments, [0, 'status']))
+        if (get(props.commentsWithQuotationsResult, [0, 'status']) == 401) {
             //navigate("/login")
             setComments()  
         }
         else {
-            setComments(get(props.comments, [0, 'data']))
-
-            
+            //setComments(get(props.comments, [0, 'data']))
+            setComments(props.commentsWithQuotationsResult)
         }
-    },[props.comments])
+    },[props.commentsWithQuotationsResult])
 
     // получаем имя из ЛокалСторажд
     useEffect(()=>{
@@ -56,78 +74,219 @@ function CommentOutput(props) {
     },[])
 
 
-    //видимо тут должен быть POST на сервер. TODO thunk POST  ++
+    //видимо тут должен быть POST на сервер. TODO thunk POST  ++//////////////////////////////////////////////////////////////////////
 
-    
     function commentReply(user, text, date, userReply){
-        const quote = {
-            user: user,
-            text: text,
-            date: convertedFullDate(date),
-        }
 
-        let additionWithCommentPost = {
-                    id: new Date().toISOString(), 
-                    create_at: new Date().toISOString(), 
-                    author:  filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id, 
-                    quote: quote,
-                    text: userReply
-                }
-        setComments([ ...comments, additionWithCommentPost]) 
-        setReplyComment('')  
+        const urlComment = '/comments'
+        const message =    {
+            "text":userReply,
+            "rating": 0,
+            "create_at": new Date().toISOString(),
+            "author": filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id,
+            "video": toNumber(videoID)
+        }
+        
+        const urlQuotation = '/quotations'
+        const quotation = {
+            "text": text,
+            "create_at": date,
+            "baseComment": null,
+            "author": filter(props.usersDict, {'username': user})[0].id,
+            "video": toNumber(videoID)
+        }
+        props.postCommentsWithQuotations(urlComment, message, urlQuotation, quotation)
+
+
+            const quote = {
+                author: get(filter(props.usersDict, {'username': user}),[0,'id']),
+                text: text,
+                create_at: date,
+            }
+            let additionWithCommentPost = {
+                        id: new Date().toISOString(), 
+                        create_at: new Date().toISOString(), 
+                        author:  filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id, 
+                        quote: quote,
+                        text: userReply
+                    }
+            setComments([ ...comments, additionWithCommentPost])
+            setReplyComment('')  
+        
     }
 
-    // ++ простой коммент
+//после возврата из селектора id нового поста - добавляем в чат то, что ранее добавили в базу.
+
+
+
+    // ++ простой коммент----------------------------------------
     function printComment(e){
         e.preventDefault();
-
-        console.log('commentQuote', commentQuote)
-
-
-        let additionPost = {
-                    id: new Date().toISOString(), 
-                    create_at: new Date().toISOString(), 
-                    author:  filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id, 
-                    text: replyComment
-                }
-        setComments([ ...comments, additionPost]) 
-        setReplyComment('')          
+        const message =    {
+            "text":replyComment,
+            "rating": 0,
+            "create_at": new Date().toISOString(),
+            "author": filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id,
+            "video": videoID
+        }
+        const url = '/comments'
+        props.postToBase(message, url)
     }
     
+    useEffect(()=>{
+        if (props.postToBaseResult.id){
+            PrintToChat();
+        }
+    },[props.postToBaseResult])
+
+
+    function PrintToChat() {
+        let additionPost = {
+            id: props.postToBaseResult.id, 
+            create_at: new Date().toISOString(), 
+            author:  filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')})[0].id, 
+            text: replyComment
+        }
+        setComments([ ...comments, additionPost]) 
+        setReplyComment('') 
+
+    }
+
+
+
+
 
     //EDIT ++
     function commentEdit(id, user, text, date){
         const editedComments = filter(comments, {id:id})
         editedComments[0].text = text
         setEditedComment(editedComments)
+
+        const message = {
+            "text": text 
+        }
+        const url = '/comments'
+        props.putToBase(message, id, url)
     }
+
+
 
     // DELETE COMMENT ++
     function commentDelete(id){
         const newComments = comments.filter(com => com.id !== id)
         setComments(comments.filter(com => com.id !== id))
-        
-    }
 
 
+        const url = '/comments'
+        props.deleteFromBase(id, url)
+        }
+
+ 
     //PRIVATE --
-
+    const [privateModal, setPrivateModal] = useState(false)
+    const [privateMessage, setPrivateMessage] = useState('')
+    const [newRoomName, setNewRoomName] = useState()
+    const [user, setUser] = useState({})
     function commentPrivateMessege(id, user){
 
         //получаем оба айди
-        console.log('тот кому пишем ', get(filter(props.usersDict, {'username': user}),[0,'id']))
-        console.log('МЫ ', get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
+        //console.log('тот кому пишем ', get(filter(props.usersDict, {'username': user}),[0,'id']))
+        //console.log('МЫ ', get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
 
+        setUser({
+            id:  get(filter(props.usersDict, {'username': user}),[0,'id']),
+            username:  get(filter(props.usersDict, {'username': user}),[0,'username']),
+            roomName: getPrivateRoomNameFromIndexesService(get(filter(props.usersDict, {'username': user}),[0,'id']), get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
+        })
+        
         //отправляем в сервис комнат (правило: оба айти отсортированы по возрастанию и далее название формата "@PRIVATE_АЙДИ1_АЙДИ2")
         const roomName = getPrivateRoomNameFromIndexesService(get(filter(props.usersDict, {'username': user}),[0,'id']), get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
         //получаем название комнаты
-        console.log('room', roomName)
         //пишшем в комнату, если нет создаем ее и пишем
     }
+
+    //отправка приватных сообщений
+
+    useEffect(()=>{
+        if (user.id){
+            props.getPrivateRooms(user.id)
+        }        
+    },[user])
+    
+
+    useEffect(()=>{
+            callModalForPrivate(user)  
+     }, [props.usersPrivateRooms])
+
+
+
+
+    function callModalForPrivate(user) {
+        if (props.usersPrivateRooms.length && user){
+            const addressatUser = user.id
+            const currentUser = get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id'])
+            const roomName = user.roomName
+    
+             //проверяем. Если есть такой чат или нет. Да тру - вариант нового чата.
+            setPrivateModal(true)
+            setNewRoomName(roomName)
+         }
+     }
+    
+
+     // при нажатии кнопки отправить - в танку кидаем имя комнаты. Сообщение и и имя юзера кто пишет
+    function SendPrivateMessage(e){
+        e.preventDefault();
+        if (props.usersPrivateRooms && newRoomName){
+            if (!Boolean(props.usersPrivateRooms.filter(room => room.privateChatName === newRoomName).length)){
+                  props.postPrivateRoom(newRoomName, privateMessage, get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
+              }
+              else{
+                props.postPrivateMessage(get(props.usersPrivateRooms.filter(room => room.privateChatName === newRoomName),[0,'id']), 
+                newRoomName, 
+                privateMessage,
+                get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
+                  //вот сюда сделать танку и апи писать в чат newRoomName сообщение privateMessage
+              }
+        }
+     }
+
+    //слушаем обновление стора. если из редюсера пришел статус 201 - значит ок. Мы записали личку в новую компану. соотвествеено если это так то мы обновляем страницу. :)
+    useEffect(()=>{
+        setPrivateModal(false)
+        if (props.newMessageSucces === 201) {
+            window.location.reload();
+        }
+    },[props.newMessageSucces])
+
+    useEffect(()=>{
+        setPrivateModal(false)
+        if (props.privateMessageSucces === 201) {
+            window.location.reload();
+        }
+    },[props.privateMessageSucces])
+
 
 
     return (
         <div className={cl.BaseLine}>
+
+         {/* блока приватных сообщений КОТОРЫХ НЕ БЫЛО! */}
+         <MyModal
+            visible={privateModal}
+            setVisible={setPrivateModal}
+        >
+
+            <CommentInput
+                value={privateMessage}
+                onChange={e => setPrivateMessage(e.target.value)}
+                onClick={e => SendPrivateMessage(e)}
+
+                // onClickCancel={setModal(false)}
+            />
+        </MyModal>
+
+
             
 
             {comments && props.usersDict.length && userName
@@ -176,7 +335,15 @@ export default connect(
     state => ({
         comments: getAllCommentsSelectedbyVideo(state),
         usersDict: getUsersDict(state),
-        userToken: getUserToken(state)
+        userToken: getUserToken(state),
+        usersPrivateRooms: getPrivateRooms(state),
+        newMessageSucces: state.postUserRoom,
+        privateMessageSucces: state.postUserPrivate,
+        putToBaseResult: getPutToBaseResult(state),
+        deleteToBaseResult: getDeleteFromBaseResult(state),
+        postToBaseResult: getPostToBaseResult(state),
+        commentsWithQuotationsResult: getCommentsWithQuotationsResult(state),
+        postCommentsWithQuotationsResult: getPostCommentsWithQuotationsResult(state)
     }),
     //mapDispatchToProps
     dispatch => ({
@@ -185,6 +352,30 @@ export default connect(
         },
         getUsersDict: () => {
             dispatch(getUserDictAPI())
+        },
+        getPrivateRooms: (value) => {
+            dispatch(getPrivateRoomsAPI(value))
+        },
+        postPrivateRoom: (value, text, userID) => {
+            dispatch(postRoomAPI(value, text, userID))
+        },
+        postPrivateMessage: (roomID, roomName, message, userID) => {
+            dispatch(postMessageAPI(roomID, roomName, message, userID))
+        },
+        putToBase: (value, id, url) => {
+            dispatch(putToBaseAPI(value, id, url))
+        },
+        deleteFromBase: (id, url) => {
+            dispatch(deleteFromBaseAPI(id, url))
+        },
+        postToBase: (id, url) => {
+            dispatch(postToBaseAPI(id, url))
+        },
+        getCommentsWithQuotations: (id) => {
+            dispatch(getCommentsWithQuotationAPI(id))
+        },
+        postCommentsWithQuotations: (urlComment, baseMessage, urlQuot, quotMessage) => {
+            dispatch(postCommentsWithQuotationAPI(urlComment, baseMessage, urlQuot, quotMessage))
         }
     })
 

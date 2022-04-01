@@ -21,7 +21,7 @@ function LKEmail({value, userEmail, ...props}) {
             >  
 
             <div className={cl.UserInfoViewLabel}>
-                <span>Ваш емаил: <span style={{fontWeight:'bold'}}>{userEmail}</span></span>
+                <span>Ваш емаил: <p style={{fontWeight:'bold'}}>{userEmail}</p></span>
             </div>
 
 

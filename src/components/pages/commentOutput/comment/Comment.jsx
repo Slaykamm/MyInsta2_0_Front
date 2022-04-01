@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import cl from './Comment.module.css'
 
 import { convertedFullDate } from '../../../../services/dataConverter'
-import { get } from 'lodash'
+import { get, filter } from 'lodash'
 import { useState } from 'react'
 import MyModal from '../../../../UI/MyModal/MyModal'
 import CommentInput from '../CommentInput/CommentInput'
@@ -44,6 +44,9 @@ function Comment({
     function DeleteTransition(e){
         commentDelete(id)
     }
+
+
+
 
     return (
         <>
@@ -92,8 +95,8 @@ function Comment({
                         ? <div className={cl.Quotation}>
                             <span>Цитата</span>
                                 <p>
-                                    Пользователь:  {get(comment, ['quote', 'user']) + ".    "}
-                                    Опубликовано:  {get(comment, ['quote', 'date'])}
+                                    Пользователь:  {get(filter(usersDict, {'id': get(comment, ['quote', 'author'])}), [0, 'username']) + ".    "}
+                                    Опубликовано:  {convertedFullDate(get(comment, ['quote', 'create_at']))}
                                 </p> 
                                 <p>
                                     {get(comment, ['quote', 'text'])}

@@ -14,6 +14,7 @@ export const postRoomAPI  = (value, message, userID) => {
         usersID.push(index1)
         usersID.push(index2)
 
+        
 
         const params = {
             "privateChatName": value,
@@ -30,7 +31,7 @@ export const postRoomAPI  = (value, message, userID) => {
                 "author": userID,
                 "privateRoom": get(response.data, ['id'])
             }
-
+            console.log('mess', mess)
             
 
             const postPrivateMessAPI = axios.post(`http://127.0.0.1:8000/api/prvatemessages/`, mess);

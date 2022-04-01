@@ -5,6 +5,8 @@ import { reduxForm } from 'redux-form';
 import { get, filter } from 'lodash'
 import { getUserDictAPI } from '../../API/getUserDictAPI'
 import { filterQuery } from '../../services/filterQuery'
+import { putToBaseAPI } from '../../API/putToBaseAPI'
+import { getPutToBaseResult } from  '../../redux/Selectors/baseSelectors'
 import Header from '../../components/pages/header/Header'
 import Menu from '../Menu/Menu'
 import MyButton from '../../UI/MyButton/MyButton'
@@ -12,6 +14,9 @@ import LKLogin from './LKLogin/LKLogin';
 import LKEmail from './LKEmail/LKEmail';
 import LKPassword from './LKPassword/LKPassword';
 import cl from './UserCabinet.module.css'
+
+
+
 
 function UserCabinet(props) {
 
@@ -22,6 +27,7 @@ const [userLogin, setUserLogin] = useState('bb')
 const [userEmail, setUserEmail] = useState('aa')
 const [userPassword, setPassword] = useState('')
 const [oldPassword, setOldPassword] = useState(false)
+const [confirmLoginChanged, serConfirmLoginChanged] = useState(false)
 
 
 
@@ -53,8 +59,32 @@ const LKPasswordForm = reduxForm({
 
 
 function onSubmitLogin(formData) {
-    console.log("Submit Login", formData)
+    console.log("Submit2Login", formData.lklogin)
+
+    const message = {
+        "username": formData.lklogin 
+    }
+    const url = '/users'
+
+    props.putToBase(
+        message,
+        url,
+        get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])
+        )
+        console.log('test')
+        localStorage.setItem('SLNUserName', formData.lklogin);
 }
+console.log('props.putToBaseResult', props.putToBaseResult)
+useEffect(()=>{
+    // TODO обрбаотать ошибку. при ошибке ставить false
+    if (props.putToBaseResult === 200) {
+        serConfirmLoginChanged(true)
+    }
+    else {
+        serConfirmLoginChanged(false)
+    }
+    
+},[props.putToBaseResult])
 
 function onSubmitEmail(formData) {
     console.log("Submit Email", formData)
@@ -72,8 +102,6 @@ function onSubmitPassword(formData) {
     }
     
 }
-
-
 
 
 function handleAvatarChange(event){
@@ -96,6 +124,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
         
         <Header/>
             <Menu 
+                disable
                 value={searchQuery}
                 onChange={checkTheInput}
                 placeholder='Поиск в названиях'
@@ -110,10 +139,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                         onSubmit={onSubmitLogin} 
                         userLogin={userLogin}
                         initialValues={{username: 'test'}}
-                        
-                        
-
-                        
+                        confirmLoginChanged={confirmLoginChanged}
                         //isError={isError}
                     />
 
@@ -162,6 +188,7 @@ export default connect(
     //mapStateToProps
     state => ({
         usersDict: state.usersDict,
+        putToBaseResult: getPutToBaseResult(state),
 
 
     }),
@@ -170,6 +197,9 @@ export default connect(
     dispatch => ({
         getUsersDict: () => {
           dispatch(getUserDictAPI())
-        }
+        },
+        putToBase: (value, id, url) => {
+            dispatch(putToBaseAPI(value, id, url))
+        },  
     })
 )(UserCabinet);

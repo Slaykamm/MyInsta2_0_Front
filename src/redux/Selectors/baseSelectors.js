@@ -41,3 +41,23 @@ export const getUserToken = (state) => {
 export const getUserRoom = (state) => {
     return state.postUserRoom
 } 
+
+export const getPutToBaseResult = (state) => {
+    return state.putToBaseReducer
+} 
+
+export const getDeleteFromBaseResult = (state) => {
+    return state.deleteFromBaseReducer
+} 
+
+export const getPostToBaseResult = (state) => {
+    return state.postToBaseReducer
+} 
+
+export const getCommentsWithQuotationsResult = (state) => {
+    return state.getCommentsWithQuotationsReducer
+} 
+
+export const getPostCommentsWithQuotationsResult = (state) => {
+    return state.postCommentsWithQuotationsReducer
+} 
