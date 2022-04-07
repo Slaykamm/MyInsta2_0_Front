@@ -1,12 +1,16 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form';
 import { get, filter } from 'lodash'
 import { getUserDictAPI } from '../../API/getUserDictAPI'
 import { filterQuery } from '../../services/filterQuery'
 import { putToBaseAPI } from '../../API/putToBaseAPI'
-import { getPutToBaseResult } from  '../../redux/Selectors/baseSelectors'
+import { postToBaseMediaAction } from '../../redux/actions/postToBaseMediaAction';
+import { postToBaseMediaAPI } from '../../API/postToBaseMediaAPI';
+import { changeUserPasswordAPI } from '../../API/changeUserPasswordAPI';
+import { getPutToBaseResult, getPostToBaseMediaResult, getChangePasswordResult } from  '../../redux/Selectors/baseSelectors'
 import Header from '../../components/pages/header/Header'
 import Menu from '../Menu/Menu'
 import MyButton from '../../UI/MyButton/MyButton'
@@ -14,6 +18,10 @@ import LKLogin from './LKLogin/LKLogin';
 import LKEmail from './LKEmail/LKEmail';
 import LKPassword from './LKPassword/LKPassword';
 import cl from './UserCabinet.module.css'
+import NameForm from '../../UI/LoadFIlesForm/NameForm';
+
+import { getUserTokenAPI } from '../../API/getUserToken';
+
 
 
 
@@ -24,10 +32,24 @@ function UserCabinet(props) {
  
 const [searchQuery, setSearchQuery] = useState('')
 const [userLogin, setUserLogin] = useState('bb')
+const [unconfirmedNewLogin, setUnconfirmedNewLogin] = useState('')
+const [confirmLoginChanged, serConfirmLoginChanged] = useState(false)
+
 const [userEmail, setUserEmail] = useState('aa')
 const [userPassword, setPassword] = useState('')
 const [oldPassword, setOldPassword] = useState(false)
-const [confirmLoginChanged, serConfirmLoginChanged] = useState(false)
+
+const [unconfirmedNewEmail, setUnconfirmedNewEmail] = useState('')
+const [confirmEmailChanged, serConfirmEmailChanged] = useState(false)
+
+const [avaChanged, setAvaChanged] = useState('')
+
+// ---------если у нас пользак не авторизован - кдиаем его на страницу логина. 
+const navigate = useNavigate()
+
+// if (!localStorage.getItem('SLNUserName')){
+//     navigate("/login")
+// }
 
 
 
@@ -57,51 +79,75 @@ const LKPasswordForm = reduxForm({
 
 }) (LKPassword)
 
-
+//меняем логин. после изменения на беке перезаписываем 
 function onSubmitLogin(formData) {
-    console.log("Submit2Login", formData.lklogin)
 
     const message = {
         "username": formData.lklogin 
     }
     const url = '/users'
-
     props.putToBase(
         message,
         url,
         get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])
         )
-        console.log('test')
-        localStorage.setItem('SLNUserName', formData.lklogin);
+        setUnconfirmedNewLogin(formData.lklogin)
+
 }
-console.log('props.putToBaseResult', props.putToBaseResult)
+
 useEffect(()=>{
     // TODO обрбаотать ошибку. при ошибке ставить false
-    if (props.putToBaseResult === 200) {
+    if (props.putToBaseResult === 200 && unconfirmedNewLogin) {
         serConfirmLoginChanged(true)
+        localStorage.setItem('SLNUserName', unconfirmedNewLogin);
+        setUnconfirmedNewLogin('')
+        window.location.reload();
     }
     else {
         serConfirmLoginChanged(false)
+        setUnconfirmedNewLogin('')
+
     }
-    
 },[props.putToBaseResult])
 
+
+//==============================E M A I L   C H A N G E ===============
 function onSubmitEmail(formData) {
-    console.log("Submit Email", formData)
+    const message = {
+        "email": formData.lkemail 
+    }
+    const url = '/users'
+    console.log('1111', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']) )
+    props.putToBase(
+        message,
+        url,
+        get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])
+
+        )
+        setUnconfirmedNewEmail(formData.lkemail)
 }
+
+useEffect(()=>{
+    if (props.putToBaseResult === 200 && unconfirmedNewEmail) {
+        serConfirmEmailChanged(true)
+        setUnconfirmedNewEmail('')
+    }
+    else {
+        serConfirmEmailChanged(false)
+        setUnconfirmedNewEmail('')
+    }
+},[props.putToBaseResult])
+//=================================END==========
 
 
 function onSubmitPassword(formData) {
-    console.log("Submit Password1", formData.lkeOldPassword)
     //TODO в этом месте происходит запрос пароля на сервер. И оттуда приходит тру или фолс и мые его тут присваиваем
-    if (formData.lkeOldPassword == '444'){
-        setOldPassword(true)
-    }
-    else{
-        setOldPassword(false)
-    }
-    
+    props.changePassword(localStorage.getItem('SLNToken'), formData)
 }
+
+useEffect(()=>{
+    console.log('props.changePasswordResult', props.changePasswordResult)
+},[props.changePasswordResult])
 
 
 function handleAvatarChange(event){
@@ -116,8 +162,38 @@ function checkTheInput(event){
 }
 const listFiles=[]
 const filteredVideo=filterQuery(listFiles, searchQuery)
+
 // ВСЕ
 //TODO убрать тут из меню в этой странице поиск.
+
+
+
+
+
+// обработка загрузки аватарки
+function handleAvatarSubmit(e) {
+    e.preventDefault();
+    let files = e.target.files
+    console.log('files', files[0])
+
+    var formData = new FormData;
+    formData.append('imagefile', files[0]);
+
+        const url = `http://127.0.0.1:8000/api/author/${get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'userID'])}/`
+
+        props.postToBaseMedia(formData, url)
+}
+
+    useEffect(()=> {
+        if (props.postToBaseMediaResult.status === 200){
+            window.location.reload();
+        }
+    }, [props.postToBaseMediaResult])
+
+
+
+
+
     return (
         <>
 
@@ -141,11 +217,12 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                         initialValues={{username: 'test'}}
                         confirmLoginChanged={confirmLoginChanged}
                         //isError={isError}
-                    />
+                        />
 
                     <LKEmailForm 
                         onSubmit={onSubmitEmail} 
                         userEmail={userEmail}
+                        confirmEmailChanged={confirmEmailChanged}
                         
                         // isError={isError}
                     />
@@ -161,8 +238,20 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
                 </div>
 
                 <div className={cl.UserInfoViewImage}>
-                        <img src={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}/>
-                        <MyButton onClick={handleAvatarChange}>Изменить</MyButton> 
+                        {get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']) 
+                            ? <span> <img src={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}/></span>
+                            : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
+                        }
+
+                        <div className={cl.AvatarButton}>
+                            Для смены аватара выберите другое изображение
+                            <p></p>
+                        <NameForm 
+                            handleSubmit={handleAvatarSubmit}  
+                            />                           
+                        </div>
+
+
                 </div>
 
             </div>                
@@ -189,8 +278,8 @@ export default connect(
     state => ({
         usersDict: state.usersDict,
         putToBaseResult: getPutToBaseResult(state),
-
-
+        postToBaseMediaResult: getPostToBaseMediaResult(state),
+        changePasswordResult: getChangePasswordResult(state),
     }),
 
     //mapDispatchToProps
@@ -201,5 +290,13 @@ export default connect(
         putToBase: (value, id, url) => {
             dispatch(putToBaseAPI(value, id, url))
         },  
+        postToBaseMedia: (formData, url) => {
+            dispatch(postToBaseMediaAPI(formData, url))
+        }, 
+        changePassword: (userToken, formData) => {
+            dispatch(changeUserPasswordAPI(userToken, formData))
+        },   
     })
 )(UserCabinet);
+
+

@@ -123,9 +123,8 @@ function RegistrationForm(props) {
             <div>
                 <span >SMS выслано</span>
             </div> 
-            
 
-            <MyButton>Зарегистрироваться</MyButton>
+            <MyButton>Регистрация</MyButton>
 
         </form> 
 

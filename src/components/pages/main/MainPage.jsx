@@ -5,14 +5,9 @@ import Menu from '../../../modules/Menu/Menu';
 import { connect } from  'react-redux';
 import { getVideoPreviewsAPI } from '../../../API/getPreviewAPI'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
-import { store } from '../../../redux/reducers';
 import { useState} from 'react';
-import MovieDispatch from '../MovieDispatch/MovieDispatch';
 import { useEffect } from 'react';
-import { arrayRemoveAll } from 'redux-form';
 import { filterQuery } from '../../../services/filterQuery';
-import cl from './MainPage.module.css'
 import VideoContainer from './VideoContainer/VideoContainer';
 
 

@@ -1,8 +1,7 @@
-.MyButton {
+.MyInput {
     background-color:#444653;
     color: whitesmoke;
     cursor: pointer;
     border-radius: 8px;
     margin-left: 10px;
-    transform: scale(1.1);
 }

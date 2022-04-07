@@ -195,7 +195,13 @@ function PrivateMessageContainer({
             className={cl.Container}>
 
             <div className={cl.userInfo}>
-                <img src={avatar}/>
+
+                {avatar 
+                        ? <span> <img src={avatar} alt='avatar'/></span>
+                        : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
+                    }
+
+
             </div>
 
             <div className={cl.textInfo}>

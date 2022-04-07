@@ -82,7 +82,13 @@ function Comment({
                 <div className={cl.commentContainer}>
                     <div className={cl.userInfo}>
                         <div>
-                            <img src={props.avatar}/>
+                            {props.avatar 
+                            ? <span> <img src={props.avatar} alt='avatar'/></span>
+                            : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
+                        }
+
+
+
                         </div>
                         <div>
                             <span>{props.user}</span>                        

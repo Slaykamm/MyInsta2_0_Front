@@ -14,15 +14,16 @@ export const getUserDictAPI  = () => {
                     let securedValue = omit(value, ['password', 'is_superuser', 'is_staff', 'groups', 'user_permissions'])
                     securedUSerDict.push(securedValue) // получили тут юзеров без вышеозначенных полей (для безопасности)
                 })
+                console.log('securedUSerDict', securedUSerDict)
                 const users = [];
                 securedUSerDict.map(user => {     // мапим по юзерам
                     const ava = filter(respAuthor.data, {'name':user.id})  // получаем записаь из автора с юзер айди 
 
                         if (ava.length){
-                            users.push({...user,...{avatar: ava[0].avatar, phone: ava[0].phone, author: ava[0].name}})  // если есть тогда присоеднием к юзерам аватар и телефон
+                            users.push({...user,...{avatar: ava[0].avatar, phone: ava[0].phone, author: ava[0].name, userID: ava[0].id}})  // если есть тогда присоеднием к юзерам аватар и телефон
                         }
                         else {
-                            users.push({...user,...{avatar: null, phone: null, author: null}}) // если записей  - тогда просто нули пишем.
+                            users.push({...user,...{avatar: null, phone: null, author: null, userID: ava[0]?.id}}) // если записей  - тогда просто нули пишем.
                         }
                     }
                 )

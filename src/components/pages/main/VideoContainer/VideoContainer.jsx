@@ -7,6 +7,7 @@ function VideoContainer({listFiles, filteredVideo,  ...props}) {
 //    console.log('listFiles', listFiles)
 //    console.log('filteredVideo', filteredVideo)
     return (
+        <>
         <div className={cl.BaseLayer}>
             <div className={cl.BaseFrame}>
                 { listFiles ? 
@@ -23,6 +24,8 @@ function VideoContainer({listFiles, filteredVideo,  ...props}) {
                 }
             </div>
         </div>
+        </>
+
     )
 }
 

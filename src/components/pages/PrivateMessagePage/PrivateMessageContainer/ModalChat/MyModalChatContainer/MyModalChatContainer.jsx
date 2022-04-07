@@ -33,7 +33,15 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
                 <div className={cl.commentContainer}>
                     <div className={cl.userInfo}>
                         <div >
-                            <img style={{height:'50px'}} src={get(filter(usersDict, {'author': author}),[0,'avatar'])}/>
+
+                            
+
+                            {get(filter(usersDict, {'author': author}),[0,'avatar']) 
+                            ? <span> <img style={{height:'50px'}} src={get(filter(usersDict, {'author': author}),[0,'avatar'])}/></span>
+                            : <span><img style={{height:'50px'}} src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
+                        }
+
+
                         </div>
                         <div>
                             <span>{get(filter(usersDict, {'author': author}),[0,'username'])}</span>  

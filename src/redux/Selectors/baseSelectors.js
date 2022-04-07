@@ -61,3 +61,15 @@ export const getCommentsWithQuotationsResult = (state) => {
 export const getPostCommentsWithQuotationsResult = (state) => {
     return state.postCommentsWithQuotationsReducer
 } 
+
+export const getPostToBaseMediaResult = (state) => {
+    return state.postToBaseMediaReducer
+} 
+
+export const getCreateEmptyUserResult = (state) => {
+    return state.createNewUserReducer
+} 
+
+export const getChangePasswordResult = (state) => {
+    return state.changeUserPasswordReducer
+} 

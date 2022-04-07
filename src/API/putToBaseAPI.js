@@ -5,10 +5,10 @@ import { putToBaseAction } from "../redux/actions/putToBaseAction";
 //ф--------------функция для асинхронного запроса
 export const putToBaseAPI  = (message, url, id) => {
     return function(dispatch) {
-        console.log('message', message)
-        console.log('id', id)
-        console.log('url', url)
-        console.log('ht', `http://127.0.0.1:8000/api${url}/${id}/`)
+        // console.log('message', message)
+        // console.log('id', id)
+        // console.log('url', url)
+        // console.log('ht', `http://127.0.0.1:8000/api${url}/${id}/`)
 
         
         

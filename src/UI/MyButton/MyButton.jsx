@@ -1,5 +1,6 @@
 import React from 'react'
 import cl from './MyButton.module.css'
+import Button from 'react-bootstrap/Button'
 
 function MyButton({children, ...props}) {
     return (
@@ -10,6 +11,13 @@ function MyButton({children, ...props}) {
             {children}
         </button>
 
+        // <Button 
+        //     variant="secondary" 
+        //     size="sm" 
+        //     active {...props}
+        // >
+        //     {children}
+        // </Button>
         
     )
 }

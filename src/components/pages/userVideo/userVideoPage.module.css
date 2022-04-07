@@ -1,0 +1,36 @@
+
+
+.VideoInfo {
+   padding-top: 4rem;
+   padding-left: 5%;  
+}
+
+
+.VideoLoadingLayer{
+    color: black;
+    width: 80%;
+    margin-left: 10%;
+    display: grid;
+    grid-template-columns: minmax(40%,40%) minmax(40%, 40%);
+    grid-template-rows: 15rem 2rem 2rem;
+    justify-content: center;
+    padding-top: 14rem;
+    grid-column-gap: 3px;
+    border: 2px solid #c9c9c9;
+    box-shadow: 0 0 7px #666; /* Параметры тени */
+    border-radius: 10px;
+    padding: 20px 0 40px 10px;
+
+}
+
+.VideoFilesLayer{
+    padding-top: 1rem;
+}
+
+.InnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+
+}

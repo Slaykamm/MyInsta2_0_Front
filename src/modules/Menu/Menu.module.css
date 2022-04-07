@@ -42,6 +42,7 @@
 .searchPanel input {
     width: 60%;
     margin-left: 10rem;
+    border-radius: 5px;
 }
 
 .Outer h3 {

@@ -45,7 +45,13 @@ const LeftSideBar = (props) => {
           <Offcanvas.Body>
             <ul className={cl.userInfo}>
             <li >
-                <img src={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}/>
+
+                {get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']) 
+                            ? <span> <img src={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}/></span>
+                            : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
+                        }
+
+
               </li>
               <li>
                 <p>{get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'username'])}</p>

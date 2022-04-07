@@ -5,7 +5,7 @@ import cl from '../UserCabinet.module.css'
 import MyButton from '../../../UI/MyButton/MyButton'
 import MyInput from '../MyInput/MyInput'
 
-function LKEmail({value, userEmail, ...props}) {
+function LKEmail({value, userEmail, confirmEmailChanged, ...props}) {
     function changeEmailHandle(event) {
         setUserEmail(event)
     }
@@ -40,8 +40,11 @@ function LKEmail({value, userEmail, ...props}) {
                     <MyButton>Изменить</MyButton>
                 </div>
 
-                <div className={cl.UserInfoViewBeforeConfirm}>
-                    <span>OK</span>
+                <div className={cl.UserInfoViewConfirm}>
+                {confirmEmailChanged 
+                    ? <span >OK</span>
+                    : <span></span>
+                    }
                 </div>   
             </form> 
     

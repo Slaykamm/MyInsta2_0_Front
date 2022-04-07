@@ -52,7 +52,7 @@ function LKPassword({oldPassword, ...props}) {
                     placeholder='введите новый пароль'
                     component={MyInputNewPassword}
                     validationmessage='Введенный пароль не соотвествует эталлонному'
-                    disabled={!oldPassword}
+                    //disabled={!oldPassword}
                 />
   
                 </div>
