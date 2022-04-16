@@ -1,13 +1,14 @@
 import React from 'react';
 import cl from './MyInput.module.css'
 
-function MyInput({input, meta, ...props}) {
-    const hasError = meta.touched && true
+function MyInput({input, meta, validationmessage, ...props}) {
+    const hasError = meta.touched && meta.error && true
+   // console.log('neta', meta.error)
+   // console.log('hasErrror', meta.valid)
+
  
 
  
-    //meta.error
-    const test = meta.initial
 
 
     return (
@@ -17,7 +18,9 @@ function MyInput({input, meta, ...props}) {
                 {...props}
                 {...input}  
             />
-            <span className={cl.MyError}></span>        
+            <span className={cl.MyError}>
+                {validationmessage}
+                </span>        
         </div>
 
     );

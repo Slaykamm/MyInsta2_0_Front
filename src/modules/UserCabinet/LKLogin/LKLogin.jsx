@@ -3,11 +3,10 @@ import { Field } from 'redux-form'
 import cl from '../UserCabinet.module.css'
 import MyButton from '../../../UI/MyButton/MyButton'
 import MyInput from '../MyInput/MyInput'
+import { loginSybmolsValidate, maxLengthLogin, minLengthLogin, requiredField } from '../../WelcomePage/LoginForm/Validators/validatorsLogin'
 
 
 function LKLogin({userLogin, confirmLoginChanged, ...props}) {
-
-    console.log('check', confirmLoginChanged)
 
     return (
             <form  
@@ -24,7 +23,8 @@ function LKLogin({userLogin, confirmLoginChanged, ...props}) {
                             type='text'
                             placeholder='Введите новый логин'
                             component={MyInput}
-                            validationmessage='Введенная строка не соотвествует эталонной'
+                            validationmessage='Только цифры или латиница'
+                            validate={[requiredField, loginSybmolsValidate]}
 
                     />
                 </div>

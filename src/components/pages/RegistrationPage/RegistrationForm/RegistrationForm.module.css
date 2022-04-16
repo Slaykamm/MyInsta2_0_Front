@@ -57,7 +57,8 @@
 
 .UserInfoViewBtn{
     display: flex;
-    align-items: center;    
+    align-items: flex-start;  
+    padding-top: 5px;  
 }
 
 .UserInfoViewBeforeConfirm{
@@ -103,4 +104,7 @@ h5 {
 
 
 
-
+.confirmMessage {
+    display: flex;
+    justify-content: center;
+}

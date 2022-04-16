@@ -10,22 +10,55 @@ import { filter, get } from 'lodash'
 
 
 
-const movieDispatch = ({url, title, id, author, ...props}) => {
+const movieDispatch = ({
+    url, 
+    title, 
+    id, 
+    author, 
+    deleteMode, 
+    addToSetListFilesVideosToDelete,
+    deleteFromSetListFilesVideosToDelete,
+    ...props
+}) => {
 
     useEffect(()=>{ 
         props.getUsersDict()
     },[])
+
+
+   // console.log('addToSetListFilesVideosToDelete', addToSetListFilesVideosToDelete)
 // TODO сделать тут чтобы было имя автора. Для этого доделать словарь юзеров сюда. И потомотфильтровать по id видео там есть ай ди автора.
     
-   // console.log('author', author)
-   // console.log('DICT', props.usersDict)
 
-    const test = get(filter(props.usersDict, {'id': author}),[0, 'username'])
 
-    
+//onChange={(e) => addToSetListFilesVideosToDelete(id)}
+    function addFilesToDeleteHandle(e){
+
+        //console.log(e)
+        if (e) {
+            //console.log('add', id)
+            addToSetListFilesVideosToDelete(id)
+        } else {
+            //console.log('delete', id)
+            deleteFromSetListFilesVideosToDelete(id)
+        }
+
+    }
 
     return (
-        <div className={cl.ContainerConstruction}>
+
+        
+
+        <div className={cl.ContainerConstruction + ' ' + (deleteMode ? cl.checkBoxDeleteMode : ' ')}>
+
+            <div className={cl.checkBoxStyle}>
+                <input 
+                type='checkbox'
+                onChange={(e) => addFilesToDeleteHandle(e.target.checked)}
+                />
+            </div>
+
+
             <div className={cl.InnerBlock}>
                 <NavLink to={`/video/${id}`}>
                     <img src={url}/>

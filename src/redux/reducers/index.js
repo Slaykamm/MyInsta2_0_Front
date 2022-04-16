@@ -22,6 +22,7 @@ import postCommentsWithQuotationsReducer from "./postCommentsWithQuotationsReduc
 import postToBaseMediaReducer from "./postToBaseMediaReducer";
 import createNewUserReducer from "./createNewUserReducer";
 import changeUserPasswordReducer from "./changeUserPasswordReducer";
+import createNewVideoReducer from "./createNewVideoReducer";
 import {reducer as formReducer} from 'redux-form'
 import thunk from 'redux-thunk'
 
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
     postToBaseMediaReducer,
     createNewUserReducer,
     changeUserPasswordReducer,
+    createNewVideoReducer,
     IsErrorAPI,  //так и не нашел применения пока. потом можно удалить TODO
     UserToken,
     

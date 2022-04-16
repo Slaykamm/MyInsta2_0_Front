@@ -4,6 +4,7 @@ import cl from '../UserCabinet.module.css'
 
 import MyButton from '../../../UI/MyButton/MyButton'
 import MyInput from '../MyInput/MyInput'
+import { emailSybmolsValidate, requiredField } from '../../WelcomePage/LoginForm/Validators/validatorsLogin'
 
 function LKEmail({value, userEmail, confirmEmailChanged, ...props}) {
     function changeEmailHandle(event) {
@@ -32,6 +33,7 @@ function LKEmail({value, userEmail, confirmEmailChanged, ...props}) {
                         placeholder='введите новый емаил'
                         component={MyInput}
                         validationmessage='Введенная строка не емаил'
+                        validate={[requiredField, emailSybmolsValidate]}
 
                     />
                 </div>

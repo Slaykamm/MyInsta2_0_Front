@@ -1,12 +1,16 @@
 import React from 'react'
+import { useState } from 'react'
 import cl from './RegistrationForm.module.css'
 import { Field } from 'redux-form'
 import MyInput from '../../../../modules/UserCabinet/MyInput/MyInput'
 //import MyInput from './MyInput/MyInput'
 import MyButton from '../../../../UI/MyButton/MyButton'
+import { emailSybmolsValidate, loginSybmolsValidate, passwordSymbolsValidate, phoneSybmolsValidate, requiredField } from '../../../../modules/WelcomePage/LoginForm/Validators/validatorsLogin'
 
 
 function RegistrationForm(props) {
+
+    const [isFormCorrectAndConfirmed, setIsFormCorrectAndConfirmed] = useState(false)
 
     function regEmailButtonHandle(event) {
         event.preventDefault()
@@ -19,6 +23,7 @@ function RegistrationForm(props) {
         console.log('works4')
     }
 
+    const isPhoneConfirmed = false
     return (
         <form  
             className={cl.UserInfoView} 
@@ -33,9 +38,10 @@ function RegistrationForm(props) {
                 <Field
                     name={'regLogin'}
                     type='text'
-                    placeholder='Введите логин'
+                    placeholder='Введите новый логин'
                     component={MyInput}
-                    validationmessage='Введенная строка не соотвествует эталонной'
+                    validationmessage='Только цифры или латиница'
+                    validate={[requiredField, loginSybmolsValidate]}
                 />
             </div>
 
@@ -56,9 +62,10 @@ function RegistrationForm(props) {
                 <Field
                     name={'regPassword'}
                     type='text'
-                    placeholder='Введите пароль'
+                    placeholder='введите новый пароль'
                     component={MyInput}
-                    validationmessage='Введенная строка не соотвествует эталонной'
+                    validationmessage='должен содержать спец. симв, цифры и буквы'
+                    validate={[requiredField, passwordSymbolsValidate]}
                 />
 
             </div>
@@ -78,10 +85,11 @@ function RegistrationForm(props) {
             <div className={cl.UserInfoViewInput}>
                 <Field
                     name={'regEmail'}
-                    type='text'
-                    placeholder='Введите email'
+                    type='email'
+                    placeholder='введите новый емаил'
                     component={MyInput}
-                    validationmessage='Введенная строка не соотвествует эталонной'
+                    validationmessage='Введенная строка не емаил'
+                    validate={[requiredField, emailSybmolsValidate]}
                 />
             </div>
 
@@ -94,7 +102,7 @@ function RegistrationForm(props) {
                 {/* TODO после сохранить тут высылаем емаил на кофирм. */}
             </div>
 
-            <div >
+            <div className={cl.confirmMessage}>
                 <span >Письмо выслано</span>
             </div> 
 
@@ -108,7 +116,8 @@ function RegistrationForm(props) {
                     type='text'
                     placeholder='Введите телефон'
                     component={MyInput}
-                    validationmessage='Введенная строка не соотвествует эталонной'
+                    validationmessage='Допускаются только цифры'
+                    validate={[requiredField, phoneSybmolsValidate]}
                 />
 
             </div>
@@ -120,11 +129,16 @@ function RegistrationForm(props) {
                     Подтвердить</MyButton>
             </div>
                 {/* TODO после сохранить тут высылаем смс на кофирм. */}
-            <div>
+            <div className={cl.confirmMessage}>
                 <span >SMS выслано</span>
             </div> 
 
-            <MyButton>Регистрация</MyButton>
+            <MyButton
+            //disabled={isPhoneConfirmed && isEmailConfirmed}
+            
+            >
+                Регистрация
+            </MyButton>
 
         </form> 
 

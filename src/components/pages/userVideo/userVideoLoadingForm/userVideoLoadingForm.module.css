@@ -1,0 +1,49 @@
+
+
+.videoLoadingInterface {
+    color: black;
+    width: 80%;
+    margin-left: 10%;
+    border: 2px solid #c9c9c9;
+    box-shadow: 0 0 7px #666; /* Параметры тени */
+    border-radius: 10px;
+    padding: 0px 0 40px 10px;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+
+}
+
+.VideoLoadingLayer{
+
+    display: grid;
+    grid-template-columns: minmax(40%,40%) minmax(40%, 40%);
+    grid-template-rows: 1rem 3rem 15rem 3rem 3rem;
+    justify-content: center;
+    grid-column-gap: 3%;
+    grid-row-gap: 1rem;
+}
+
+.VideoLoadingLayer input {
+    width: 100%;
+    border: 2px solid #c9c9c9;
+    box-shadow: 0 0 7px #666; /* Параметры тени */
+    border-radius: 10px;
+}
+
+
+.VideoFilesLayer{
+    padding-top: 1rem;
+}
+
+.InnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+
+}
+
+.InnerContainer span {
+    color: greenyellow;
+    font-weight: bold;
+}

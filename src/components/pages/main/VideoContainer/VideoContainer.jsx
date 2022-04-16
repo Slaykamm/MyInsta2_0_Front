@@ -2,9 +2,16 @@ import React from 'react'
 import MovieDispatch from '../../MovieDispatch/MovieDispatch'
 import cl from './VideoContainer.module.css'
 
-function VideoContainer({listFiles, filteredVideo,  ...props}) {
+function VideoContainer({
+    listFiles, 
+    filteredVideo, 
+    deleteMode, 
+    addToSetListFilesVideosToDelete,
+    deleteFromSetListFilesVideosToDelete,
+    ...props
+}) {
 
-//    console.log('listFiles', listFiles)
+
 //    console.log('filteredVideo', filteredVideo)
     return (
         <>
@@ -15,7 +22,16 @@ function VideoContainer({listFiles, filteredVideo,  ...props}) {
                         <div className="row">
                             { filteredVideo.map(video =>
                                 <div key={video.id} className="col-6 col-md-4">
-                                        <MovieDispatch url={video.image} id={video.id} title={video.title} create_at={video.create_at} author={video.author}/>      
+                                        <MovieDispatch 
+                                            url={video.image} 
+                                            id={video.id} 
+                                            title={video.title} 
+                                            create_at={video.create_at} 
+                                            author={video.author}
+                                            deleteMode={deleteMode}
+                                            addToSetListFilesVideosToDelete={addToSetListFilesVideosToDelete}
+                                            deleteFromSetListFilesVideosToDelete={deleteFromSetListFilesVideosToDelete}
+                                        />      
                                 </div>
                             )}
                         </div>

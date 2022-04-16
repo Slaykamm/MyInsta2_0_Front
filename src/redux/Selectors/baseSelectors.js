@@ -73,3 +73,7 @@ export const getCreateEmptyUserResult = (state) => {
 export const getChangePasswordResult = (state) => {
     return state.changeUserPasswordReducer
 } 
+
+export const getNewVideoResult = (state) => {
+    return state.createNewVideoReducer
+} 

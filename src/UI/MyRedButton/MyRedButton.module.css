@@ -1,5 +1,5 @@
 .MyButton {
-    background-color:#444653;
+    background-color:#c20b0b;
     color: whitesmoke;
     cursor: pointer;
     border-radius: 8px;
@@ -8,5 +8,5 @@
 }
 
 .MyButton:hover {
-    background-color:#5a5b5f; 
+    background-color:#ff0000; 
 }

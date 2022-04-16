@@ -5,10 +5,13 @@ import { Field } from 'redux-form'
 import MyButton from '../../../UI/MyButton/MyButton'
 import MyInputOld from '../MyInputOld/MyInputOld'
 import MyInputNewPassword from '../MyInputNewPassword/MyInputNewPassword'
+import { passwordSymbolsValidate, requiredField } from '../../WelcomePage/LoginForm/Validators/validatorsLogin'
+import MyInput from '../MyInput/MyInput'
 
 
-function LKPassword({oldPassword, ...props}) {
+function LKPassword({oldPassword, confirmPasswordChanged, ...props}) {
 
+    console.log('confirmPasswordChanged', confirmPasswordChanged)
 
 
     function changePasswordHandle(event) {
@@ -40,9 +43,10 @@ function LKPassword({oldPassword, ...props}) {
                         name={'lkeOldPassword'}
                         type='text'
                         placeholder='введите старый пароль'
-                        component={MyInputOld}
-                        validationmessage='Пароль не верный'
+                        component={MyInput}
+                        validationmessage='должен содержать спец. симв, цифры и буквы'
                         disabled={oldPassword}
+                        validate={[requiredField, passwordSymbolsValidate]}
 
                     />
 
@@ -50,8 +54,9 @@ function LKPassword({oldPassword, ...props}) {
                     name={'lkeNewpassword'}
                     type='text'
                     placeholder='введите новый пароль'
-                    component={MyInputNewPassword}
-                    validationmessage='Введенный пароль не соотвествует эталлонному'
+                    component={MyInput}
+                    validationmessage='должен содержать спец. симв, цифры и буквы'
+                    validate={[requiredField, passwordSymbolsValidate]}
                     //disabled={!oldPassword}
                 />
   
@@ -62,7 +67,10 @@ function LKPassword({oldPassword, ...props}) {
                 </div>
 
                 <div className={cl.UserInfoViewConfirm}>
-                    <span>OK</span>
+                {confirmPasswordChanged 
+                    ? <span >OK</span>
+                    : <span></span>
+                    }
                 </div>
             </form>
         </>

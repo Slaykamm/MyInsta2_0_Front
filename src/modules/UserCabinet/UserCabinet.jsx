@@ -34,13 +34,16 @@ const [searchQuery, setSearchQuery] = useState('')
 const [userLogin, setUserLogin] = useState('bb')
 const [unconfirmedNewLogin, setUnconfirmedNewLogin] = useState('')
 const [confirmLoginChanged, serConfirmLoginChanged] = useState(false)
+const [confirmEmailChanged, serConfirmEmailChanged] = useState(false)
+const [confirmPasswordChanged, serConfirmPasswordChanged] = useState(false)
 
 const [userEmail, setUserEmail] = useState('aa')
 const [userPassword, setPassword] = useState('')
 const [oldPassword, setOldPassword] = useState(false)
 
 const [unconfirmedNewEmail, setUnconfirmedNewEmail] = useState('')
-const [confirmEmailChanged, serConfirmEmailChanged] = useState(false)
+
+
 
 const [avaChanged, setAvaChanged] = useState('')
 
@@ -147,6 +150,8 @@ function onSubmitPassword(formData) {
 
 useEffect(()=>{
     console.log('props.changePasswordResult', props.changePasswordResult)
+    if (props.changePasswordResult.message === 'Password updated successfully')
+        serConfirmPasswordChanged(true)
 },[props.changePasswordResult])
 
 
@@ -209,7 +214,7 @@ function handleAvatarSubmit(e) {
             <div className={cl.InnerContainer}>
                 <div>
                     <h3>Приветстуем Вас {localStorage.getItem('SLNUserName')}</h3>
-                    <h5>для изменения Ваших данных введите новое знание и нажмите ок.</h5>
+                    <h5>для изменения Ваших данных введите новое значение и нажмите изменить.</h5>
 
                     <LKLoginForm 
                         onSubmit={onSubmitLogin} 
@@ -230,6 +235,8 @@ function handleAvatarSubmit(e) {
                     <LKPasswordForm 
                         onSubmit={onSubmitPassword} 
                         oldPassword={oldPassword}
+                        confirmPasswordChanged={confirmPasswordChanged}
+                        
                       //  isError={isError}
                     />
 

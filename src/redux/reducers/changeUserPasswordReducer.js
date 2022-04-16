@@ -8,6 +8,7 @@ function changeUserPasswordReducer(state=initialState, action) {
     switch (action.type){
 
         case CHANGE_USER_PASSWORD:
+            console.log('passss', action.payload)
 
             return {...action.payload}
         default:

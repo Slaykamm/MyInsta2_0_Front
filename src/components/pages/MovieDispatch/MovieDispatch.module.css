@@ -19,3 +19,24 @@ img {
     display: flex;
     justify-content: center;
 }
+
+.checkBoxStyle {
+   
+
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 3%;
+    padding-right: 5%;
+    padding-bottom: 3%;
+}
+
+.checkBoxStyle input {
+
+    display: none;
+    transform: scale(2);
+}
+
+.checkBoxDeleteMode input{
+    display: flex;
+}

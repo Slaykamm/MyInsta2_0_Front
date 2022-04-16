@@ -14,7 +14,6 @@ export const getUserDictAPI  = () => {
                     let securedValue = omit(value, ['password', 'is_superuser', 'is_staff', 'groups', 'user_permissions'])
                     securedUSerDict.push(securedValue) // получили тут юзеров без вышеозначенных полей (для безопасности)
                 })
-                console.log('securedUSerDict', securedUSerDict)
                 const users = [];
                 securedUSerDict.map(user => {     // мапим по юзерам
                     const ava = filter(respAuthor.data, {'name':user.id})  // получаем записаь из автора с юзер айди 

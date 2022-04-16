@@ -6,7 +6,6 @@ function postUserPrivate(state=initialState, action) {
     switch (action.type){
 
         case POST_USER_MESSAGE:
-            console.log('action.payload', action.payload)
 
             return action.payload
         default:

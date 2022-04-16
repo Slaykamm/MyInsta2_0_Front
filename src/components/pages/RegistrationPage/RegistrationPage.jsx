@@ -20,6 +20,45 @@ function RegistrationPage(props) {
     const [userForEdit, setUserForEdit] = useState({})
     const [editUser, setEditUser] = useState({})
     const [aaa, setAaa] = useState()
+    const [user, setUser] = useState({
+        userID: null,
+        authorID: null,
+        userName: '',
+        userEmail: '',
+        authorPhone: null,
+        authorAvatar: null,
+    }
+)
+    //============после создания нового будущего юзера. присваиваем юзеру в стейте: id USER и id Author
+
+    function createUsers() {
+        props.createUser()
+                //setUser({...user, ...{userName: '123'}})
+    }
+    
+    useEffect(()=>{
+        setUserForEdit(props.createEmpyUserResult)
+        setUser({...user, ...{authorID: props.createEmpyUserResult.id}})
+        props.getUsersDict()
+    },[props.createEmpyUserResult])
+
+
+    useEffect(()=>{
+        try{
+            setUser({...user, ...{userID: get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'author'])}})
+        }catch (err) {
+            console.log('err', err)
+        }
+    }, [props.usersDict])
+    //==================================END
+
+
+
+    // ==============контролируем что в юзере==============
+    useEffect(()=>{
+        console.log('user', user)
+    },[user])
+
 
     // Логика - создаем пустого юзера . 
     //     POST http://127.0.0.1:8000/auth/registration/ HTTP/1.1
@@ -28,37 +67,32 @@ function RegistrationPage(props) {
 
     // в эту созданную заявку начинаем дополнять
 
-    function createUsers() {
-        props.createUser()
-        console.log('Далее сделать из юзера автора')    
 
-    }
-
-    useEffect(()=>{
-        setUserForEdit(props.createEmpyUserResult)
-        props.getUsersDict()
-    },[props.createEmpyUserResult])
     
-    console.log('yes', userForEdit)
-
     function submitRegistrationData(formData){
         console.log("registration Data", formData)
     }
+
 
     const RegForm = reduxForm({
         form: 'RegistrationForm'
     }) (RegistrationForm)
 
 
+    //==============заглушка на ререндер
+
     function renderer(e){
         e.preventDefault;
         setAaa(Date.now())
+        console.log('userrr', user)
+        setUser({...user, ...{userName: 'aaa'}})
     }
 
 
+    
 
 
-    // обработка загрузки аватарки
+    // обработка загрузки аватарки========================+
     function handleAvatarSubmit(e) {
         e.preventDefault();
         if (userForEdit.id){
@@ -74,11 +108,11 @@ function RegistrationPage(props) {
     useEffect(()=> {
         if (props.postToBaseMediaResult.status === 200){
             props.getUsersDict()
+            setUser({...user, ...{authorAvatar: get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])}})
             //window.location.reload();
-            
         }
     }, [props.postToBaseMediaResult])
-
+//===================готово. Прикол в том, что т.к. я пытаюсь ее получать из обновленного словаря. то тогда когда я за ней лезу ее еще там нет.
 
 // TODO разобраться с валидациями. я вижу на каждое поле делать свой валидатор. и возможно свой инпут. но тут надо подумать.
     return (
@@ -106,7 +140,6 @@ function RegistrationPage(props) {
 
 
                 <div className={cl.UserInfoViewImage}>
-                    {console.log('FROM MODULE', editUser)}
                     {get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])
                         ? <span><img src={get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])} alt='avatar'/></span>
                         : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
