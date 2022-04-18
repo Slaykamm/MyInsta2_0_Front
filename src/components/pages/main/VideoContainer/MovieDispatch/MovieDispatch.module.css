@@ -20,6 +20,10 @@ img {
     justify-content: center;
 }
 
+.InnerText span{
+    color: black;
+    font-weight: bold;
+}
 .checkBoxStyle {
    
 
@@ -39,4 +43,10 @@ img {
 
 .checkBoxDeleteMode input{
     display: flex;
+}
+
+.AuthorHover:hover  {
+    color:rgb(84, 24, 139);
+    font-weight: bold;
+    cursor: pointer;
 }

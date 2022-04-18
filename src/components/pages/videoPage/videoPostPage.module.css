@@ -21,8 +21,6 @@
 }
 
 
-
-
 .Frame {
     height: 30rem;
     width: 100%;
@@ -37,19 +35,19 @@
     list-style: none;	
     padding: 5px;		
     display: flex;
-    justify-content: space-between;
-
-
+    flex-direction: column;
 }
 
-.VideoMenuOptions li{
-    display: inline;
+.VideoMenuOptions p {
+    font-size: 1.4rem;
+}
+
+.VideoMenuOptions span {
+    font-weight: bold;
+}
+
+.AuthorHover:hover {
+    color:rgb(84, 24, 139);
+    font-weight: bold;
     cursor: pointer;
-    margin: 10px;
 }
-
-.VideoMenuOptions li:hover {
-    background-color: rgb(100, 97, 97);
-    border: 1px white;
-}
-

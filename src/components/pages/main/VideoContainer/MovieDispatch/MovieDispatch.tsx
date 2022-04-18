@@ -2,17 +2,29 @@ import React from 'react';
 import { useEffect } from 'react';
 import cl from './MovieDispatch.module.css'
 import { connect } from 'react-redux'
-import { getVideoAPI } from '../../../API/getVideoAPI';
+import { getVideoAPI } from '../../../../../API/getVideoAPI';
 import { NavLink } from 'react-router-dom';
-import { convertedFullDate } from '../../../services/dataConverter';
-import { getUserDictAPI } from '../../../API/getUserDictAPI';
+import { convertedFullDate } from '../../../../../services/dataConverter';
+import { getUserDictAPI } from '../../../../../API/getUserDictAPI';
 import { filter, get } from 'lodash'
 
 
+interface IMovieDispatch {
+    url: string, 
+    title: string, 
+    description: string,
+    id: number, 
+    author: string, 
+    deleteMode: void, 
+    addToSetListFilesVideosToDelete: void,
+    deleteFromSetListFilesVideosToDelete: void,
+    props: object
+}
 
 const movieDispatch = ({
     url, 
     title, 
+    description,
     id, 
     author, 
     deleteMode, 
@@ -25,57 +37,51 @@ const movieDispatch = ({
         props.getUsersDict()
     },[])
 
-
-   // console.log('addToSetListFilesVideosToDelete', addToSetListFilesVideosToDelete)
-// TODO сделать тут чтобы было имя автора. Для этого доделать словарь юзеров сюда. И потомотфильтровать по id видео там есть ай ди автора.
-    
-
-
-//onChange={(e) => addToSetListFilesVideosToDelete(id)}
     function addFilesToDeleteHandle(e){
-
-        //console.log(e)
         if (e) {
-            //console.log('add', id)
             addToSetListFilesVideosToDelete(id)
         } else {
-            //console.log('delete', id)
             deleteFromSetListFilesVideosToDelete(id)
         }
-
     }
 
+    const testClick = () => console.log('test click on author')
+
     return (
-
-        
-
         <div className={cl.ContainerConstruction + ' ' + (deleteMode ? cl.checkBoxDeleteMode : ' ')}>
 
             <div className={cl.checkBoxStyle}>
                 <input 
+                placeholder='MarkFilesToDelete'
                 type='checkbox'
                 onChange={(e) => addFilesToDeleteHandle(e.target.checked)}
                 />
             </div>
 
 
-            <div className={cl.InnerBlock}>
-                <NavLink to={`/video/${id}`}>
-                    <img src={url}/>
-                </NavLink>
-            </div>
 
             <div className={cl.InnerText}>
-                <h5>Название:{title}</h5>
+                <h5><span>Название: </span>{title}</h5>
             </div>
+
+            <div className={cl.InnerBlock}>
+                <NavLink to={`/video/${id}`}>
+                    <img src={url} alt='LinkToFullVideo'/>
+                </NavLink>
+            </div>
+          <div className={cl.InnerText}>
+                <h5><span>Описание: </span> {description}</h5>
+            </div>
+ 
             <div className={cl.InnerText}>
-                <p>Автор:{get(filter(props.usersDict, {'author': author}),[0, 'username'])}</p> 
+                <h5
+                    onClick={testClick}
+                    className={cl.AuthorHover}
+                ><span
+                >Автор: </span>{get(filter(props.usersDict, {'author': author}),[0, 'username'])}</h5> 
             </div>
             <div className={cl.InnerText}>          
-                <p>Likes:{id}</p>
-            </div>
-            <div className={cl.InnerText}>          
-                <p>Загружено: {convertedFullDate(props.create_at)}</p>
+                <h5><span>Загружено: </span> {convertedFullDate(props.create_at)}</h5>
             </div>
 
         </div>
@@ -83,13 +89,10 @@ const movieDispatch = ({
 };
 
 export default connect(
-    //mapStateToProps
     state => ({
        videoObject: state.getVideo,
        usersDict: state.usersDict
-
     }),
-    //mapDispatchToProps
     dispatch => ({
         getVideoFile: () => {
             dispatch(getVideoAPI(id))
@@ -97,9 +100,6 @@ export default connect(
         getUsersDict: () => {
             dispatch(getUserDictAPI())
         }
-        
     })
-
-
 ) (movieDispatch);
 

@@ -1,3 +1,5 @@
+import { isNumber } from 'lodash'
+
 export function filterQuery(listFiles, searchQuery) {
     
     if (listFiles && searchQuery.length > 2 ){
@@ -17,3 +19,22 @@ export function filterQuery(listFiles, searchQuery) {
         return listFiles
     }
 }
+
+
+export function clearDeletedVideo(listFiles) {
+    if (listFiles){
+        var filtered = listFiles.filter(file=>
+            {
+                if (file.title !== file.description &&  !isNumber(file.title)){
+                    return (file.title)
+                }
+        })
+        return filtered
+    }
+    else {
+        return listFiles
+    }
+}
+
+
+

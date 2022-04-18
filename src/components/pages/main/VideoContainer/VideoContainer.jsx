@@ -1,6 +1,7 @@
 import React from 'react'
-import MovieDispatch from '../../MovieDispatch/MovieDispatch'
+import MovieDispatch from './MovieDispatch/MovieDispatch.tsx'
 import cl from './VideoContainer.module.css'
+import { clearDeletedVideo } from '../../../../services/filterQuery'
 
 function VideoContainer({
     listFiles, 
@@ -11,6 +12,10 @@ function VideoContainer({
     ...props
 }) {
 
+    const clearedVideo = clearDeletedVideo(listFiles)
+
+    
+    //video.title === video.description && isNumber(video.description) 
 
 //    console.log('filteredVideo', filteredVideo)
     return (
@@ -20,12 +25,13 @@ function VideoContainer({
                 { listFiles ? 
                     <div className="container">
                         <div className="row">
-                            { filteredVideo.map(video =>
+                            { clearedVideo.map(video =>
                                 <div key={video.id} className="col-6 col-md-4">
                                         <MovieDispatch 
                                             url={video.image} 
                                             id={video.id} 
                                             title={video.title} 
+                                            description={video.description}
                                             create_at={video.create_at} 
                                             author={video.author}
                                             deleteMode={deleteMode}

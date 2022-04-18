@@ -29,7 +29,7 @@ import {
     submitAddNewVideoFormAction,
 } from './userVideoPageActions'
 
-import { videoValidator, imageValidator } from '../../../Validators/validators'
+import { videoValidator, imageValidator } from '../../../Validators/validators.ts'
 
 import cl from './userVideoPage.module.css'
 

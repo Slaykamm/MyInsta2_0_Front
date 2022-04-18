@@ -113,7 +113,7 @@ function PrivateMessageContainer({
 
         const url = '/privaterooms'
         
-        props.putToBase(message, id, url)
+        props.putToBase(message, url, id)
             console.log('TODO ОБНОВЛЯЕМ ДАТУ ЗАХОДА В КОМНАТУ')
     }
 

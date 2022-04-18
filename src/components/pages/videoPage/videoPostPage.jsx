@@ -16,6 +16,9 @@ import {
     PlaybackRateMenuButton,
     VolumeMenuButton
   } from 'video-react';
+import { get, filter } from 'lodash'
+import { getUserDictAPI } from '../../../API/getUserDictAPI'
+import { getUsersDict } from '../../../redux/Selectors/baseSelectors'
 
 
 
@@ -38,7 +41,7 @@ function VideoPostPage(props) {
         props.getVideo(params.id)
     },[videoID])
 
-
+    const clickAuthor = e => console.log('clickHere')
 
     return (
         <>
@@ -75,22 +78,19 @@ function VideoPostPage(props) {
 
                             </div>
                             <br/>
-                            <div>
-                                <ul className={cl.VideoMenuOptions}>
-                                    <li>
-                                        Просмотры:
-                                    </li>
-                                    <li>
-                                        Лайки:
-                                        Лайкнуть
-                                    </li>
-                                    <li>
-                                        Дизлайки:
-                                        Дизлайкнуть
-                                    </li>
-                                </ul>
- 
-
+                            <div className={cl.VideoMenuOptions}>
+                                <p>
+                                    <span>Описание видео: </span> 
+                                    {props.video.description}
+                                </p>
+                                <p 
+                                    onClick={clickAuthor}
+                                    className={cl.AuthorHover}
+                                >
+                                    <span 
+                                        >Автор: </span> 
+                                    {get(filter(props.usersDict, {'author': props.video.author}),[0, 'username'])}
+                                </p>
                             </div>
                             
                         </div>
@@ -123,7 +123,9 @@ function VideoPostPage(props) {
 export default connect(
     //mapStateToProps
     state => ({
-        video: state.getVideo
+        video: state.getVideo,
+        usersDict: getUsersDict(state),
+
         }),
 
     //mapDispatchToProps
@@ -132,6 +134,9 @@ export default connect(
         getVideo: (value) =>{
             dispatch(getVideoAPI(value))
         },
+    getUsersDict: () => {
+        dispatch(getUserDictAPI())
+    },
 
     })
     
