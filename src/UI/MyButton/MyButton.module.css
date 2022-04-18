@@ -8,5 +8,9 @@
 }
 
 .MyButton:hover {
-    background-color:#5a5b5f; 
+    background-color:#9b9b9b;
+}
+
+.MyButton:disabled {
+    background-color:#9b9b9b; 
 }

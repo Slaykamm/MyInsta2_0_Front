@@ -1,0 +1,27 @@
+.ControlBtnGroup {
+   z-index: 5;
+   position: fixed;
+   margin-top: 9rem;
+   padding-top: 5rem;
+   margin-left: 10%;
+   height: 8rem;
+   width: 80%;
+   background-color: white;
+}
+
+.ControlBtnNameContainer {
+   display: flex;
+   justify-content: space-between;
+}
+
+.DeleteButton {
+   display: flex;
+   justify-content: center;
+   transform: scale(1.2);
+}
+
+.DeleteModeOFFButton {
+   display: inline;
+}
+
+

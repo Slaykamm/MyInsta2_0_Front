@@ -4,9 +4,8 @@ import { postToBaseMediaAction } from "../redux/actions/postToBaseMediaAction";
 //ф--------------функция для асинхронного запроса
 export const postToBaseMediaAPI  = (formData, url) => {
     return function(dispatch) {
-
-        console.log('from API formData', formData)
-        console.log('from APIurl ', url)
+        
+        
         const postMedia = fetch(url, {
             method: "POST", 
                 body: formData,//JSON.stringify(data4), // data4,// // string, FormData, Blob, BufferSource или URLSearchParams
@@ -26,6 +25,9 @@ export const postToBaseMediaAPI  = (formData, url) => {
             if (resp.status === 200) {
                 dispatch(postToBaseMediaAction(resp))
             }
+        })
+        postMedia.catch((err)=>{
+            console.log('ERROR', err)
         })
 
 

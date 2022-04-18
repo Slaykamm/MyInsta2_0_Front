@@ -1,26 +1,37 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-
+import { get, filter, includes } from 'lodash'
 import Menu from '../../../modules/Menu/Menu'
 import Header from '../header/Header'
-import { filterQuery } from '../../../services/filterQuery'
 import VideoContainer from '../main/VideoContainer/VideoContainer'
+import UserVideoLoadingForm from './userVideoLoadingForm/userVideoLoadingForm'
+import MyModal from '../../../UI/MyModal/MyModal'
+import UserVideoControlButtonForm from './userVideoControlButtonForm/userVideoControlButtonForm'
+import { filterQuery } from '../../../services/filterQuery'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
 import { createNewVideoAPI } from '../../../API/createNewVideoAPI'
-import { get, filter } from 'lodash'
-import cl from './userVideoPage.module.css'
-import MyButton from '../../../UI/MyButton/MyButton'
-import MyRedButton from '../../../UI/MyRedButton/MyRedButton'
-import MyModal from '../../../UI/MyModal/MyModal'
-import UserVideoLoadingForm from './userVideoLoadingForm/userVideoLoadingForm'
-import { getNewVideoResult, getDeleteFromBaseResult, getPostToBaseMediaResult } from '../../../redux/Selectors/baseSelectors'
 import { deleteFromBaseAPI } from '../../../API/deleteFromBaseAPI'
 import { postToBaseMediaAPI} from '../../../API/postToBaseMediaAPI'
 import { getVideoUserOwnerAPI } from '../../../API/getVideoUserOwnerAPI'
+import { getVideoAPI } from '../../../API/getVideoAPI'
+import { putToBaseAPI } from '../../../API/putToBaseAPI'
+import { 
+    getNewVideoResult, 
+    getDeleteFromBaseResult, 
+    getPostToBaseMediaResult, 
+    getPutToBaseResult 
+} from '../../../redux/Selectors/baseSelectors'
+import { 
+    createNewVideoAction, 
+    submitVideoAction, 
+    handlePreviewSubmitAction,
+    submitAddNewVideoFormAction,
+} from './userVideoPageActions'
 
-import { createNewVideoAction, submitVideoAction } from './userVideoPageActions'
+import { videoValidator, imageValidator } from '../../../Validators/validators'
 
+import cl from './userVideoPage.module.css'
 
 function UserVideoPage(props) {
 
@@ -30,10 +41,11 @@ function UserVideoPage(props) {
     const [loadingVideoActive, setLoadingVideoActive] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
     const [listFilesVideosToDelete, setListFilesVideosToDelete] = useState([])
-    
     const [isVideoLoaded, setIsVideoLoaded] = useState(false)
     const [isImageLoaded, setIsImageLoaded] = useState(false)
-    const [isFormCorrect, setIsFormCorrect] = useState(false)
+    const [queryVideoInput, setQueryVideoInput] = useState('')
+    const [queryDescriptionInput, setQueryDescriptionInput] = useState('')
+
 
     // получаем словарь
     useEffect(()=>{
@@ -42,13 +54,10 @@ function UserVideoPage(props) {
         }
     },[])
     
-    
     useEffect(()=>{
         setUserID(get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
     }, [props.usersDict])
     
-
-
     useEffect(()=>{
         props.getUserOwnerPreview(userID)
     }, [userID])
@@ -57,126 +66,83 @@ function UserVideoPage(props) {
         setUserVideoList(props.videoUserOwnerPreviews)
     },[props.videoUserOwnerPreviews])
     
-    
-    
     // Блок фильтрации роликов//////////////////////////////////////////
     function checkTheInput(event){
         setSearchQuery(event.target.value)
     }
     const filteredVideo=filterQuery(userVideoList, searchQuery)
-    // ВСЕ
-    
 
 
-
+    // Кнопка активации модалки.
     function modalActivation(e) {
         e.preventDefault()
         setDeleteMode(false)
         setLoadingVideoActive(true)
+        createNewVideoAction(queryVideoInput, queryDescriptionInput, props.usersDict, props.createNewVideo)
     }
 
-    const [queryVideoInput, setQueryVideoInput] = useState('')
-    const [queryDescriptionInput, setQueryDescriptionInput] = useState('')
-    const [videoToAddId, setVideoToAddId] = useState({})
-
-
-
-    
-    //  action СОЗДАНИЯ ПУСТОГО РОЛИКА 
-    function createNewVideo(e){
-           e.preventDefault()
-           createNewVideoAction(queryVideoInput, queryDescriptionInput, props.usersDict, props.createNewVideo)
-     }
-
-
 // ========================видео сабмит
-
-        
         function submitVideo(e){
             e.preventDefault();
-
             let files = e.target.files
-            submitVideoAction(files, props.newVideoResult.id, props.postToBaseMedia)
-
-            setIsVideoLoaded(true)
-        }
-            
-
-        // {
-        //     setQueryVideoInput('')
-        //     setQueryDescriptionInput('')
-        //     setLoadingVideoActive(false)
-        // }
-
-
-            // обработка загрузки превью ------------------------------------------------
-            function handlePreviewSubmit(e) {
-                e.preventDefault();
-                let files = e.target.files
-                console.log('files', files[0])
-
-                var formData = new FormData;
-                formData.append('imagefile', files[0]);
-
-                    const url = `http://127.0.0.1:8000/api/video/${props.newVideoResult.id}/`
-                    console.log('url', url)
-                    props.postToBaseMedia(formData, url)
-
-                    setIsImageLoaded(true)
+            console.log('1111', files[0].type)
+            if (includes(videoValidator, files[0].type)){
+                submitVideoAction(files, props.newVideoResult.id, props.postToBaseMedia)
+                setIsVideoLoaded(true)
+            }
+            else{
+                window.alert('Данным тип файла не поддерживается!')
             }
 
 
-
+        }
             
-            useEffect(()=> {
-                if (props.postToBaseMediaResult.status === 200){
-                    //window.location.reload();
-                    console.log('превью ок')
-                }
-            }, [props.postToBaseMediaResult])
+        // обработка загрузки превью ------------------------------------------------
+        function handlePreviewSubmit(e) {
+            e.preventDefault();
+            let files = e.target.files
+            if (includes(imageValidator, files[0].type)){
+                handlePreviewSubmitAction(files, props.newVideoResult.id, props.postToBaseMedia)
+                setIsImageLoaded(true)
+            }
+            else{
+                window.alert('Данным тип файла не поддерживается!')
+            }
+        }
+
+        // кнопка отправки видео в форме
+        function submitAddNewVideoForm(){
+            submitAddNewVideoFormAction(queryVideoInput, queryDescriptionInput, props.newVideoResult.id, props.putToBase)
+            }
+
+        // action если загрузили все то форму гасим.
+        useEffect(()=> {
+            if (props.putToBaseResult == 200){
+                setQueryVideoInput('')
+                setQueryDescriptionInput('')
+                setLoadingVideoActive(false)
+                window.location.reload()
+            }
+        },[props.putToBaseResult])
+
         
-
-
-        function deleteModeEnable(e){
-            console.log('e', e)
-            e.preventDefault();
-            setDeleteMode(true)
-        }
-
-        function cancelDeleteMode(e){
-            e.preventDefault();
-            setDeleteMode(false)
-            setListFilesVideosToDelete([])
-        }
-
+        // -------------------Обработка добавления к списку удаления и удаления оттуда
         function addToSetListFilesVideosToDelete(id){
             setListFilesVideosToDelete([...listFilesVideosToDelete,  {'id': id}])
         }
-
+        
         function deleteFromSetListFilesVideosToDelete(id){
             setListFilesVideosToDelete(listFilesVideosToDelete.filter(file => file.id !== id))
         }
- 
-
-        function deleteVideo () {
-            var videoList = userVideoList
 
 
-            for (let i = 0; i<listFilesVideosToDelete.length; i++){
-                var videoList = videoList.filter(video => listFilesVideosToDelete[i].id !== video.id)
+        // реагируем на подрузку видео
+        useEffect(()=>{
+           // console.log('gotovo', props.postToBaseMediaResult.length)
+            if (props.postToBaseMediaResult.length){
+                props.getVideoFile(props.newVideoResult.id)
             }
-            setUserVideoList(videoList)
-
-            const url = '/video'
-            listFilesVideosToDelete.forEach(id =>{
-                props.deleteFromBase(id.id, url)
-            })
-
-            setListFilesVideosToDelete([])
-
-        }
-
-        
+        },[props.postToBaseMediaResult])
 
 
     return (
@@ -188,98 +154,67 @@ function UserVideoPage(props) {
                 placeholder='Поиск в названиях'
             />
 
-            <div className={cl.ControlBtnGroup}>
-                <div className={cl.ControlBtnNameContainer}>
-                    <div className={cl.loadingButton}>
-                        <MyButton
-                            onClick={modalActivation}
-                        >Загрузить новые видео</MyButton>
-                    </div>
+            <UserVideoControlButtonForm
+                setDeleteMode={setDeleteMode}
+                userVideoList={userVideoList}
+                setUserVideoList={setUserVideoList}
+                listFilesVideosToDelete={listFilesVideosToDelete}
+                setListFilesVideosToDelete={setListFilesVideosToDelete}
+                deleteFromBase={props.deleteFromBase}
+                modalActivation={modalActivation}
+            />
 
-                    <div className={cl.DeleteModeONButton}>
-                        <MyButton
-                            onClick={e => deleteModeEnable(e)}
-                        >Пометить файлы на удаление</MyButton>
-                    </div>
-
-                    <div className={cl.DeleteModeOFFButton}>
-                        <MyButton
-                            onClick={cancelDeleteMode}
-                        >Выключить режим удаления</MyButton>
-                    </div>
-
-                    {listFilesVideosToDelete.length > 0
-                    ?
-                    <div className={cl.DeleteButton}>
-                        <MyRedButton
-                            onClick={deleteVideo}
-
-                        >Удалить {listFilesVideosToDelete.length} видео </MyRedButton>
-                    </div>
-                    : <div></div>
-                    }
+            <div className={cl.PaddingForVideoAtUsersPage}>
+                {filteredVideo.length 
+                ? <div >
+                    <VideoContainer
+                        listFiles={userVideoList}
+                        filteredVideo={filteredVideo}
+                        deleteMode={deleteMode}
+                        addToSetListFilesVideosToDelete={addToSetListFilesVideosToDelete}
+                        deleteFromSetListFilesVideosToDelete={deleteFromSetListFilesVideosToDelete}
+                        
+                    />    
                 </div>
-            </div>
-
-
-
-
-                <div className={cl.PaddingForVideoAtUsersPage}>
-                    {filteredVideo.length 
-                    ? <div >
-                        <VideoContainer
-                            listFiles={userVideoList}
-                            filteredVideo={filteredVideo}
-                            deleteMode={deleteMode}
-                            addToSetListFilesVideosToDelete={addToSetListFilesVideosToDelete}
-                            deleteFromSetListFilesVideosToDelete={deleteFromSetListFilesVideosToDelete}
-                            
-                        />    
-                    </div>
-                    : <div>
-                        <h3 className={cl.VideoInfo}> К сожалению, пока нет Ваших видео</h3>
-                    </div>
-                    }
-                </div> 
+                : <div>
+                    <h3 className={cl.VideoInfo}> К сожалению, пока нет Ваших видео</h3>
+                </div>
+                }
+            </div> 
 
             <MyModal
                 visible={loadingVideoActive}
                 setVisible={setLoadingVideoActive}
-            >
-
-                {/* TODO костыль на создание видео */}
-                <MyButton
-                onClick={e => createNewVideo(e)}
-                > 
-                    Create New Video 
-                </MyButton>
-
-                    <UserVideoLoadingForm
-                        queryVideoInput={queryVideoInput}
-                        setQueryVideoInput={setQueryVideoInput}
-                        queryDescriptionInput={queryDescriptionInput}
-                        setQueryDescriptionInput={setQueryDescriptionInput}
-                        submitVideo={submitVideo}
-                        handlePreviewSubmit={handlePreviewSubmit}
-                        disabled={isVideoLoaded && isImageLoaded}
-                    />
-                </MyModal>
+                >
+                <UserVideoLoadingForm
+                    queryVideoInput={queryVideoInput}
+                    setQueryVideoInput={setQueryVideoInput}
+                    queryDescriptionInput={queryDescriptionInput}
+                    setQueryDescriptionInput={setQueryDescriptionInput}
+                    submitVideo={submitVideo}
+                    handlePreviewSubmit={handlePreviewSubmit}
+                    disabled={isVideoLoaded && isImageLoaded && !!queryVideoInput && !!queryDescriptionInput }
+                    submitAddNewVideoForm={submitAddNewVideoForm}
+                    videoObject={props.videoObject}
+                />
+            </MyModal>
         </>
     )
 }
 
 
 export default connect(
-    // mapStateToProps
     state => ({
         videoUserOwnerPreviews: state.videoOwnerUser,
         usersDict: state.usersDict,
         newVideoResult: getNewVideoResult(state),
         deleteToBaseResult: getDeleteFromBaseResult(state),
         postToBaseMediaResult: getPostToBaseMediaResult(state),
+        putToBaseResult: getPutToBaseResult(state),
+        videoObject: state.getVideo,
+
     }),
 
-    //mapDispatchToProps
     dispatch => ({
         getUserOwnerPreview: (value) =>{
             dispatch(getVideoUserOwnerAPI(value))
@@ -296,9 +231,11 @@ export default connect(
         postToBaseMedia: (formData, url) => {
             dispatch(postToBaseMediaAPI(formData, url))
         }, 
+        putToBase: (value, id, url) => {
+            dispatch(putToBaseAPI(value, id, url))
+        },
+        getVideoFile: (id) => {
+            dispatch(getVideoAPI(id))
+        },
     })
-
-
-
-
 )(UserVideoPage); 
