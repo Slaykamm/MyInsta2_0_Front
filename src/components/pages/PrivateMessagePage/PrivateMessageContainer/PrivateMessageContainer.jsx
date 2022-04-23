@@ -45,90 +45,7 @@ function PrivateMessageContainer({
     const [modal, setModal] = useState(false)
     const [replyPrivateWithQuotation, setReplyPrivateWithQuotation] = useState(true)
     const [privateMessage, setPrivateMessage] = useState('')
-    const [newRoomName, setNewRoomName] = useState()
     
-
-    const callModal = useMemo(()=>{
-        return userForNewChat
-    },[userForNewChat])
-
-
-    useEffect(()=>{
-        
-        /// HERE
-        console.log('te')
-        callModalForPrivate(callModal)  
-    }, [callModal])
-
- 
-    // function callModalForPrivate(user){
-
-    //     if (user){
-    //         props.getPrivateRooms(user)
-    //     }
-
-
-    // } 
-
-
-
-
-    
-
-
-
-    function callModalForPrivate(user) {
-      //  console.log('user', user)
-      //  console.log('props.usersPrivateRooms', props.usersPrivateRooms)
-      //  console.log('target', target)
-        
-        if (user && props.usersPrivateRooms && target){
-            const addressatUser = user.id
-            const currentUser = get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id'])
-            const roomName = getPrivateRoomNameFromIndexesService(user.id, get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
-    
-            //проверяем. Если есть такой чат или нет. Да тру - вариант нового чата.
-          //  console.log('user.id', user)
-            console.log('PIZDEC!', privateModal)
-            setPrivateModal(true)
-            setNewRoomName(roomName)
-
-        }
-    }
-    
-
-    // при нажатии кнопки отправить - в танку кидаем имя комнаты. Сообщение и и имя юзера кто пишет
-    function SendPrivateMessage(e){
-        e.preventDefault();
-        if (props.usersPrivateRooms && newRoomName){
-            if (!Boolean(props.usersPrivateRooms.filter(room => room.privateChatName === newRoomName).length)){
-                  props.postPrivateRoom(newRoomName, privateMessage, get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
-              }
-              else{
-                props.postPrivateMessage(get(props.usersPrivateRooms.filter(room => room.privateChatName === newRoomName),[0,'id']), 
-                newRoomName, 
-                privateMessage,
-                get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
-                  //вот сюда сделать танку и апи писать в чат newRoomName сообщение privateMessage
-              }
-        }
-    }
-
-    //слушаем обновление стора. если из редюсера пришел статус 201 - значит ок. Мы записали личку в новую компану. соотвествеено если это так то мы обновляем страницу. :)
-    useEffect(()=>{
-        setPrivateModal(false)
-        if (props.newMessageSucces === 201) {
-            window.location.reload();
-        }
-    },[props.newMessageSucces])
-
-    useEffect(()=>{
-        setPrivateModal(false)
-        if (props.privateMessageSucces === 201) {
-            window.location.reload();
-        }
-    },[props.privateMessageSucces])
-
 
 
     function startChat(id){
@@ -163,40 +80,6 @@ function PrivateMessageContainer({
 
     return (
         <>
-         {/* блока приватных сообщений КОТОРЫХ НЕ БЫЛО! */}
-        <MyModal
-            visible={privateModal}
-            setVisible={setPrivateModal}
-        >
-
-            <CommentInput
-                value={privateMessage}
-                onChange={e => setPrivateMessage(e.target.value)}
-                onClick={e => SendPrivateMessage(e)}
-
-                // onClickCancel={setModal(false)}
-            />
-        </MyModal>
-
-{/* 
-            {userForNewChat
-            ?   <div>
-
-                <MyPrivateWhispModule 
-                userForNewChat={userForNewChat}
-                usersDict={props.usersDict}
-                usersPrivateRooms={props.usersPrivateRooms}
-                />  
-                {console.log('aaaaaaaaa')}     
-                </div>
-            :   <span></span>
-            } */}
-
-
-
-
-
-
 
                  {/* блока приватных сообщений КОТОРЫЕ БЫЛИ */}
         <MyModalChat

@@ -221,7 +221,6 @@ function PrivateMessagePage(props) {
                 setUserForNewChat={setUserForNewChat}
                 setUserPrivateRooms={setUserPrivateRooms}
                 />  
-                {console.log('aaaaaaaaa')}     
                 </div>
             :   <span></span>
             }
