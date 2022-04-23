@@ -83,7 +83,7 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
 
                 </div>
 
-
+                {/* модалка для того, чтобы по редактировать сообщения в чате */}
                 <MyModal
                 visible={modalEdit}
                 setVisible={setModalEdit}

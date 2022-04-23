@@ -2,7 +2,7 @@ import React from 'react'
 import Header from '../header/Header'
 import Menu from '../../../modules/Menu/Menu'
 import cl from './PrivateMessagePage.module.css'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo  } from 'react'
 import PrivateMessageContainer from './PrivateMessageContainer/PrivateMessageContainer'
 import { connect } from 'react-redux'
 import { get, filter, flatten } from 'lodash'
@@ -16,6 +16,7 @@ import { getUsersDict, getUserRoom, getPutToBaseResult, getDeleteFromBaseResult}
 import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages } from '../../../redux/Selectors/privateRoomsSelector'
 import { filterQuery } from '../../../services/filterQuery'
 import { sortBy, last, pick } from 'lodash'
+import MyPrivateWhispModule from '../../../modules/MyPrivateWhispModule/MyPrivateWhispModule'
 
 function PrivateMessagePage(props) {
     
@@ -24,7 +25,6 @@ function PrivateMessagePage(props) {
     const [usersPrivateMessages, setUsersPrivateMessages] = useState()
     const [replyPrivateMessage, setReplyPrivateMessage] = useState('')
     const [listUsers, setListUsers] = useState()
-    const [userForNewChat, setUserForNewChat] = useState()
 
 
     useEffect(()=>{
@@ -161,7 +161,7 @@ function PrivateMessagePage(props) {
         function checkTheInput(event){
             setSearchQuery(event.target.value)
         }
-        
+
         const filteredUsersProcess = useMemo(()=>{
             return filterQuery(listUsers, searchQuery)
         },[listUsers, searchQuery])
@@ -179,15 +179,55 @@ function PrivateMessagePage(props) {
 
         // пишем личные сообщения найденным юзерам
 
+        const [userForNewChat, setUserForNewChat] = useState()
+        const [target, setTarget] = useState() // костыль ключ модалки, чтобы вызывалась только нужная
+        const [privateModal, setPrivateModal] = useState(false)
+        const [userPrivateRooms, setUserPrivateRooms] = useState()
+
+        // function callModalForPrivate (target, user){
+        //     setUserForNewChat(user)
+        //     setTarget(target)
+        //     setPrivateModal(true)
+        // } 
 
 
-        function callModalForPrivate (user){
-            setUserForNewChat(user)
-            console.log('user', user)
+       // const [userForNewChat, setUserForNewChat] = useState()
+
+        function callModalForPrivate(target, user){
+    
+    
+
+            props.getPrivateRooms(user.id)
+            setUserForNewChat(user.id)
+            console.log('testtest', user)
+    
         } 
+
+
+
+
+
 
     return (
         <>
+
+            {userForNewChat
+            ?   <div>
+
+                <MyPrivateWhispModule
+                userForNewChat={userForNewChat}
+                usersDict={props.usersDict}
+                usersPrivateRooms={props.usersPrivateRooms}
+                setUserForNewChat={setUserForNewChat}
+                setUserPrivateRooms={setUserPrivateRooms}
+                />  
+                {console.log('aaaaaaaaa')}     
+                </div>
+            :   <span></span>
+            }
+
+
+
         <Header/>
         <Menu
         value={searchQuery}
@@ -214,8 +254,8 @@ function PrivateMessagePage(props) {
                                         key={messageRoom.privateChatID}
                                         messages={usersPrivateMessages}
                                         ID={messageRoom.privateChatID}
-                                        user={filter(usersDict, {'id':messageRoom.anotherChatMate})[0].username}
-                                        avatar={filter(usersDict, {'id':messageRoom.anotherChatMate})[0].avatar}
+                                        user={filter(usersDict, {'id':messageRoom.anotherChatMate})[0]?.username}
+                                        avatar={filter(usersDict, {'id':messageRoom.anotherChatMate})[0]?.avatar}
                                         text={
                                         getLastMessage(messageRoom.privateChatID)  
                                         ? getLastMessage(messageRoom.privateChatID)
@@ -230,6 +270,9 @@ function PrivateMessagePage(props) {
                                         privateMessageDelete={privateMessageDelete}
                                         privateMessageEdit={privateMessageEdit}
                                         userForNewChat={userForNewChat}
+                                        target={target}
+                                        setPrivateModal={setPrivateModal}
+                                        privateModal={privateModal}
                                         usersPrivateRooms={props.usersPrivateRooms}
                                         
                                     />
@@ -254,7 +297,7 @@ function PrivateMessagePage(props) {
                                             
                                         >
                                             <span
-                                                onClick={() => callModalForPrivate(user)}
+                                                onClick={(e) => callModalForPrivate(e.target, user)}
                                                 value={user.username}
                                                 
                                             >{user.username}, </span>
@@ -286,7 +329,8 @@ export default connect(
         privateMessages: getPrivateMessages(state),
         userRoom: getUserRoom(state),
         putToBaseResult: getPutToBaseResult(state),
-        deleteFromBaseResult: getDeleteFromBaseResult(state)
+        deleteFromBaseResult: getDeleteFromBaseResult(state),
+        
 
         
         

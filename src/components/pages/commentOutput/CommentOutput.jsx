@@ -52,7 +52,8 @@ function CommentOutput({videoID, ...props}) {
         props.getCommentsWithQuotations(videoID)   // <- будущие комменты TODO
     },[localStorage.getItem('SLNToken')])
 
- 
+    
+
 
 
     //обрабатываем ошибку авториации)
@@ -122,6 +123,7 @@ function CommentOutput({videoID, ...props}) {
     // ++ простой коммент----------------------------------------
     function printComment(e){
         e.preventDefault();
+
         const message =    {
             "text":replyComment,
             "rating": 0,
@@ -187,11 +189,15 @@ function CommentOutput({videoID, ...props}) {
     const [privateMessage, setPrivateMessage] = useState('')
     const [newRoomName, setNewRoomName] = useState()
     const [user, setUser] = useState({})
-    function commentPrivateMessege(id, user){
+    const [target, setTarget] = useState('')  // эти типо ключа чтобы срабатывала нужна модалка. иначе тригеряться все по фазе всплытия
 
+    function commentPrivateMessege(id, user){
+        console.log("111", id.target )
+        setTarget(id.target)
         //получаем оба айди
         //console.log('тот кому пишем ', get(filter(props.usersDict, {'username': user}),[0,'id']))
         //console.log('МЫ ', get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
+
 
         setUser({
             id:  get(filter(props.usersDict, {'username': user}),[0,'id']),
@@ -205,24 +211,29 @@ function CommentOutput({videoID, ...props}) {
         //пишшем в комнату, если нет создаем ее и пишем
     }
 
-    //отправка приватных сообщений
+    //отправка приватных сообщений TODO REFACTOR THIs!!!!!!
 
     useEffect(()=>{
         if (user.id){
             props.getPrivateRooms(user.id)
+
         }        
     },[user])
     
 
     useEffect(()=>{
-            callModalForPrivate(user)  
+            callModalForPrivate2(user)
+              
+            console.log('Hello World!')
      }, [props.usersPrivateRooms])
 
 
 
 
-    function callModalForPrivate(user) {
-        if (props.usersPrivateRooms.length && user){
+    function callModalForPrivate2(user) {
+
+        
+        if (props.usersPrivateRooms.length && user && target ){
             const addressatUser = user.id
             const currentUser = get(filter(props.usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id'])
             const roomName = user.roomName
@@ -266,25 +277,32 @@ function CommentOutput({videoID, ...props}) {
         }
     },[props.privateMessageSucces])
 
-
+// ------------------till here!!!
 
     return (
-        <div className={cl.BaseLine}>
+        <div 
+            className={cl.BaseLine}
+            >
 
          {/* блока приватных сообщений КОТОРЫХ НЕ БЫЛО! */}
-         <MyModal
+
+        {console.log('privateModal', privateModal)}
+        { privateModal &&
+            <MyModal
             visible={privateModal}
             setVisible={setPrivateModal}
-        >
+            >
+                <CommentInput
+                    value={privateMessage}
+                    onChange={e => setPrivateMessage(e.target.value)}
+                    onClick={e => SendPrivateMessage(e)}
 
-            <CommentInput
-                value={privateMessage}
-                onChange={e => setPrivateMessage(e.target.value)}
-                onClick={e => SendPrivateMessage(e)}
+                    // onClickCancel={setModal(false)}
+                />
+            </MyModal>
+        }
+         
 
-                // onClickCancel={setModal(false)}
-            />
-        </MyModal>
 
 
             
@@ -318,6 +336,7 @@ function CommentOutput({videoID, ...props}) {
 
             {/* <CommentReduxForm 
             onSubmit={addComment}/> */}
+            
             <CommentInput
 
                 value={replyComment}

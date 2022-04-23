@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { filter, sortBy, get } from 'lodash'
 import cl from './PrivateMessageContainer.module.css'
 import MyModalChat from './ModalChat/ModalChat'
@@ -15,7 +15,10 @@ import { postRoomAPI } from '../../../../API/postPrivateRoomAPI'
 import { postMessageAPI } from '../../../../API/postPrivateMessage'
 import { putToBaseAPI } from '../../../../API/putToBaseAPI'
 import { getPutToBaseResult } from '../../../../redux/Selectors/baseSelectors'
+import MyPrivateWhispModule from '../../../../modules/MyPrivateWhispModule/MyPrivateWhispModule'
 
+import { getPrivateRooms } from '../../../../redux/Selectors/privateRoomsSelector'
+import { getPrivateRoomsAPI } from '../../../../API/getPrivateRoomsAPI'
 
 
 function PrivateMessageContainer({
@@ -34,33 +37,60 @@ function PrivateMessageContainer({
     messages, 
     userForNewChat,
     ID, 
+    target,
+    setPrivateModal,
+    privateModal,
     ...props}) {
 
-
     const [modal, setModal] = useState(false)
-     // TODO заглушка чтобы убрать цитирование
     const [replyPrivateWithQuotation, setReplyPrivateWithQuotation] = useState(true)
-    const [privateModal, setPrivateModal] = useState(false)
     const [privateMessage, setPrivateMessage] = useState('')
     const [newRoomName, setNewRoomName] = useState()
+    
 
-    console.log('userForNewChat', userForNewChat)
+    const callModal = useMemo(()=>{
+        return userForNewChat
+    },[userForNewChat])
+
+
     useEffect(()=>{
-        console.log('here')
-        callModalForPrivate(userForNewChat)  
-    }, [userForNewChat])
+        
+        /// HERE
+        console.log('te')
+        callModalForPrivate(callModal)  
+    }, [callModal])
 
  
+    // function callModalForPrivate(user){
+
+    //     if (user){
+    //         props.getPrivateRooms(user)
+    //     }
+
+
+    // } 
+
+
+
+
+    
+
+
 
     function callModalForPrivate(user) {
-        if (user && props.usersPrivateRooms){
+      //  console.log('user', user)
+      //  console.log('props.usersPrivateRooms', props.usersPrivateRooms)
+      //  console.log('target', target)
+        
+        if (user && props.usersPrivateRooms && target){
             const addressatUser = user.id
             const currentUser = get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id'])
             const roomName = getPrivateRoomNameFromIndexesService(user.id, get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
     
             //проверяем. Если есть такой чат или нет. Да тру - вариант нового чата.
+          //  console.log('user.id', user)
+            console.log('PIZDEC!', privateModal)
             setPrivateModal(true)
-
             setNewRoomName(roomName)
 
         }
@@ -74,9 +104,7 @@ function PrivateMessageContainer({
             if (!Boolean(props.usersPrivateRooms.filter(room => room.privateChatName === newRoomName).length)){
                   props.postPrivateRoom(newRoomName, privateMessage, get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']))
               }
-      
               else{
-                  
                 props.postPrivateMessage(get(props.usersPrivateRooms.filter(room => room.privateChatName === newRoomName),[0,'id']), 
                 newRoomName, 
                 privateMessage,
@@ -84,7 +112,6 @@ function PrivateMessageContainer({
                   //вот сюда сделать танку и апи писать в чат newRoomName сообщение privateMessage
               }
         }
-  
     }
 
     //слушаем обновление стора. если из редюсера пришел статус 201 - значит ок. Мы записали личку в новую компану. соотвествеено если это так то мы обновляем страницу. :)
@@ -105,6 +132,7 @@ function PrivateMessageContainer({
 
 
     function startChat(id){
+        console.log('teeest')
         setModal(true)
 
         const message = {
@@ -116,10 +144,6 @@ function PrivateMessageContainer({
         props.putToBase(message, url, id)
             console.log('TODO ОБНОВЛЯЕМ ДАТУ ЗАХОДА В КОМНАТУ')
     }
-
-    useEffect(()=>{
-        console.log('props.putToBaseResult', props.putToBaseResult)
-    },[props.putToBaseResult])
 
 
 
@@ -154,6 +178,23 @@ function PrivateMessageContainer({
             />
         </MyModal>
 
+{/* 
+            {userForNewChat
+            ?   <div>
+
+                <MyPrivateWhispModule 
+                userForNewChat={userForNewChat}
+                usersDict={props.usersDict}
+                usersPrivateRooms={props.usersPrivateRooms}
+                />  
+                {console.log('aaaaaaaaa')}     
+                </div>
+            :   <span></span>
+            } */}
+
+
+
+
 
 
 
@@ -178,14 +219,14 @@ function PrivateMessageContainer({
                 replyPrivateWithQuotation={replyPrivateWithQuotation}
                 />                  
                 
-        )}
+            )}
 
-        <CommentInput
-                value={replyPrivateMessage}
-                onChange={e => setReplyPrivate(e.target.value)}
-                onClick={e => ReplyPrivateTransition(e)}
-        // onClickCancel={setModal(false)}
-        /> 
+            <CommentInput
+                    value={replyPrivateMessage}
+                    onChange={e => setReplyPrivate(e.target.value)}
+                    onClick={e => ReplyPrivateTransition(e)}
+            // onClickCancel={setModal(false)}
+            /> 
 
         </MyModalChat>
 
@@ -226,6 +267,8 @@ function PrivateMessageContainer({
     )
 }
 
+
+
 export default connect(
     //mapStateToProps
     state => ({
@@ -234,6 +277,7 @@ export default connect(
         newMessageSucces: state.postUserRoom,
         privateMessageSucces: state.postUserPrivate,
         putToBaseResult: getPutToBaseResult(state),
+        usersPrivateRooms: getPrivateRooms(state),
     }),
     //mapDispatchToProps
     dispatch => ({
@@ -248,6 +292,9 @@ export default connect(
         },
         putToBase: (value, id, url) => {
             dispatch(putToBaseAPI(value, id, url))
+        },
+        getPrivateRooms: (value) => {
+            dispatch(getPrivateRoomsAPI(value))
         },
     })
     

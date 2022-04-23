@@ -12,9 +12,8 @@ function VideoContainer({
     ...props
 }) {
 
-    const clearedVideo = clearDeletedVideo(listFiles)
+    const clearedVideo = clearDeletedVideo(filteredVideo)
 
-    
     //video.title === video.description && isNumber(video.description) 
 
 //    console.log('filteredVideo', filteredVideo)

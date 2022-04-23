@@ -18,7 +18,7 @@ import { getCheckUserAPI } from '../../API/getCheckUserAPI';
 import MyButton from '../../UI/MyButton/MyButton';
 import MenuNew from '../MenuNew/MenuNew';
  
-
+import _ from 'lodash' 
 
 const WelcomePage = (props) => {
     const [isError, setIsError] = useState(false)
@@ -98,6 +98,29 @@ console.log('token', localStorage.getItem('SLNToken'))
 
 
 
+   
+
+    const data = [ 
+        {
+            'id': 1,
+            'sex': 'male',
+            'flat': {
+                'rooms': 2,
+                'number': 13
+            }
+        }, 
+        {
+            'id': 2,
+            'sex': 'female',
+            'flat': {
+                'rooms': 1,
+                'number': 9
+            }
+        }, 
+    ]
+    
+
+
     return (
         <div>
             <Header/>
@@ -115,6 +138,7 @@ console.log('token', localStorage.getItem('SLNToken'))
         </div>
     );
 };
+
 
 export default connect(
     //mapStateToProps

@@ -21,6 +21,7 @@ function DropDown(
                 drop={direction}
                 variant="secondary"
                 title='...'
+                
             >
                 {replyPrivateWithQuotation 
                 ? <span></span>
@@ -54,7 +55,7 @@ function DropDown(
 
                         {commentPrivateMessege
                         ?   <Dropdown.Item 
-                                onClick={id => commentPrivateMessege(props.id, props.user)}
+                                onClick={e => commentPrivateMessege(e,  props.user)}
                                 >
                                     Отправить личное сообщение автору
                             </Dropdown.Item>

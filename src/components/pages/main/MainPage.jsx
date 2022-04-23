@@ -33,6 +33,7 @@ function checkTheInput(event){
 }
 
 const filteredVideo=filterQuery(listFiles, searchQuery)
+
 // ВСЕ
 
  

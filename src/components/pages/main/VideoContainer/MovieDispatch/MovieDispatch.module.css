@@ -17,13 +17,32 @@ img {
 
 .InnerText {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .InnerText span{
     color: black;
     font-weight: bold;
 }
+
+.InnerText h5{
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.textLimits {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+
 .checkBoxStyle {
    
 

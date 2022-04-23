@@ -26,6 +26,9 @@ import '../../../../node_modules/video-react/dist/video-react.css'
 import { useParams } from 'react-router-dom'
 
 import { getVideoAPI } from '../../../API/getVideoAPI'
+import { getPrivateRooms} from '../../../redux/Selectors/privateRoomsSelector'
+import { getPrivateRoomsAPI } from '../../../API/getPrivateRoomsAPI'
+import MyPrivateWhispModule from '../../../modules/MyPrivateWhispModule/MyPrivateWhispModule'
 
 
 
@@ -33,6 +36,7 @@ function VideoPostPage(props) {
     const params = useParams()
     const [videoID, setVideoID] = useState('')
 
+    console.log('Rendered!!!')
     if (!videoID){
         setVideoID(params.id)
     }
@@ -41,10 +45,49 @@ function VideoPostPage(props) {
         props.getVideo(params.id)
     },[videoID])
 
-    const clickAuthor = e => console.log('clickHere')
+
+    useEffect(()=>{
+        props.getUsersDict()
+    },[])
+
+    const [userForNewChat, setUserForNewChat] = useState()
+    const [userPrivateRooms, setUserPrivateRooms] = useState()
+
+
+    function callPrivate(user){
+        props.getPrivateRooms(user)
+        setUserForNewChat(user)
+    } 
+
+    console.log('userForNewChat', userForNewChat)
+
+    useEffect(()=>{
+        setUserPrivateRooms(props.usersPrivateRooms)
+        console.log('111111111111usersPrivateRooms', props.usersPrivateRooms)
+    }, [props.usersPrivateRooms])
+
+
 
     return (
         <>
+
+            {userForNewChat
+            ?
+                <div>
+
+                <MyPrivateWhispModule 
+                    userForNewChat={userForNewChat}
+                    usersDict={props.usersDict}
+                    usersPrivateRooms={userPrivateRooms}
+                    setUserForNewChat={setUserForNewChat}
+                    setUserPrivateRooms={setUserPrivateRooms}
+                />
+                {console.log('module ACTIVATE')}   
+                </div>
+                    
+            :   <span></span>
+            }
+
             <Header/>
             <Menu
                 placeholder='Поиск автора в комментариях'
@@ -78,13 +121,17 @@ function VideoPostPage(props) {
 
                             </div>
                             <br/>
-                            <div className={cl.VideoMenuOptions}>
+                            <div 
+                                className={cl.VideoMenuOptions}
+                                //onClick={e => e.stopPropagation()}
+                            >
                                 <p>
                                     <span>Описание видео: </span> 
                                     {props.video.description}
                                 </p>
                                 <p 
-                                    onClick={clickAuthor}
+                                    onClick={(e) => callPrivate(props.video.author)}
+                                    
                                     className={cl.AuthorHover}
                                 >
                                     <span 
@@ -94,7 +141,8 @@ function VideoPostPage(props) {
                             </div>
                             
                         </div>
-                        <CommentOutput videoID={videoID}/>
+
+                            <CommentOutput videoID={videoID}/>
                         <hr/>
                         
                         <Footer/>   
@@ -125,6 +173,7 @@ export default connect(
     state => ({
         video: state.getVideo,
         usersDict: getUsersDict(state),
+        usersPrivateRooms: getPrivateRooms(state),
 
         }),
 
@@ -136,6 +185,9 @@ export default connect(
         },
     getUsersDict: () => {
         dispatch(getUserDictAPI())
+    },
+    getPrivateRooms: (value) => {
+        dispatch(getPrivateRoomsAPI(value))
     },
 
     })
