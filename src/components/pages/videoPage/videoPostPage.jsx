@@ -66,8 +66,9 @@ function VideoPostPage(props) {
         console.log('111111111111usersPrivateRooms', props.usersPrivateRooms)
     }, [props.usersPrivateRooms])
 
-
-
+    console.log('props.usersDict', props.usersDict)
+    console.log('props.video.author', props.video.author)
+    console.log('testt', get(filter(props.usersDict, {'id': props.video.author}),[0, 'username']))
     return (
         <>
 
@@ -136,7 +137,7 @@ function VideoPostPage(props) {
                                 >
                                     <span 
                                         >Автор: </span> 
-                                    {get(filter(props.usersDict, {'author': props.video.author}),[0, 'username'])}
+                                    {get(filter(props.usersDict, {'id': props.video.author}),[0, 'username'])}
                                 </p>
                             </div>
                             

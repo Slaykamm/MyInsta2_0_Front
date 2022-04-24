@@ -118,7 +118,7 @@ const movieDispatch = ({
                         onClick={() => callModalForPrivate(author)}
                         className={cl.AuthorHover}
                     ><span
-                    >Автор: </span>{get(filter(props.usersDict, {'author': author}),[0, 'username'])}</h5> 
+                    >Автор: </span>{get(filter(props.usersDict, {'id': author}),[0, 'username'])}</h5> 
                 </div>
                 <div className={cl.InnerText}>   
                     <div >

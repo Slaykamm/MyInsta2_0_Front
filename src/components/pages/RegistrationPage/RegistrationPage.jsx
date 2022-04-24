@@ -7,8 +7,13 @@ import { getUserDictAPI } from '../../../API/getUserDictAPI'
 import { putToBaseAPI } from '../../../API/putToBaseAPI'
 import { postToBaseMediaAPI } from '../../../API/postToBaseMediaAPI';
 import { createNewUserAPI } from '../../../API/createNewUserAPI';
-import { getPutToBaseResult, getPostToBaseMediaResult, getCreateEmptyUserResult} from '../../../redux/Selectors/baseSelectors'
-
+import { 
+    getPutToBaseResult, 
+    getPostToBaseMediaResult, 
+    getCreateEmptyUserResult, 
+    getPutNewUserDataResult
+} from '../../../redux/Selectors/baseSelectors'
+import { putNewUserDataAPI } from '../../../API/putNewUserDataAPI';
 import Header from '../header/Header'
 import RegistrationForm from './RegistrationForm/RegistrationForm';
 import NameForm from '../../../UI/LoadFIlesForm/NameForm';
@@ -52,12 +57,15 @@ function RegistrationPage(props) {
     }, [props.usersDict])
     //==================================END
 
+    useEffect(()=>{
+        console.log('userrr', user)
+
+        // usage props.putToBase(message, id, url)
+
+    },[user])
 
 
     // ==============контролируем что в юзере==============
-    useEffect(()=>{
-        console.log('user', user)
-    },[user])
 
 
     // Логика - создаем пустого юзера . 
@@ -71,7 +79,37 @@ function RegistrationPage(props) {
     
     function submitRegistrationData(formData){
         console.log("registration Data", formData)
+
+        
+//  тут делаем следующее:
+        // 1. Загружаем через putTobase: login, Имя, емаил в putto base user
+         
+        // 2. меняем пароль на новый с технического 'qwe+12345'
+        const payload = {
+            'username':formData.regLogin,
+            'email':  formData.regEmail,
+        }
+        const url = '/users'
+
+        const payloadAuthor = {
+            'phone':formData.regPhone,
+        }
+
+        props.putNewUserData(
+            payload,
+            url,
+            user.userID,
+            localStorage.getItem('SLNToken'),
+            formData.regPassword,
+            user.authorID,
+            payloadAuthor
+            )
     }
+
+    useEffect(()=>{
+        console.log('putNewUserDataResult', props.putNewUserDataResult)
+    },[props.putNewUserDataResult])
+//===========все. юзер создан!
 
 
     const RegForm = reduxForm({
@@ -163,13 +201,16 @@ function RegistrationPage(props) {
     )
 }
 
+
+
 export default connect(
     //mapStateToProps
     state => ({
         usersDict: state.usersDict,
         putToBaseResult: getPutToBaseResult(state),
         postToBaseMediaResult: getPostToBaseMediaResult(state),
-        createEmpyUserResult: getCreateEmptyUserResult(state)
+        createEmpyUserResult: getCreateEmptyUserResult(state),
+        putNewUserDataResult: getPutNewUserDataResult(state)
     }),
 
     //mapDispatchToProps
@@ -186,6 +227,9 @@ export default connect(
         createUser: () => {
             dispatch(createNewUserAPI())
         }, 
+        putNewUserData: (message, url, id, userToken, password, authorID, phoneData) => {
+            dispatch(putNewUserDataAPI(message, url, id, userToken, password, authorID, phoneData))
+        },
         
     })
 )(RegistrationPage);

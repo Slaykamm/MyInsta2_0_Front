@@ -185,6 +185,7 @@ function handleAvatarSubmit(e) {
     formData.append('imagefile', files[0]);
 
         const url = `http://127.0.0.1:8000/api/author/${get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'userID'])}/`
+        console.log('url', url)
 
         props.postToBaseMedia(formData, url)
 }
@@ -195,8 +196,12 @@ function handleAvatarSubmit(e) {
         }
     }, [props.postToBaseMediaResult])
 
+    console.log('1000123', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
 
-
+    console.log('1123', localStorage.getItem('SLNUserName'))
+    console.log('1123', {'username':localStorage.getItem('SLNUserName')})
+    console.log('1123', filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}))
+    console.log('1123', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']))
 
 
     return (

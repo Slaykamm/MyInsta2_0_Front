@@ -42,7 +42,7 @@ function MyPrivateWhispModule(
         if (usersDict){
             setUserID(get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
             setListUsers(usersDict.map(user => pick(user, ['id', 'username'])))
-            console.log('check1', usersDict.map(user => pick(user, ['id', 'username'])))
+           // console.log('check1', usersDict.map(user => pick(user, ['id', 'username'])))
             
         }
         
@@ -50,7 +50,7 @@ function MyPrivateWhispModule(
 
 
         //получаем юзера с которому будем писать сообщение и высываем модальный чат.
-        console.log('check!', listUsers)
+      //  console.log('check!', listUsers)
 
         useEffect(()=>{
             const user = filter(listUsers, {'id':userForNewChat})

@@ -175,8 +175,6 @@ function PrivateMessagePage(props) {
         
 
         // ВСЕ
-
-
         // пишем личные сообщения найденным юзерам
 
         const [userForNewChat, setUserForNewChat] = useState()
@@ -184,23 +182,11 @@ function PrivateMessagePage(props) {
         const [privateModal, setPrivateModal] = useState(false)
         const [userPrivateRooms, setUserPrivateRooms] = useState()
 
-        // function callModalForPrivate (target, user){
-        //     setUserForNewChat(user)
-        //     setTarget(target)
-        //     setPrivateModal(true)
-        // } 
-
-
-       // const [userForNewChat, setUserForNewChat] = useState()
 
         function callModalForPrivate(target, user){
-    
-    
-
             props.getPrivateRooms(user.id)
             setUserForNewChat(user.id)
             console.log('testtest', user)
-    
         } 
 
 
@@ -224,9 +210,6 @@ function PrivateMessagePage(props) {
                 </div>
             :   <span></span>
             }
-
-
-
         <Header/>
         <Menu
         value={searchQuery}

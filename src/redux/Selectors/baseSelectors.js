@@ -77,3 +77,8 @@ export const getChangePasswordResult = (state) => {
 export const getNewVideoResult = (state) => {
     return state.createNewVideoReducer
 } 
+
+export const getPutNewUserDataResult = (state) => {
+    return state.putNewUserDataReducer
+} 
+

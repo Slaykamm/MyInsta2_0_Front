@@ -2,7 +2,6 @@ export const requiredField = (value) => {
     if (value) {
         return undefined
     }
-    console.log('requiered MISTAKE')
     return 'Field is requered'
 }
 
