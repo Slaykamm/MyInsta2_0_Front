@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { reduxForm } from 'redux-form';
 import { get, filter, pick } from 'lodash'
 import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
 import { putToBaseAPI } from '../../../API/putToBaseAPI'
 import { postToBaseMediaAPI } from '../../../API/postToBaseMediaAPI';
@@ -25,6 +26,7 @@ function RegistrationPage(props) {
     const [userForEdit, setUserForEdit] = useState({})
     const [editUser, setEditUser] = useState({})
     const [aaa, setAaa] = useState()
+    const [newUserToken, setNewUserToken] = useState()
     const [user, setUser] = useState({
         userID: null,
         authorID: null,
@@ -36,14 +38,16 @@ function RegistrationPage(props) {
 )
     //============после создания нового будущего юзера. присваиваем юзеру в стейте: id USER и id Author
 
-    function createUsers() {
+
+    useEffect(()=>{
         props.createUser()
-                //setUser({...user, ...{userName: '123'}})
-    }
-    
+    },[])
+
+
     useEffect(()=>{
         setUserForEdit(props.createEmpyUserResult)
         setUser({...user, ...{authorID: props.createEmpyUserResult.id}})
+        setNewUserToken(props.createEmpyUserResult.token)
         props.getUsersDict()
     },[props.createEmpyUserResult])
 
@@ -99,15 +103,23 @@ function RegistrationPage(props) {
             payload,
             url,
             user.userID,
-            localStorage.getItem('SLNToken'),
+            newUserToken,
             formData.regPassword,
             user.authorID,
             payloadAuthor
             )
     }
 
+    const navigate = useNavigate()
+
     useEffect(()=>{
         console.log('putNewUserDataResult', props.putNewUserDataResult)
+        console.log('props.putNewUserDataResult?.status', props.putNewUserDataResult?.status)
+        if (props.putNewUserDataResult.status === 200){
+
+            navigate("/login")
+
+        }
     },[props.putNewUserDataResult])
 //===========все. юзер создан!
 
@@ -119,15 +131,6 @@ function RegistrationPage(props) {
 
     //==============заглушка на ререндер
 
-    function renderer(e){
-        e.preventDefault;
-        setAaa(Date.now())
-        console.log('userrr', user)
-        setUser({...user, ...{userName: 'aaa'}})
-    }
-
-
-    
 
 
     // обработка загрузки аватарки========================+
@@ -150,22 +153,11 @@ function RegistrationPage(props) {
             //window.location.reload();
         }
     }, [props.postToBaseMediaResult])
-//===================готово. Прикол в том, что т.к. я пытаюсь ее получать из обновленного словаря. то тогда когда я за ней лезу ее еще там нет.
 
-// TODO разобраться с валидациями. я вижу на каждое поле делать свой валидатор. и возможно свой инпут. но тут надо подумать.
     return (
         <>
             <Header/>
                 <div className={cl.BaseLayer}>
-
-                <button
-                    onClick={createUsers}
-                >Create</button>
-
-                <button
-                    onClick={renderer}
-                >Render</button>
-
                     <div className={cl.InnerContainer}>
                         <div>
                             <h3>Приветстуем Вас на форме регистрации</h3>
@@ -177,31 +169,25 @@ function RegistrationPage(props) {
                         </div>
 
 
-                <div className={cl.UserInfoViewImage}>
-                    {get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])
-                        ? <span><img src={get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])} alt='avatar'/></span>
-                        : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
-                    }
+                        <div className={cl.UserInfoViewImage}>
+                            {get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])
+                                ? <span><img src={get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])} alt='avatar'/></span>
+                                : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
+                            }
 
-                    <div className={cl.AvatarButton}>
-                        <p></p>
-                        <NameForm 
-                            handleSubmit={handleAvatarSubmit}  
-                            />                           
+                            <div className={cl.AvatarButton}>
+                                <p></p>
+                                <NameForm 
+                                    handleSubmit={handleAvatarSubmit}  
+                                    />                           
+                            </div>
+                            
+                        </div>
                     </div>
-                    
                 </div>
-
-
-                    </div>
-
-                </div>
-        
         </>
     )
 }
-
-
 
 export default connect(
     //mapStateToProps

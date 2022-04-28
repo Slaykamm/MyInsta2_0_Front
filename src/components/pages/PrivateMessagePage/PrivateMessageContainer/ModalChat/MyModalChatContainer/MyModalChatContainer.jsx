@@ -14,7 +14,6 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
     const [modalEdit, setModalEdit] = useState(false)
     const [editMessage, setEditMessage] = useState(roomMessage.text)
 
-
     function EditTransition(e){
         e.preventDefault();
         setModalEdit(false)
@@ -25,23 +24,15 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
         e.preventDefault();
         privateMessageDelete(roomMessage.id)
     }
-
-
-
     return (
         <>
                 <div className={cl.commentContainer}>
                     <div className={cl.userInfo}>
                         <div >
-
-                            
-
                             {get(filter(usersDict, {'author': author}),[0,'avatar']) 
                             ? <span> <img style={{height:'50px'}} src={get(filter(usersDict, {'author': author}),[0,'avatar'])}/></span>
                             : <span><img style={{height:'50px'}} src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
                         }
-
-
                         </div>
                         <div>
                             <span>{get(filter(usersDict, {'author': author}),[0,'username'])}</span>  
@@ -50,37 +41,27 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
                 </div>
 
                 <div className={cl.Context}>
-
                     <div className={cl.postDate}>Опубликовано: {convertedFullDate(create_at)}</div>
                     <div><span>{roomMessage.text}</span></div>
                     <p></p>
                 </div>
-
-
-
 
                 <div className={cl.ButtonCollection}>
                 
                     { localStorage.getItem('SLNUserName') === get(filter(usersDict, {'author': author}),[0,'username'])
                         ?
                             <DropDown
-                            setModal={setModal}
-                            setModalEdit={setModalEdit}
-                            user={get(filter(usersDict, {'author': author}),[0,'username'])}
-                            id={roomID}
-                            privatwsageEdit={EditTransition}
-                            commentDelete={DeleteTransition}
-                            commentPrivateMessege={null}
-                            replyPrivateWithQuotation={replyPrivateWithQuotation}
+                                setModal={setModal}
+                                setModalEdit={setModalEdit}
+                                user={get(filter(usersDict, {'author': author}),[0,'username'])}
+                                id={roomID}
+                                privatwsageEdit={EditTransition}
+                                commentDelete={DeleteTransition}
+                                commentPrivateMessege={null}
+                                replyPrivateWithQuotation={replyPrivateWithQuotation}
                             />
-                      
                         : <span></span>
-                    
-
                     }
-
-
-
                 </div>
 
                 {/* модалка для того, чтобы по редактировать сообщения в чате */}
@@ -94,12 +75,7 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
                         onClick={e => EditTransition(e)}
                     // onClickCancel={setModalEdit(false)}
                     />
-
                 </MyModal>
-
-
-
-
             </div>        
 
 

@@ -39,6 +39,27 @@ export const getAnotherChatMatesID = createSelector(
     }
   )
 
+
+export const getAnotherChatMatesMultyUsersID = createSelector(
+    getPrivateRooms, 
+    getActualUserInfo,
+    (
+    users,
+    actualUser
+    ) => {
+        const anotherChatMatesID = []
+        users.map(user => {
+            anotherChatMatesID.push(
+                {
+                    'privateChatID': user.id, 
+                    'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])
+                })
+        })
+        return anotherChatMatesID    
+    }
+  )
+
+
 //TODO нормализовать имена групп хорошобы написать селектор, где бы на основании данных из групп погружались бы данные по чатам.
 
 

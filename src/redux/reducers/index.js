@@ -24,6 +24,7 @@ import createNewUserReducer from "./createNewUserReducer";
 import changeUserPasswordReducer from "./changeUserPasswordReducer";
 import createNewVideoReducer from "./createNewVideoReducer";
 import putNewUserDataReducer from "./putNewUserDataReducer";
+import getPrivateRoomsMultyUsersReducer from "./getPrivateRoomsMultyUsersReducer";
 import {reducer as formReducer} from 'redux-form'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -53,6 +54,7 @@ const rootReducer = combineReducers({
     changeUserPasswordReducer,
     createNewVideoReducer,
     putNewUserDataReducer,
+    getPrivateRoomsMultyUsersReducer,
     IsErrorAPI,  //так и не нашел применения пока. потом можно удалить TODO
     UserToken,
     

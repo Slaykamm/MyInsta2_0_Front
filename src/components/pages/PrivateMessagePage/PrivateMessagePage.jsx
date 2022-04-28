@@ -1,9 +1,9 @@
 import React from 'react'
 import Header from '../header/Header'
 import Menu from '../../../modules/Menu/Menu'
+import PrivateMessageContainer from './PrivateMessageContainer/PrivateMessageContainer'
 import cl from './PrivateMessagePage.module.css'
 import { useState, useEffect, useMemo  } from 'react'
-import PrivateMessageContainer from './PrivateMessageContainer/PrivateMessageContainer'
 import { connect } from 'react-redux'
 import { get, filter, flatten } from 'lodash'
 import { getUserDictAPI } from '../../../API/getUserDictAPI'
@@ -13,10 +13,11 @@ import { postRoomAPI } from '../../../API/postPrivateRoomAPI'
 import { putToBaseAPI } from '../../../API/putToBaseAPI'
 import { deleteFromBaseAPI } from '../../../API/deleteFromBaseAPI'
 import { getUsersDict, getUserRoom, getPutToBaseResult, getDeleteFromBaseResult} from  '../../../redux/Selectors/baseSelectors'
-import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages } from '../../../redux/Selectors/privateRoomsSelector'
+import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages, getAnotherChatMatesMultyUsersID } from '../../../redux/Selectors/privateRoomsSelector'
 import { filterQuery } from '../../../services/filterQuery'
 import { sortBy, last, pick } from 'lodash'
 import MyPrivateWhispModule from '../../../modules/MyPrivateWhispModule/MyPrivateWhispModule'
+import MultiChatCover from './MultiChatCover/MultiChatCover'
 
 function PrivateMessagePage(props) {
     
@@ -25,6 +26,7 @@ function PrivateMessagePage(props) {
     const [usersPrivateMessages, setUsersPrivateMessages] = useState()
     const [replyPrivateMessage, setReplyPrivateMessage] = useState('')
     const [listUsers, setListUsers] = useState()
+    const [messagesMultipleChat, setMessagesMultipleChat] = useState()
 
 
     useEffect(()=>{
@@ -89,7 +91,10 @@ function PrivateMessagePage(props) {
     // TODO через websocketОтправку
 //========================REPLY
 
-    function privateReply(roomID){
+    function privateReply(roomID, usersArray){
+
+        console.log('ID', roomID)
+        
         const username = localStorage.getItem('SLNUserName')
         const newPrivateMessage = {
             id: new Date().toISOString(), 
@@ -99,6 +104,7 @@ function PrivateMessagePage(props) {
             text: replyPrivateMessage
         }
         console.log('TODO через websocketОтправку')
+        console.log('usersPrivateMessages', usersPrivateMessages)
 
         setUsersPrivateMessages([...usersPrivateMessages, newPrivateMessage])
         setReplyPrivateMessage('')
@@ -186,13 +192,7 @@ function PrivateMessagePage(props) {
         function callModalForPrivate(target, user){
             props.getPrivateRooms(user.id)
             setUserForNewChat(user.id)
-            console.log('testtest', user)
         } 
-
-
-
-
-
 
     return (
         <>
@@ -230,53 +230,75 @@ function PrivateMessagePage(props) {
 
 
                         <div className={cl.MessagesContainer}>
-                             {props.anotherChatMatesList && usersDict
-                            ?   props.anotherChatMatesList.map(messageRoom =>
-                                    <PrivateMessageContainer 
-                                        key={messageRoom.privateChatID}
-                                        messages={usersPrivateMessages}
-                                        ID={messageRoom.privateChatID}
-                                        user={filter(usersDict, {'id':messageRoom.anotherChatMate})[0]?.username}
-                                        avatar={filter(usersDict, {'id':messageRoom.anotherChatMate})[0]?.avatar}
-                                        text={
-                                        getLastMessage(messageRoom.privateChatID)  
-                                        ? getLastMessage(messageRoom.privateChatID)
-                                        : <p></p>
-                                        }
-                                        newMessages={getNumberNewMessages(messageRoom.privateChatID)}
-                                        usersDict={props.usersDict}
-                                        privateReply={privateReply}
-                                        setReplyPrivate={setReplyPrivateMessage}
-                                        replyPrivateMessage={replyPrivateMessage}
-                                        replyPrivateQithQuotation={privateReplWithQoutation}
-                                        privateMessageDelete={privateMessageDelete}
-                                        privateMessageEdit={privateMessageEdit}
-                                        userForNewChat={userForNewChat}
-                                        target={target}
-                                        setPrivateModal={setPrivateModal}
-                                        privateModal={privateModal}
-                                        usersPrivateRooms={props.usersPrivateRooms}
+                             {props.anotherChatMatesMultyUsersID && usersDict
+                            ?   props.anotherChatMatesMultyUsersID.map(messageRoom =>
+                                
+                                    messageRoom.anotherChatMate.length === 1 
+                                        ? 
+                                            <PrivateMessageContainer 
+                                                key={messageRoom.privateChatID}
+                                                messages={usersPrivateMessages}
+                                                ID={messageRoom.privateChatID}
+                                                // ВОТ ТУТ Т.к. мы передаем не цифру а массив то надо брать мапить!!!
+                                                user={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.username}
+                                                avatar={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.avatar}
+                                                text={
+                                                    getLastMessage(messageRoom.privateChatID)  
+                                                    ? getLastMessage(messageRoom.privateChatID)
+                                                    : <p></p>
+                                                }
+                                                newMessages={getNumberNewMessages(messageRoom.privateChatID)}
+                                                usersDict={props.usersDict}
+                                                privateReply={privateReply}
+                                                setReplyPrivate={setReplyPrivateMessage}
+                                                replyPrivateMessage={replyPrivateMessage}
+                                                replyPrivateQithQuotation={privateReplWithQoutation}
+                                                privateMessageDelete={privateMessageDelete}
+                                                privateMessageEdit={privateMessageEdit}
+                                                userForNewChat={userForNewChat}
+                                                target={target}
+                                                setPrivateModal={setPrivateModal}
+                                                privateModal={privateModal}
+                                                usersPrivateRooms={props.usersPrivateRooms}
+                                            
+                                        />
                                         
-                                    />
+                                        :   <MultiChatCover
+                                                key={messageRoom.privateChatID}
+                                                messages={usersPrivateMessages}
+                                                messageRoom={messageRoom}
+                                                ID={messageRoom.privateChatID}
+                                                usersArray={messageRoom.anotherChatMate}
+                                                usersDict={props.usersDict}
+                                                text={
+                                                    getLastMessage(messageRoom.privateChatID)  
+                                                    ? getLastMessage(messageRoom.privateChatID)
+                                                    : <p></p>
+                                                }
+                                                newMessages={getNumberNewMessages(messageRoom.privateChatID)}
+                                                replyPrivateMessage={replyPrivateMessage}
+                                                replyPrivateQithQuotation={privateReplWithQoutation}
+                                                privateReply={privateReply}
+                                                setReplyPrivate={setReplyPrivateMessage}
+                                                privateMessageDelete={privateMessageDelete}
+                                                privateMessageEdit={privateMessageEdit}
+                                                isMultipyChat={true}
+                                                filteredUsers={filteredUsers}
+                                            /> 
                                     )
                             : <p></p>
-
-
                             } 
-
                         </div>
                     </div>
 
                     <div className={cl.userList}>
                         <div className={cl.MessagesLayer}>
                             <h5>Список пользователей, зарегистрированных на портале</h5>
-
                                 { filteredUsers
                                 ?   filteredUsers.map(user =>
                                         <span
                                             className={cl.userName}
                                             key={user.id}
-                                            
                                         >
                                             <span
                                                 onClick={(e) => callModalForPrivate(e.target, user)}
@@ -308,6 +330,7 @@ export default connect(
         usersDict: getUsersDict(state),
         usersPrivateRooms: getPrivateRooms(state),
         anotherChatMatesList: getAnotherChatMatesID(state),
+        anotherChatMatesMultyUsersID: getAnotherChatMatesMultyUsersID(state),
         privateMessages: getPrivateMessages(state),
         userRoom: getUserRoom(state),
         putToBaseResult: getPutToBaseResult(state),

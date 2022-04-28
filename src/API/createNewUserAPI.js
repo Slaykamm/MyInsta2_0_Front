@@ -39,8 +39,8 @@ export const createNewUserAPI  = () => {
 
                 makeAuthor.then(newAuthorResp => {
                     console.log('step4: new author ', newAuthorResp)
-
-                        dispatch(createEmptyUserAction(newAuthorResp))
+                        const enrichedResult = {...newAuthorResp, ...resp.data}
+                        dispatch(createEmptyUserAction(enrichedResult))
                 })
 
                 makeAuthor.catch((err) => {

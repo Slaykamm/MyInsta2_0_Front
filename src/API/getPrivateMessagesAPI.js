@@ -7,6 +7,7 @@ export const getPrivateMessagesAPI  = (value) => {
     return function(dispatch) {
 
         const privateMessagesToUser = [];
+        console.log('value', value)
 
         if (value){
             value.map(val=> {

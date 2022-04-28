@@ -1,5 +1,5 @@
 import axios from "axios";
-import { putToBaseAction } from "../redux/actions/putToBaseAction";
+import { putNewUserDataAction } from "../redux/actions/putNewUserDataAction";
 
 
 //ф--------------
@@ -19,11 +19,11 @@ export const putNewUserDataAPI  = (message, url, id, userToken, password, author
                     'Authorization': userToken                    
                 }
             }
-    
+            console.log('userToken', userToken)
             // меняем пароль на новый
             const data = {
               "old_password":'qwe+12345',
-              "new_password":password
+              "new_password": password
             }
             
     
@@ -36,7 +36,7 @@ export const putNewUserDataAPI  = (message, url, id, userToken, password, author
                 putMessage.then(respPhoneAuthor => {
                      console.log('step3 respPhoneAuthor', respPhoneAuthor)
 
-                     dispatch(putToBaseAction(respPhoneAuthor))
+                     dispatch(putNewUserDataAction(respPhoneAuthor))
 
 
                  })

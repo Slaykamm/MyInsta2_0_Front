@@ -100,6 +100,7 @@ function PrivateMessageContainer({
                 privateMessageDelete={privateMessageDelete}
                 privateMessageEdit={privateMessageEdit}
                 replyPrivateWithQuotation={replyPrivateWithQuotation}
+                
                 />                  
                 
             )}
@@ -108,6 +109,7 @@ function PrivateMessageContainer({
                     value={replyPrivateMessage}
                     onChange={e => setReplyPrivate(e.target.value)}
                     onClick={e => ReplyPrivateTransition(e)}
+                    isMultipyChat={false}
             // onClickCancel={setModal(false)}
             /> 
 
