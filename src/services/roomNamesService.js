@@ -1,3 +1,4 @@
+
 export function getPrivateRoomNameFromIndexesService(id1, id2) {
     const indexes = [id1, id2]
     indexes.sort((a,b)=> a-b)
@@ -13,3 +14,11 @@ export function getIndexesFromPrivateRoomNameService(roomName){
     return [typeIndex, index1, index2]
 }
 
+
+export function getMultyUsersRoomNameFromIndexesService(indexArray) {
+    const indexes = indexArray.sort((a,b)=> a-b)
+    const result = '@MULTY_'+indexes.join('_')
+    
+    return result
+    //TODO для расширения чатов с 2х чел до необграниченного имя комнаты надо делать так: получаем args. делаем массив. сортируем. идем по порядку и добавляем как внизу только красивее.
+}

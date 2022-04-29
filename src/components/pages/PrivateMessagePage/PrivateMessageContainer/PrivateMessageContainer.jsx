@@ -116,7 +116,7 @@ function PrivateMessageContainer({
         </MyModalChat>
 
 
-        <div
+        <div 
             onClick={e => startChat(ID)} 
             className={cl.Container}>
 

@@ -7,8 +7,6 @@ export const getPrivateMessagesAPI  = (value) => {
     return function(dispatch) {
 
         const privateMessagesToUser = [];
-        console.log('value', value)
-
         if (value){
             value.map(val=> {
                 const privateMessages = axios.get(`http://127.0.0.1:8000/api/prvatemessages/?privateRoom=${val.id}`)

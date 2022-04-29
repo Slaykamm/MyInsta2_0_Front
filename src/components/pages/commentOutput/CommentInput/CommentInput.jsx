@@ -3,7 +3,11 @@ import MyButton from '../../../../UI/MyButton/MyButton'
 import MyRedButton from '../../../../UI/MyRedButton/MyRedButton'
 import MySelect from '../../../../UI/Myselect/MySelect'
 import cl from './CommentInput.module.css'
-import { get } from 'lodash'
+import { 
+    get, 
+    includes  
+} from 'lodash'
+import { useEffect, useState } from 'react'
 
 
 function CommentInput({
@@ -12,13 +16,18 @@ function CommentInput({
     onClickCancel, 
     isMultipyChat,
     filteredUsers,
+    addUserChange,
+    removeUserChange,
+    usersArray,
+    groupMembers,
+    notGroupMembers,
     ...props
-    
 }) {
-// get(filteredUsers, ['username'])
-    console.log('filteredUsers', filteredUsers)
 
-    const printUser = (value) => console.log('user',  value)
+    function addUserChange12(value) {
+        addUserChange(usersArray, value)
+    }
+
 
     return (
         <>
@@ -32,15 +41,15 @@ function CommentInput({
                 <MyButton onClick={onClick}>Ответить</MyButton>
                 <MyButton onClick={onClickCancel}>Отмена</MyButton>
             </div>
-            { isMultipyChat 
+            { isMultipyChat && groupMembers && notGroupMembers
                 ?   <div>
                         <div>
 
                             <MySelect
-                                onChange={printUser}
+                                onChange={addUserChange12}
                                 
                                 defaultValue="Пользователи на форуме"
-                                options={filteredUsers}
+                                options={notGroupMembers}
                             /> 
                             <span style={{marginLeft:'20px'}}>
                                 <MyButton>Добавить в группу</MyButton>
@@ -48,10 +57,10 @@ function CommentInput({
                         </div>
                         <div style={{marginTop:'10px'}}>
                             <MySelect
-                                onChange={printUser}
+                                onChange={removeUserChange}
                                 
                                 defaultValue="Мемберы группы"
-                                options={filteredUsers}
+                                options={groupMembers}
                             /> 
                             <span style={{marginLeft:'20px'}}>
                                 <MyRedButton>Удалить из группы</MyRedButton>

@@ -173,7 +173,7 @@ function CommentOutput({videoID, ...props}) {
 
 
 
-    // DELETE COMMENT ++
+    // DELETE COMMENT  ++
     function commentDelete(id){
         const newComments = comments.filter(com => com.id !== id)
         setComments(comments.filter(com => com.id !== id))

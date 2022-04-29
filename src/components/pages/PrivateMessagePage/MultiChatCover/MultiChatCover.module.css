@@ -3,11 +3,19 @@
     flex-direction: column;
     justify-content: center;
     border: solid 1px;
-    border: 2px solid #c9c9c9;
-    box-shadow: 0 0 7px #666; /* Параметры тени */
-    border-radius: 10px;
-
+    border: 1px solid #c9c9c9;
+    border-radius: 10px; 
     
+    
+    /* 
+    box-shadow: 0 0 7px #666; 
+    border-radius: 10px; */
+
+    }
+
+.Container:hover {
+    box-shadow: 0 0 7px #666; 
+    border-radius: 10px;
 }
 
 /* .userInfo {
@@ -40,13 +48,7 @@
     box-shadow: 0 0 7px #666; /* Параметры тени */
 }
 
-.userInfo:hover{
-    transform: scale(1.05);
-}
 
-.textInfo {
-
-}
 
 .cuttedText {
     display: block;
@@ -54,4 +56,11 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-left: 20px;
+    padding-left: 20px;
+
+  }
+
+  .textInfo span{
+    padding-left: 4%;
   }

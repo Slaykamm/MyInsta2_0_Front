@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import cl from './MultiChatCover.module.css'
-import { get, filter, sortBy } from 'lodash'
+import { 
+    get, 
+    filter, 
+    sortBy, 
+    includes, 
+    lowerCase, 
+    toNumber 
+} from 'lodash'
 import MyModalChat from '../PrivateMessageContainer/ModalChat/ModalChat'
 import CommentInput from '../../../../components/pages/commentOutput/CommentInput/CommentInput'
 import { useState } from 'react'
 import MyModalChatContainer from '../PrivateMessageContainer/ModalChat/MyModalChatContainer/MyModalChatContainer'
+import { getMultyUsersRoomNameFromIndexesService } from '../../../../services/roomNamesService'
 
 
 
@@ -24,10 +32,28 @@ function MultiChatCover({
     filteredUsers,
     ...props}) {
 
+    
+
+
     const [modal, setModal] = useState(false)
     const [replyPrivateWithQuotation, setReplyPrivateWithQuotation] = useState(true)
+    const [groupMembers, setGroupMembers] = useState()
+    const [notGroupMembers, setNotGroupMembers] = useState()
+
+
 
     function startChat(id){
+        let groupMembers = []
+        let notGroupMembers = []
+        filteredUsers.map(user => {
+            if (includes(usersArray, user.id)){
+                groupMembers.push(user)
+            } else {
+                notGroupMembers.push(user)
+            }
+        })
+        setGroupMembers(sortBy(groupMembers, lowerCase(['username'])))
+        setNotGroupMembers(sortBy(notGroupMembers, lowerCase(['username'])))
         setModal(true)
     }
 
@@ -37,14 +63,32 @@ function MultiChatCover({
     }
 
 
+    function addUserChange(usersArray, value){
+
+        console.log('userrr', get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
+
+
+        if ([...usersArray, toNumber(value)].length <= 10) {
+            const rez = getMultyUsersRoomNameFromIndexesService([...usersArray, toNumber(value), get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])])
+            console.log('rezult', rez)
+        } else {
+            window.alert('Вы превысили максимальное значение пользователей в комнате')
+        }
+
+    }
+
+    function removeUserChange(value){
+        console.log('userRemove', value)
+    }
+
 
     return (
         <>
 
         <MyModalChat
-                    visible={modal}
-                    setVisible={setModal}
-                >
+            visible={modal}
+            setVisible={setModal}
+        >
 
             {sortBy(filter(messages, {'privateRoom':ID}),['create_at']).map(message=>
                 <MyModalChatContainer
@@ -60,29 +104,28 @@ function MultiChatCover({
                     privateMessageEdit={privateMessageEdit}
                     replyPrivateWithQuotation={replyPrivateWithQuotation}
                     
-                    
+
                 />
-                )}
+            )}
 
                 <CommentInput
                     value={replyPrivateMessage}
                     onChange={e => setReplyPrivate(e.target.value)}
                     onClick={e => ReplyPrivateTransition(e)}
                     isMultipyChat={true}
-                    filteredUsers={filteredUsers}
+                    addUserChange={addUserChange}
+                    removeUserChange={removeUserChange}
+                    groupMembers={groupMembers}
+                    notGroupMembers={notGroupMembers}
+                    usersArray={usersArray}
                 />
-
-
-
-
         </MyModalChat>
 
 
 
-                <div
+        <div
             onClick={e => startChat(ID)} 
             className={cl.Container}>
-
             <div className={cl.userInfo}>
                 {usersArray.map(chatMember =>
                     <div 
@@ -95,19 +138,11 @@ function MultiChatCover({
                             }
                     </div>
                 )}
-                
-
-
-
-
             </div>
-
             <div className={cl.textInfo}>
-
                 <div className={cl.cuttedText}>
-
                 </div>
-                <div
+                <div 
                 onClick={startChat}>
                     {newMessages
                     ?  <span style={{fontWeight:'bold'}}>Новых сообщений: {newMessages}</span>

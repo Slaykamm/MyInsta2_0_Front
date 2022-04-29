@@ -3,7 +3,6 @@ import classes from './MySelect.module.css'
 
 const MySelect = ({options, defaultValue, value, onChange}) => {
 
-    console.log('options', options)
     return (
         <select
             className={classes.mySelect}
