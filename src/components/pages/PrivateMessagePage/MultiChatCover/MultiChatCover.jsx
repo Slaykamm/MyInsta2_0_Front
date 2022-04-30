@@ -6,13 +6,14 @@ import {
     sortBy, 
     includes, 
     lowerCase, 
-    toNumber 
+    toNumber,
+    without,
 } from 'lodash'
 import MyModalChat from '../PrivateMessageContainer/ModalChat/ModalChat'
 import CommentInput from '../../../../components/pages/commentOutput/CommentInput/CommentInput'
 import { useState } from 'react'
 import MyModalChatContainer from '../PrivateMessageContainer/ModalChat/MyModalChatContainer/MyModalChatContainer'
-import { getMultyUsersRoomNameFromIndexesService } from '../../../../services/roomNamesService'
+import { getIndexesFromMultyUsersRoomNameService, getMultyUsersRoomNameFromIndexesService } from '../../../../services/roomNamesService'
 
 
 
@@ -22,7 +23,6 @@ function MultiChatCover({
     text, 
     newMessages, 
     messages, 
-    ID, 
     usersArray,
     setReplyPrivate, 
     replyPrivateMessage, 
@@ -30,9 +30,13 @@ function MultiChatCover({
     privateMessageDelete, 
     privateMessageEdit,
     filteredUsers,
+    ID, 
+    roomName,
+    putToBase,
+    putToBaseResult,
     ...props}) {
 
-    
+
 
 
     const [modal, setModal] = useState(false)
@@ -65,22 +69,60 @@ function MultiChatCover({
 
     function addUserChange(usersArray, value){
 
-        console.log('userrr', get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
-
-
-        if ([...usersArray, toNumber(value)].length <= 10) {
+        console.log('CHECK', [...usersArray, toNumber(value)].length)
+        if ([...usersArray, toNumber(value)].length < 10) {
             const rez = getMultyUsersRoomNameFromIndexesService([...usersArray, toNumber(value), get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])])
-            console.log('rezult', rez)
+            
+            const [newRoomName, newRoomMembers] = rez
+            console.log('newRoomName', newRoomName, ID)
+            console.log('newRoomMembers', newRoomMembers)
+
+            let newRoomMembersArray = new Array;
+            newRoomMembers.map(user =>{
+                newRoomMembersArray.push(user)
+            })  
+
+            
+            const payload = {
+                "privateChatName": newRoomName,
+                "privateRoomMembers": newRoomMembersArray
+            }
+            const url = '/privaterooms'
+           putToBase(payload, url, ID)
+
+
         } else {
-            window.alert('Вы превысили максимальное значение пользователей в комнате')
+            window.alert('Вы превысили максимальное значение пользователей в комнате. Максимальное количество 10 человек')
         }
-
+        console.log('roomName', roomName)
     }
 
-    function removeUserChange(value){
-        console.log('userRemove', value)
-    }
+    function removeUserChange(userToRemoveId){
 
+        const groupMembers = getIndexesFromMultyUsersRoomNameService(roomName, ID)
+        const newRoomMembers = without(groupMembers, userToRemoveId)
+        const newRoomName = getMultyUsersRoomNameFromIndexesService(newRoomMembers)
+
+        let newRoomMembersArray = new Array;
+        newRoomMembers.map(user =>{
+            newRoomMembersArray.push(user)
+        })   
+
+
+        const payload = {
+            "privateChatName": newRoomName[0],
+            "privateRoomMembers": newRoomMembersArray
+        }
+        const url = '/privaterooms'
+        putToBase(payload, url, ID)
+
+    }
+        useEffect(()=>{
+            console.log('GroupChange result', putToBaseResult)
+            if (putToBaseResult === 200){
+                window.location.reload();
+            }
+        },[putToBaseResult])
 
     return (
         <>

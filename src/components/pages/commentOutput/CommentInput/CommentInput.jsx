@@ -24,8 +24,12 @@ function CommentInput({
     ...props
 }) {
 
-    function addUserChange12(value) {
+    function addUserChangeProcessing(value) {
         addUserChange(usersArray, value)
+    }
+
+    function removeUserChangeProcessing(value) {
+        removeUserChange(value)
     }
 
 
@@ -46,7 +50,7 @@ function CommentInput({
                         <div>
 
                             <MySelect
-                                onChange={addUserChange12}
+                                onChange={addUserChangeProcessing}
                                 
                                 defaultValue="Пользователи на форуме"
                                 options={notGroupMembers}
@@ -57,7 +61,7 @@ function CommentInput({
                         </div>
                         <div style={{marginTop:'10px'}}>
                             <MySelect
-                                onChange={removeUserChange}
+                                onChange={removeUserChangeProcessing}
                                 
                                 defaultValue="Мемберы группы"
                                 options={groupMembers}

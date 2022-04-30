@@ -28,7 +28,6 @@ function PrivateMessagePage(props) {
     const [listUsers, setListUsers] = useState()
     const [messagesMultipleChat, setMessagesMultipleChat] = useState()
 
-
     useEffect(()=>{
         props.getUsersDict()
 
@@ -194,6 +193,8 @@ function PrivateMessagePage(props) {
             setUserForNewChat(user.id)
         } 
 
+
+
     return (
         <>
 
@@ -233,13 +234,12 @@ function PrivateMessagePage(props) {
                              {props.anotherChatMatesMultyUsersID && usersDict
                             ?   props.anotherChatMatesMultyUsersID.map(messageRoom =>
                                 
-                                    messageRoom.anotherChatMate.length === 1 
+                                    messageRoom.privateChat
                                         ? 
                                             <PrivateMessageContainer 
                                                 key={messageRoom.privateChatID}
                                                 messages={usersPrivateMessages}
                                                 ID={messageRoom.privateChatID}
-                                                // ВОТ ТУТ Т.к. мы передаем не цифру а массив то надо брать мапить!!!
                                                 user={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.username}
                                                 avatar={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.avatar}
                                                 text={
@@ -259,7 +259,7 @@ function PrivateMessagePage(props) {
                                                 target={target}
                                                 setPrivateModal={setPrivateModal}
                                                 privateModal={privateModal}
-                                                usersPrivateRooms={props.usersPrivateRooms}
+                                                roomName={get(filter(props.usersPrivateRooms, {'id': messageRoom.privateChatID}),[0, 'privateChatName'])}
                                             
                                         />
                                         
@@ -284,6 +284,12 @@ function PrivateMessagePage(props) {
                                                 privateMessageEdit={privateMessageEdit}
                                                 isMultipyChat={true}
                                                 filteredUsers={filteredUsers}
+                                                usersPrivateRooms={props.usersPrivateRooms}
+                                                userID={userID}
+                                                roomName={get(filter(props.usersPrivateRooms, {'id': messageRoom.privateChatID}),[0, 'privateChatName'])}
+                                                putToBase={props.putToBase}
+                                                putToBaseResult={props.putToBaseResult}
+
                                             /> 
                                     )
                             : <p></p>

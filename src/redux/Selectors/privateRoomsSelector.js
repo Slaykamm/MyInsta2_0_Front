@@ -20,6 +20,7 @@ export const getActualUserInfo = createSelector(
     }
 )
 
+
 export const getAnotherChatMatesID = createSelector(
     getPrivateRooms, 
     getActualUserInfo,
@@ -32,14 +33,15 @@ export const getAnotherChatMatesID = createSelector(
             anotherChatMatesID.push(
                 {
                     'privateChatID': user.id, 
-                    'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])[0]
+                    'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])[0],
+                    'privateChat': user.privateChat
                 })
         })
         return anotherChatMatesID    
     }
   )
 
-
+// Селектор получает других мемберов данной комнаты для мульти чата
 export const getAnotherChatMatesMultyUsersID = createSelector(
     getPrivateRooms, 
     getActualUserInfo,
@@ -52,13 +54,28 @@ export const getAnotherChatMatesMultyUsersID = createSelector(
             anotherChatMatesID.push(
                 {
                     'privateChatID': user.id, 
-                    'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])
+                    'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])]),
+                    'privateChat': user.privateChat
                 })
         })
         return anotherChatMatesID    
     }
   )
 
+
+
+
+// export const getActualChatRoomName = createSelector(
+//     getPrivateRooms,
+
+//     (privateRoomInfo) => {
+
+//         console.log('privateRoomInfo', privateRoomInfo)
+//     }
+
+// )
+
+  
 
 //TODO нормализовать имена групп хорошобы написать селектор, где бы на основании данных из групп погружались бы данные по чатам.
 
