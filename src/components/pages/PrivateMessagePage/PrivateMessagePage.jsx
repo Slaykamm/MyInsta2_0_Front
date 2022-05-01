@@ -2,6 +2,8 @@ import React from 'react'
 import Header from '../header/Header'
 import Menu from '../../../modules/Menu/Menu'
 import PrivateMessageContainer from './PrivateMessageContainer/PrivateMessageContainer'
+import MyPrivateWhispModule from '../../../modules/MyPrivateWhispModule/MyPrivateWhispModule'
+import MultiChatCover from './MultiChatCover/MultiChatCover'
 import cl from './PrivateMessagePage.module.css'
 import { useState, useEffect, useMemo  } from 'react'
 import { connect } from 'react-redux'
@@ -12,12 +14,25 @@ import { getPrivateMessagesAPI } from '../../../API/getPrivateMessagesAPI'
 import { postRoomAPI } from '../../../API/postPrivateRoomAPI'
 import { putToBaseAPI } from '../../../API/putToBaseAPI'
 import { deleteFromBaseAPI } from '../../../API/deleteFromBaseAPI'
-import { getUsersDict, getUserRoom, getPutToBaseResult, getDeleteFromBaseResult} from  '../../../redux/Selectors/baseSelectors'
-import { getPrivateRooms, getAnotherChatMatesID, getPrivateMessages, getAnotherChatMatesMultyUsersID } from '../../../redux/Selectors/privateRoomsSelector'
+import { 
+    getUsersDict, 
+    getUserRoom, 
+    getPutToBaseResult, 
+    getDeleteFromBaseResult,
+} from  '../../../redux/Selectors/baseSelectors'
+import { 
+    getPrivateRooms, 
+    getAnotherChatMatesID, 
+    getPrivateMessages, 
+    getAnotherChatMatesMultyUsersID, 
+} from '../../../redux/Selectors/privateRoomsSelector'
 import { filterQuery } from '../../../services/filterQuery'
-import { sortBy, last, pick } from 'lodash'
-import MyPrivateWhispModule from '../../../modules/MyPrivateWhispModule/MyPrivateWhispModule'
-import MultiChatCover from './MultiChatCover/MultiChatCover'
+import { 
+    sortBy, 
+    last, 
+    pick,
+    map,
+} from 'lodash'
 
 function PrivateMessagePage(props) {
     
@@ -163,21 +178,32 @@ function PrivateMessagePage(props) {
         // Блок фильтрации юзеров//////////////////////////////////////////
         const [searchQuery, setSearchQuery] = useState('')
         const [filteredUsers, setFilteredUsers] = useState()
+        const [filteredChats, setFilteredChats] = useState([1])
         function checkTheInput(event){
             setSearchQuery(event.target.value)
         }
-
+//-------юзеры внизу
         const filteredUsersProcess = useMemo(()=>{
             return filterQuery(listUsers, searchQuery)
         },[listUsers, searchQuery])
-        
 
         useEffect(()=>{
             if (filteredUsersProcess){
                 setFilteredUsers(filteredUsersProcess.filter(user => user.username !== localStorage.getItem('SLNUserName')))
             }
         },[filteredUsersProcess])
-        
+
+/// -------чаты
+        const filteredChatProcess = useMemo(()=>{
+            return filterQuery(props.anotherChatMatesMultyUsersID, searchQuery)
+        }, [props.anotherChatMatesMultyUsersID, searchQuery])
+
+        useEffect(()=>{
+            if (filteredChatProcess){
+                setFilteredChats(filteredChatProcess)
+            }
+        },[filteredChatProcess])
+
 
         // ВСЕ
         // пишем личные сообщения найденным юзерам
@@ -192,7 +218,6 @@ function PrivateMessagePage(props) {
             props.getPrivateRooms(user.id)
             setUserForNewChat(user.id)
         } 
-
 
 
     return (
@@ -223,74 +248,70 @@ function PrivateMessagePage(props) {
                 <div className={cl.BaseLine}>
 
                     <div className={cl.MessagesLayer}>
-
-
                         <div>
                             <p>Добрый день</p>
                         </div>
-
-
                         <div className={cl.MessagesContainer}>
-                             {props.anotherChatMatesMultyUsersID && usersDict
-                            ?   props.anotherChatMatesMultyUsersID.map(messageRoom =>
-                                
-                                    messageRoom.privateChat
-                                        ? 
-                                            <PrivateMessageContainer 
-                                                key={messageRoom.privateChatID}
-                                                messages={usersPrivateMessages}
-                                                ID={messageRoom.privateChatID}
-                                                user={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.username}
-                                                avatar={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.avatar}
-                                                text={
-                                                    getLastMessage(messageRoom.privateChatID)  
-                                                    ? getLastMessage(messageRoom.privateChatID)
-                                                    : <p></p>
-                                                }
-                                                newMessages={getNumberNewMessages(messageRoom.privateChatID)}
-                                                usersDict={props.usersDict}
-                                                privateReply={privateReply}
-                                                setReplyPrivate={setReplyPrivateMessage}
-                                                replyPrivateMessage={replyPrivateMessage}
-                                                replyPrivateQithQuotation={privateReplWithQoutation}
-                                                privateMessageDelete={privateMessageDelete}
-                                                privateMessageEdit={privateMessageEdit}
-                                                userForNewChat={userForNewChat}
-                                                target={target}
-                                                setPrivateModal={setPrivateModal}
-                                                privateModal={privateModal}
-                                                roomName={get(filter(props.usersPrivateRooms, {'id': messageRoom.privateChatID}),[0, 'privateChatName'])}
+                             {filteredChats !== undefined && usersDict
+                            ?   map(sortBy(filteredChats, ['privateChat']), messageRoom =>
+                                // sortBy(props.anotherChatMatesMultyUsersID, ['privateChat'])
+                                        messageRoom.privateChat
+                                            ? 
+                                                <PrivateMessageContainer 
+                                                    key={messageRoom.privateChatID}
+                                                    messages={usersPrivateMessages}
+                                                    ID={messageRoom.privateChatID}
+                                                    user={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.username}
+                                                    avatar={filter(usersDict, {'id':messageRoom.anotherChatMate[0]})[0]?.avatar}
+                                                    text={
+                                                        getLastMessage(messageRoom.privateChatID)  
+                                                        ? getLastMessage(messageRoom.privateChatID)
+                                                        : <p></p>
+                                                    }
+                                                    newMessages={getNumberNewMessages(messageRoom.privateChatID)}
+                                                    usersDict={props.usersDict}
+                                                    privateReply={privateReply}
+                                                    setReplyPrivate={setReplyPrivateMessage}
+                                                    replyPrivateMessage={replyPrivateMessage}
+                                                    replyPrivateQithQuotation={privateReplWithQoutation}
+                                                    privateMessageDelete={privateMessageDelete}
+                                                    privateMessageEdit={privateMessageEdit}
+                                                    userForNewChat={userForNewChat}
+                                                    target={target}
+                                                    setPrivateModal={setPrivateModal}
+                                                    privateModal={privateModal}
+                                                    roomName={get(filter(props.usersPrivateRooms, {'id': messageRoom.privateChatID}),[0, 'privateChatName'])}
+                                                    
+                                                    />
                                             
-                                        />
-                                        
-                                        :   <MultiChatCover
-                                                key={messageRoom.privateChatID}
-                                                messages={usersPrivateMessages}
-                                                messageRoom={messageRoom}
-                                                ID={messageRoom.privateChatID}
-                                                usersArray={messageRoom.anotherChatMate}
-                                                usersDict={props.usersDict}
-                                                text={
-                                                    getLastMessage(messageRoom.privateChatID)  
-                                                    ? getLastMessage(messageRoom.privateChatID)
-                                                    : <p></p>
-                                                }
-                                                newMessages={getNumberNewMessages(messageRoom.privateChatID)}
-                                                replyPrivateMessage={replyPrivateMessage}
-                                                replyPrivateQithQuotation={privateReplWithQoutation}
-                                                privateReply={privateReply}
-                                                setReplyPrivate={setReplyPrivateMessage}
-                                                privateMessageDelete={privateMessageDelete}
-                                                privateMessageEdit={privateMessageEdit}
-                                                isMultipyChat={true}
-                                                filteredUsers={filteredUsers}
-                                                usersPrivateRooms={props.usersPrivateRooms}
-                                                userID={userID}
-                                                roomName={get(filter(props.usersPrivateRooms, {'id': messageRoom.privateChatID}),[0, 'privateChatName'])}
-                                                putToBase={props.putToBase}
-                                                putToBaseResult={props.putToBaseResult}
-
-                                            /> 
+                                            :   <MultiChatCover
+                                                    key={messageRoom.privateChatID}
+                                                    messages={usersPrivateMessages}
+                                                    messageRoom={messageRoom}
+                                                    ID={messageRoom.privateChatID}
+                                                    usersArray={messageRoom.anotherChatMate}
+                                                    usersDict={props.usersDict}
+                                                    text={
+                                                        getLastMessage(messageRoom.privateChatID)  
+                                                        ? getLastMessage(messageRoom.privateChatID)
+                                                        : <p></p>
+                                                    }
+                                                    newMessages={getNumberNewMessages(messageRoom.privateChatID)}
+                                                    replyPrivateMessage={replyPrivateMessage}
+                                                    replyPrivateQithQuotation={privateReplWithQoutation}
+                                                    privateReply={privateReply}
+                                                    setReplyPrivate={setReplyPrivateMessage}
+                                                    privateMessageDelete={privateMessageDelete}
+                                                    privateMessageEdit={privateMessageEdit}
+                                                    isMultipyChat={true}
+                                                    filteredUsers={filteredUsers}
+                                                    usersPrivateRooms={props.usersPrivateRooms}
+                                                    userID={userID}
+                                                    roomName={get(filter(props.usersPrivateRooms, {'id': messageRoom.privateChatID}),[0, 'privateChatName'])}
+                                                    putToBase={props.putToBase}
+                                                    putToBaseResult={props.putToBaseResult}
+                                                    
+                                                    /> 
                                     )
                             : <p></p>
                             } 

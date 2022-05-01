@@ -24,17 +24,21 @@ export const getActualUserInfo = createSelector(
 export const getAnotherChatMatesID = createSelector(
     getPrivateRooms, 
     getActualUserInfo,
+    getUsersDict,
     (
     users,
-    actualUser
+    actualUser,
+    usersDict
     ) => {
         const anotherChatMatesID = []
         users.map(user => {
+            const userId = difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])[0]
             anotherChatMatesID.push(
                 {
                     'privateChatID': user.id, 
                     'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])[0],
-                    'privateChat': user.privateChat
+                    'privateChat': user.privateChat,
+                    'userName': filter(usersDict, {'id':userId})[0]?.username
                 })
         })
         return anotherChatMatesID    
@@ -45,17 +49,21 @@ export const getAnotherChatMatesID = createSelector(
 export const getAnotherChatMatesMultyUsersID = createSelector(
     getPrivateRooms, 
     getActualUserInfo,
+    getUsersDict,
     (
     users,
-    actualUser
+    actualUser,
+    usersDict
     ) => {
         const anotherChatMatesID = []
         users.map(user => {
+            const userId = difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])])[0]
             anotherChatMatesID.push(
                 {
                     'privateChatID': user.id, 
                     'anotherChatMate': difference(get(user, ['privateRoomMembers']), [get(actualUser, [0, 'id'])]),
-                    'privateChat': user.privateChat
+                    'privateChat': user.privateChat,
+                    'username': filter(usersDict, {'id':userId})[0]?.username
                 })
         })
         return anotherChatMatesID    

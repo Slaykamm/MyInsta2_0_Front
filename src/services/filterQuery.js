@@ -1,7 +1,6 @@
 import { isNumber } from 'lodash'
 
 export function filterQuery(listFiles, searchQuery) {
-    
     if (listFiles && searchQuery.length > 2 ){
         var filtered = listFiles.filter(title=>
         {
@@ -11,7 +10,6 @@ export function filterQuery(listFiles, searchQuery) {
                 if (title.username){
                     return (title.username).toLowerCase().includes(searchQuery.toLowerCase()) 
                 }
-
         })
         return filtered
     }

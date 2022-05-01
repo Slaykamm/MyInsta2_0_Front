@@ -8,6 +8,7 @@ import {
     lowerCase, 
     toNumber,
     without,
+    map,
 } from 'lodash'
 import MyModalChat from '../PrivateMessageContainer/ModalChat/ModalChat'
 import CommentInput from '../../../../components/pages/commentOutput/CommentInput/CommentInput'
@@ -49,7 +50,7 @@ function MultiChatCover({
     function startChat(id){
         let groupMembers = []
         let notGroupMembers = []
-        filteredUsers.map(user => {
+        map(filteredUsers, user => {
             if (includes(usersArray, user.id)){
                 groupMembers.push(user)
             } else {
@@ -98,11 +99,10 @@ function MultiChatCover({
     }
 
     function removeUserChange(userToRemoveId){
-
+        console.log('111111111', userToRemoveId)
         const groupMembers = getIndexesFromMultyUsersRoomNameService(roomName, ID)
         const newRoomMembers = without(groupMembers, userToRemoveId)
         const newRoomName = getMultyUsersRoomNameFromIndexesService(newRoomMembers)
-
         let newRoomMembersArray = new Array;
         newRoomMembers.map(user =>{
             newRoomMembersArray.push(user)
@@ -123,6 +123,7 @@ function MultiChatCover({
                 window.location.reload();
             }
         },[putToBaseResult])
+        console.log('messages', messages)
 
     return (
         <>
@@ -130,15 +131,15 @@ function MultiChatCover({
         <MyModalChat
             visible={modal}
             setVisible={setModal}
-        >
+            >
 
             {sortBy(filter(messages, {'privateRoom':ID}),['create_at']).map(message=>
                 <MyModalChatContainer
+                    key={message.id}
                     user={user}
                     roomMessage={message}
                     create_at={message.create_at}
                     roomID={ID}
-                    key={message.id}
                     usersDict={usersDict}
                     avatar={get(filter(usersDict, {'username': user}),[0, 'avatar'])}
                     author={message.author}
@@ -168,11 +169,14 @@ function MultiChatCover({
         <div
             onClick={e => startChat(ID)} 
             className={cl.Container}>
+            <span
+                className={cl.MultyChatName}
+                >Групповой чат</span>
             <div className={cl.userInfo}>
-                {usersArray.map(chatMember =>
+                {map(usersArray, chatMember =>
                     <div 
-                        className={cl.userInfoCell} 
                         key={chatMember}
+                        className={cl.userInfoCell} 
                     >
                         {get(filter(usersDict, {'author': chatMember}), ['0', 'avatar']) 
                                 ? <span> <img src={get(filter(usersDict, {'author': chatMember}), ['0', 'avatar']) } alt='avatar'/></span>

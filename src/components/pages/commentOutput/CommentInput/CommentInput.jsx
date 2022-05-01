@@ -24,12 +24,17 @@ function CommentInput({
     ...props
 }) {
 
-    function addUserChangeProcessing(value) {
-        addUserChange(usersArray, value)
+    const [addUserSelect, setAddUserSelect] = useState()
+    const [removeUserSelect, setRemoveUserSelect] = useState()
+
+    function addUserChangeProcessing(e) {
+        e.preventDefault()
+        addUserChange(usersArray, addUserSelect)
     }
 
-    function removeUserChangeProcessing(value) {
-        removeUserChange(value)
+    function removeUserChangeProcessing(e) {
+        e.preventDefault()
+        removeUserChange(removeUserSelect)
     }
 
 
@@ -50,24 +55,30 @@ function CommentInput({
                         <div>
 
                             <MySelect
-                                onChange={addUserChangeProcessing}
+                                onChange={e => setAddUserSelect(e)}
                                 
                                 defaultValue="Пользователи на форуме"
                                 options={notGroupMembers}
                             /> 
                             <span style={{marginLeft:'20px'}}>
-                                <MyButton>Добавить в группу</MyButton>
+                                <MyButton
+                                    disabled={!!!addUserSelect}
+                                    onClick={e => addUserChangeProcessing(e)}
+                                >Добавить в группу</MyButton>
                             </span> 
                         </div>
                         <div style={{marginTop:'10px'}}>
                             <MySelect
-                                onChange={removeUserChangeProcessing}
+                                onChange={e => setRemoveUserSelect(e)}
                                 
                                 defaultValue="Мемберы группы"
                                 options={groupMembers}
                             /> 
                             <span style={{marginLeft:'20px'}}>
-                                <MyRedButton>Удалить из группы</MyRedButton>
+                                <MyRedButton
+                                disabled={!!!removeUserSelect}
+                                onClick={e => removeUserChangeProcessing(e)}
+                                >Удалить из группы</MyRedButton>
                             </span>
                         </div>
                     </div>

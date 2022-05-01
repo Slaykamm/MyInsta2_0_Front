@@ -5,7 +5,6 @@ import { putToBaseAction } from "../redux/actions/putToBaseAction";
 //ф--------------функция для асинхронного запроса
 export const putToBaseAPI  = (message, url, id) => {
     return function(dispatch) {
-         console.log('url', url)
          
         
        const putMessage = axios.patch(`http://127.0.0.1:8000/api${url}/${id}/`, message);
