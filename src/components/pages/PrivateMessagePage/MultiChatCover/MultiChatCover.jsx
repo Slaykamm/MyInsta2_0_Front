@@ -16,7 +16,7 @@ import { useState } from 'react'
 import MyModalChatContainer from '../PrivateMessageContainer/ModalChat/MyModalChatContainer/MyModalChatContainer'
 import { getIndexesFromMultyUsersRoomNameService, getMultyUsersRoomNameFromIndexesService } from '../../../../services/roomNamesService'
 
-
+ 
 
 function MultiChatCover({
     usersDict, 
@@ -109,7 +109,7 @@ function MultiChatCover({
 
     function addUserChange(usersArray, value){
 
-        console.log('CHECK', [...usersArray, toNumber(value)].length)
+        console.log('CHECK',  [...usersArray, toNumber(value)].length)
         if ([...usersArray, toNumber(value)].length < 10) {
             const rez = getMultyUsersRoomNameFromIndexesService([...usersArray, toNumber(value), get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])])
             
