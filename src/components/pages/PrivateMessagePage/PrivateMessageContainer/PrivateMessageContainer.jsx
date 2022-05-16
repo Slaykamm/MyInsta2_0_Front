@@ -40,39 +40,76 @@ function PrivateMessageContainer({
     target,
     setPrivateModal,
     privateModal,
+    userID,
     ...props}) {
 
     const [modal, setModal] = useState(false)
     const [replyPrivateWithQuotation, setReplyPrivateWithQuotation] = useState(true)
     const [privateMessage, setPrivateMessage] = useState('')
+    const [wss, setWss] = useState(null)
+    const [wsIncomeMessage, setWsIncomeMessage] = useState()
     
 
-
     function startChat(id){
-        console.log('teeest')
         setModal(true)
+
+        const ws = new WebSocket('ws://127.0.0.1:8000/api/prvatemessages/')
+        setWss(ws)
+            ws.onopen = () => {
+                // on connecting, do nothing but log it to the console
+                console.log('connected')
+                }
+            ws.onmessage = evt => {
+                setWsIncomeMessage(evt.data)
+            }
+            ws.onclose = () => {
+                console.log('disconnected')
+                // automatically try to reconnect on connection loss
+            }
 
         const message = {
             "lastOpenDate": new Date().toISOString() 
         }
-
         const url = '/privaterooms'
-        
         props.putToBase(message, url, id)
             console.log('TODO ОБНОВЛЯЕМ ДАТУ ЗАХОДА В КОМНАТУ')
+
     }
 
+    useEffect(()=>{
+        if (wsIncomeMessage){
+            const newReplyMessage = JSON.parse(wsIncomeMessage);
+            console.log('from WS', newReplyMessage);
+            privateReply(ID, newReplyMessage) 
+        }
+    },[wsIncomeMessage])
 
+// Так: во первых есть сенд! во вторых долен быть ресив. в этом случае доренривать сообщения. менять пропсы. все тут делать.
 
-    function ReplyPrivateTransition(e){
-        e.preventDefault();
-        privateReply(ID) 
-    }
+        function ReplyPrivateTransition(e){
+            e.preventDefault();
 
-    function ReplyPrivateTransitionWithQuotation(e){
-        e.preventDefault();
-        replyPrivate(user, text, date, userReply) 
-    }
+            const newPrivateMessage = {
+                id: new Date().toISOString(), 
+                create_at: new Date().toISOString(), 
+                user: userID,
+                author: userID,
+                privateRoom: ID,
+                text: replyPrivateMessage
+                }        
+
+            try {
+                wss.send(JSON.stringify(newPrivateMessage)) //send data to the server
+            }catch (error) {
+                console.log(error) // catch error
+            }
+
+        }               
+
+        function ReplyPrivateTransitionWithQuotation(e){
+            e.preventDefault();
+            replyPrivate(user, text, date, userReply) 
+        }
 
  
     

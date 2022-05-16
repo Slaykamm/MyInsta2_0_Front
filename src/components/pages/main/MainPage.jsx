@@ -16,6 +16,7 @@ const MainPage = (props) => {
 const [listFiles, setListFiles] = useState()
 
 
+
 //TODO какгохо хрена надо 2 раза дергать
 useEffect(()=>{
     props.getPreviewAPI()
@@ -68,6 +69,7 @@ export default connect(
     // mapStateToProps
     state => ({
         videoPreviews: state.getPreview
+
     }),
 
     //mapDispatchToProps
@@ -75,10 +77,6 @@ export default connect(
         getPreviewAPI: () =>{
             dispatch(getVideoPreviewsAPI())
         },
-
     })
-
-
-
 
 )(MainPage); 

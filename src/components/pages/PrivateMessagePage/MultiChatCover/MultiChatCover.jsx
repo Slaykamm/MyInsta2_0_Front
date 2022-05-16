@@ -32,6 +32,7 @@ function MultiChatCover({
     privateMessageEdit,
     filteredUsers,
     ID, 
+    userID,
     roomName,
     putToBase,
     putToBaseResult,
@@ -44,7 +45,8 @@ function MultiChatCover({
     const [replyPrivateWithQuotation, setReplyPrivateWithQuotation] = useState(true)
     const [groupMembers, setGroupMembers] = useState()
     const [notGroupMembers, setNotGroupMembers] = useState()
-
+    const [wss, setWss] = useState(null)
+    const [wsIncomeMessage, setWsIncomeMessage] = useState()
 
 
     function startChat(id){
@@ -60,11 +62,48 @@ function MultiChatCover({
         setGroupMembers(sortBy(groupMembers, lowerCase(['username'])))
         setNotGroupMembers(sortBy(notGroupMembers, lowerCase(['username'])))
         setModal(true)
+// web sockets initialize here
+
+        const ws = new WebSocket('ws://127.0.0.1:8000/api/prvatemessages/')
+        setWss(ws)
+            ws.onopen = () => {
+                console.log('connected')
+                }
+            ws.onmessage = evt => {
+                setWsIncomeMessage(evt.data)
+
+            }
+            ws.onclose = () => {
+                console.log('disconnected')
+            }
     }
 
+    useEffect(()=>{
+        if (wsIncomeMessage){
+            const newReplyMessage = JSON.parse(wsIncomeMessage);
+            console.log('from WS', newReplyMessage);
+            privateReply(ID, newReplyMessage) 
+        }
+    },[wsIncomeMessage])
+
+
     function ReplyPrivateTransition(e){
-        e.preventDefault();
-        privateReply(ID, usersArray) 
+        e.preventDefault()
+        const newPrivateMessage = {
+            id: new Date().toISOString(), 
+            create_at: new Date().toISOString(), 
+            user: userID,
+            author: userID,
+            privateRoom: ID,
+            text: replyPrivateMessage
+            }        
+
+        try {
+
+            wss.send(JSON.stringify(newPrivateMessage)) //send data to the server
+        }catch (error) {
+            console.log(error) // catch error
+        }
     }
 
 
@@ -120,10 +159,9 @@ function MultiChatCover({
         useEffect(()=>{
             console.log('GroupChange result', putToBaseResult)
             if (putToBaseResult === 200){
-                window.location.reload();
+               // window.location.reload();
             }
         },[putToBaseResult])
-        console.log('messages', messages)
 
     return (
         <>

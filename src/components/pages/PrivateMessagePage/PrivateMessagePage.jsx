@@ -19,6 +19,7 @@ import {
     getUserRoom, 
     getPutToBaseResult, 
     getDeleteFromBaseResult,
+    getWs,
 } from  '../../../redux/Selectors/baseSelectors'
 import { 
     getPrivateRooms, 
@@ -43,6 +44,31 @@ function PrivateMessagePage(props) {
     const [listUsers, setListUsers] = useState()
     const [messagesMultipleChat, setMessagesMultipleChat] = useState()
 
+
+    // const ws = new WebSocket('ws://127.0.0.1:8000/api/prvatemessages/')
+    
+    // useEffect(()=>{
+    //     ws.onopen = () => {
+    //         // on connecting, do nothing but log it to the console
+    //         console.log('connected')
+    //         }
+    
+    //         ws.onmessage = evt => {
+    //         // listen to data sent from the websocket server
+    //         const message = JSON.parse(evt.data)
+    //         this.setState({dataFromServer: message})
+    //         console.log(message)
+    //         }
+    
+    //         ws.onclose = () => {
+    //         console.log('disconnected')
+    //         // automatically try to reconnect on connection loss
+    //         }
+    
+    // },[])
+    // console.log('WS', ws)    
+
+
     useEffect(()=>{
         props.getUsersDict()
 
@@ -61,7 +87,9 @@ function PrivateMessagePage(props) {
         }
     },[userID])
 
-    
+
+
+
 //тут мы получаем полный список сообщений, которые для юзера, деленный по комнатам.
     useEffect(()=>{
         props.getPrivateMessages(props.usersPrivateRooms)
@@ -105,22 +133,10 @@ function PrivateMessagePage(props) {
     // TODO через websocketОтправку
 //========================REPLY
 
-    function privateReply(roomID, usersArray){
-
-        console.log('ID', roomID)
-        
-        const username = localStorage.getItem('SLNUserName')
-        const newPrivateMessage = {
-            id: new Date().toISOString(), 
-            create_at: new Date().toISOString(), 
-            author: userID,
-            privateRoom: roomID,
-            text: replyPrivateMessage
-        }
+    function privateReply(roomID, newReplyMessage){
         console.log('TODO через websocketОтправку')
-        console.log('usersPrivateMessages', usersPrivateMessages)
-
-        setUsersPrivateMessages([...usersPrivateMessages, newPrivateMessage])
+        console.log('usersPrivateMessages', newReplyMessage)
+        setUsersPrivateMessages([...usersPrivateMessages, newReplyMessage])
         setReplyPrivateMessage('')
     }
 
@@ -277,6 +293,7 @@ function PrivateMessagePage(props) {
                                                     privateMessageDelete={privateMessageDelete}
                                                     privateMessageEdit={privateMessageEdit}
                                                     userForNewChat={userForNewChat}
+                                                    userID={userID}
                                                     target={target}
                                                     setPrivateModal={setPrivateModal}
                                                     privateModal={privateModal}
@@ -362,6 +379,7 @@ export default connect(
         userRoom: getUserRoom(state),
         putToBaseResult: getPutToBaseResult(state),
         deleteFromBaseResult: getDeleteFromBaseResult(state),
+        Ws: getWs(state),
         
 
         

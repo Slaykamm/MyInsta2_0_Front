@@ -82,3 +82,9 @@ export const getPutNewUserDataResult = (state) => {
     return state.putNewUserDataReducer
 } 
 
+
+export const getWs = (state) => {
+    return state.setWsReducer
+} 
+
+
