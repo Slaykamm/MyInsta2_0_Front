@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { filter, sortBy, get } from 'lodash'
 import cl from './PrivateMessageContainer.module.css'
 import MyModalChat from './ModalChat/ModalChat'
@@ -19,37 +19,36 @@ import MyPrivateWhispModule from '../../../../modules/MyPrivateWhispModule/MyPri
 
 import { getPrivateRooms } from '../../../../redux/Selectors/privateRoomsSelector'
 import { getPrivateRoomsAPI } from '../../../../API/getPrivateRoomsAPI'
+import CommentInputRef from '../../../../modules/CommentInputRef/CommentInputRef'
 
 
-function PrivateMessageContainer({
+function _PrivateMessageContainer({
     privateMessageEdit,
     privateMessageDelete, 
-    setQuotation, 
     setReplyPrivate, 
-    replyPrivateMessage, 
+    //replyPrivateMessage, 
     replyPrivate, 
     privateReply, 
-    usersDict, 
     user, 
     text, 
     avatar, 
     newMessages, 
     messages, 
-    userForNewChat,
     ID, 
-    target,
-    setPrivateModal,
-    privateModal,
     userID,
     ...props}) {
+
+// тест реф
+
 
     const [modal, setModal] = useState(false)
     const [replyPrivateWithQuotation, setReplyPrivateWithQuotation] = useState(true)
     const [privateMessage, setPrivateMessage] = useState('')
     const [wss, setWss] = useState(null)
     const [wsIncomeMessage, setWsIncomeMessage] = useState()
-    
+    const replyBodyRef = useRef();  
 
+    const usersDict = JSON.parse(window.localStorage.getItem('usersDict'))
     function startChat(id){
         setModal(true)
 
@@ -72,15 +71,16 @@ function PrivateMessageContainer({
         }
         const url = '/privaterooms'
         props.putToBase(message, url, id)
-            console.log('TODO ОБНОВЛЯЕМ ДАТУ ЗАХОДА В КОМНАТУ')
+            //console.log('TODO ОБНОВЛЯЕМ ДАТУ ЗАХОДА В КОМНАТУ')
 
     }
 
     useEffect(()=>{
         if (wsIncomeMessage){
             const newReplyMessage = JSON.parse(wsIncomeMessage);
-            console.log('from WS', newReplyMessage);
             privateReply(ID, newReplyMessage) 
+            replyBodyRef.current.value = ''
+
         }
     },[wsIncomeMessage])
 
@@ -88,14 +88,14 @@ function PrivateMessageContainer({
 
         function ReplyPrivateTransition(e){
             e.preventDefault();
-
             const newPrivateMessage = {
                 id: new Date().toISOString(), 
                 create_at: new Date().toISOString(), 
                 user: userID,
                 author: userID,
                 privateRoom: ID,
-                text: replyPrivateMessage
+                // text: replyPrivateMessage
+                text: replyBodyRef.current.value
                 }        
 
             try {
@@ -112,7 +112,14 @@ function PrivateMessageContainer({
         }
 
  
-    
+        // этим эффектом рвем сокет соединение, т.к вышли из чат рум
+        useEffect(()=> {
+            if (!modal && wss){
+                wss.close()
+                setWss(null)
+            }
+
+        }, [modal])
     
 
     return (
@@ -131,23 +138,19 @@ function PrivateMessageContainer({
                 create_at={message.create_at}
                 roomID={ID}
                 key={message.id}
-                usersDict={usersDict}
                 avatar={get(filter(usersDict, {'username': user}),[0, 'avatar'])}
                 author={message.author}
                 privateMessageDelete={privateMessageDelete}
                 privateMessageEdit={privateMessageEdit}
                 replyPrivateWithQuotation={replyPrivateWithQuotation}
-                
                 />                  
                 
             )}
 
-            <CommentInput
-                    value={replyPrivateMessage}
-                    onChange={e => setReplyPrivate(e.target.value)}
+            <CommentInputRef
+                    ref={replyBodyRef}
                     onClick={e => ReplyPrivateTransition(e)}
                     isMultipyChat={false}
-            // onClickCancel={setModal(false)}
             /> 
 
         </MyModalChat>
@@ -189,12 +192,11 @@ function PrivateMessageContainer({
     )
 }
 
-
+const PrivateMessageContainer = React.memo(_PrivateMessageContainer)
 
 export default connect(
     //mapStateToProps
     state => ({
-        usersDict: getUsersDict(state),
         userRoom: getUserRoom(state),
         newMessageSucces: state.postUserRoom,
         privateMessageSucces: state.postUserPrivate,
@@ -203,17 +205,14 @@ export default connect(
     }),
     //mapDispatchToProps
     dispatch => ({
-        getUsersDict: () => {
-            dispatch(getUserDictAPI())
-        },
         postPrivateRoom: (value, text, userID) => {
             dispatch(postRoomAPI(value, text, userID))
         },
         postPrivateMessage: (roomID, roomName, message, userID) => {
             dispatch(postMessageAPI(roomID, roomName, message, userID))
         },
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },
         getPrivateRooms: (value) => {
             dispatch(getPrivateRoomsAPI(value))

@@ -10,16 +10,14 @@ import Nav from 'react-bootstrap/Nav'
 
 
 
-const LeftSideBar = (props) => {
+const _LeftSideBar = (props) => {
 
   const [userInfo, setUserInfo] = useState()
+  function handleClose () {
+      props.setLeftPanelRedux(false);
+  }
 
-
-    function handleClose () {
-        props.setLeftPanelRedux(false);
-    }
-
-    
+    //console.log('leftSideBar 3 renders')
     useEffect(()=>{
       props.getUsersDict()
     },[])
@@ -29,10 +27,11 @@ const LeftSideBar = (props) => {
       setUserInfo(props.usersDict[1])
     },[props.usersDict])
 
+
     const test = filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')})
 
     
-// Дописать кабинеты  видео сообщений и профиля
+
   return (
     <>
 
@@ -89,7 +88,7 @@ const LeftSideBar = (props) => {
     </>
   );
 }
-  
+  const LeftSideBar = React.memo(_LeftSideBar)
   export default connect(
     //mapStateToProps
     state => ({

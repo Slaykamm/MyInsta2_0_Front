@@ -1,8 +1,8 @@
 import React from 'react'
-import MyButton from '../../../../UI/MyButton/MyButton'
-import MyRedButton from '../../../../UI/MyRedButton/MyRedButton'
-import MySelect from '../../../../UI/Myselect/MySelect'
-import cl from './CommentInput.module.css'
+import MyButton from '../../UI/MyButton/MyButton'
+import MyRedButton from '../../UI/MyRedButton/MyRedButton'
+import MySelect from '../../UI/Myselect/MySelect'
+import cl from './CommentInputRef.module.css'
 import { 
     get, 
     includes  
@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from 'react'
 
 
-const _CommentInput = ({
+const _CommentInputRef = React.forwardRef(({
     value, 
     onClick, 
     onClickCancel, 
@@ -21,10 +21,10 @@ const _CommentInput = ({
     groupMembers,
     notGroupMembers,
     ...props
-}) => {
+}, ref) => {
 
 
-    //console.log('CommentInput rendered')
+    // console.log('CommentInput rendered')
     const [addUserSelect, setAddUserSelect] = useState()
     const [removeUserSelect, setRemoveUserSelect] = useState()
 
@@ -44,7 +44,8 @@ const _CommentInput = ({
         <form>
             <textarea className={cl.InputArea} 
                 style={{width:'100%', height:'5rem'}}
-                value={value}
+                //value={value}
+                ref={ref}
                 {...props}
             />
             <div className={cl.ButtonsGroup} >
@@ -57,6 +58,7 @@ const _CommentInput = ({
 
                             <MySelect
                                 onChange={e => setAddUserSelect(e)}
+                                
                                 defaultValue="Пользователи на форуме"
                                 options={notGroupMembers}
                             /> 
@@ -88,8 +90,8 @@ const _CommentInput = ({
         </form>
         </>
     )
-}
+})
 
-const CommentInput = React.memo(_CommentInput)
-export default CommentInput
+const CommentInputRef = React.memo(_CommentInputRef)
+export default CommentInputRef
 

@@ -5,7 +5,7 @@ function PrivateMessageCreation() {
     console.log('hello WOrld!')
     return (
         <div>
-            <MyModal/>
+            {/* <MyModal/> */}
         </div>
     )
 }

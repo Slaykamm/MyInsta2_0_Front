@@ -35,7 +35,7 @@ import { postCommentsWithQuotationAPI } from '../../../API/postCommentsWithQuota
 
 
 
-function CommentOutput({videoID, ...props}) {
+function _CommentOutput({videoID, ...props}) {
     const [userName, setUserName] = useState('')
     const [comments, setComments] = useState([])
     const [replyComment, setReplyComment] = useState('')
@@ -44,6 +44,8 @@ function CommentOutput({videoID, ...props}) {
 
 
     const navigate = useNavigate()
+
+    //console.log('CommentOutput rendered 6 times ')
 
     //TODO сделать рефактор. передавать словарь в пропсах
     useEffect(()=>{ 
@@ -168,7 +170,7 @@ function CommentOutput({videoID, ...props}) {
             "text": text 
         }
         const url = '/comments'
-        props.putToBase(message, id, url)
+        props.putToBase(message, url, id)
     }
 
 
@@ -192,7 +194,7 @@ function CommentOutput({videoID, ...props}) {
     const [target, setTarget] = useState('')  // эти типо ключа чтобы срабатывала нужна модалка. иначе тригеряться все по фазе всплытия
 
     function commentPrivateMessege(id, user){
-        console.log("111", id.target )
+        //console.log("111", id.target )
         setTarget(id.target)
         //получаем оба айди
         //console.log('тот кому пишем ', get(filter(props.usersDict, {'username': user}),[0,'id']))
@@ -224,7 +226,7 @@ function CommentOutput({videoID, ...props}) {
     useEffect(()=>{
             callModalForPrivate2(user)
               
-            console.log('Hello World!')
+            //console.log('Hello World!')
      }, [props.usersPrivateRooms])
 
 
@@ -286,7 +288,6 @@ function CommentOutput({videoID, ...props}) {
 
          {/* блока приватных сообщений КОТОРЫХ НЕ БЫЛО! */}
 
-        {console.log('privateModal', privateModal)}
         { privateModal &&
             <MyModal
             visible={privateModal}
@@ -349,6 +350,8 @@ function CommentOutput({videoID, ...props}) {
     )
 }
 
+const CommentOutput = React.memo(_CommentOutput)
+
 export default connect(
     //mapStateToProps
     state => ({
@@ -381,8 +384,8 @@ export default connect(
         postPrivateMessage: (roomID, roomName, message, userID) => {
             dispatch(postMessageAPI(roomID, roomName, message, userID))
         },
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },
         deleteFromBase: (id, url) => {
             dispatch(deleteFromBaseAPI(id, url))

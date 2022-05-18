@@ -13,10 +13,10 @@ import LeftSideBar from '../LeftSideBar/LeftSideBar';
 import _ from 'lodash'
 
 
-const Menu = (props) => {
+const _Menu = (props) => {
 
 
-    
+    //console.log('menu rendered')
 
     function panelCall(){
         
@@ -97,6 +97,8 @@ const Menu = (props) => {
         </div>
     );
 };
+
+const Menu = React.memo(_Menu)
 
 export default connect(
     //mapStateToProps

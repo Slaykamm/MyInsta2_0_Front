@@ -2,7 +2,7 @@ import React from 'react'
 import cl from './MyRedButton.module.css'
 import Button from 'react-bootstrap/Button'
 
-function MyRedButton({children, ...props}) {
+function _MyRedButton({children, ...props}) {
     return (
         <button
             className={cl.MyButton}
@@ -22,4 +22,5 @@ function MyRedButton({children, ...props}) {
     )
 }
 
+const MyRedButton = React.memo(_MyRedButton)
 export default MyRedButton

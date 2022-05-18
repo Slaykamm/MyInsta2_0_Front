@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './MySelect.module.css'
 
-const MySelect = ({options, defaultValue, value, onChange}) => {
+const _MySelect = ({options, defaultValue, value, onChange}) => {
 
     return (
         <select
@@ -21,5 +21,5 @@ const MySelect = ({options, defaultValue, value, onChange}) => {
         </select>
     );
 };
-
+const MySelect = React.memo(_MySelect)
 export default MySelect;

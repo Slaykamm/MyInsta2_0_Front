@@ -13,7 +13,7 @@ function VideoContainer({
 }) {
 
     const clearedVideo = clearDeletedVideo(filteredVideo)
-
+    //console.log('VideoContainer 3 render!');
     //video.title === video.description && isNumber(video.description) 
 
 //    console.log('filteredVideo', filteredVideo)
@@ -50,4 +50,4 @@ function VideoContainer({
     )
 }
 
-export default VideoContainer
+export default React.memo(VideoContainer)

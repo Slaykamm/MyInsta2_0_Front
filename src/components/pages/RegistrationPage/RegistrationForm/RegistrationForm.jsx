@@ -14,13 +14,11 @@ function RegistrationForm(props) {
 
     function regEmailButtonHandle(event) {
         event.preventDefault()
-        console.log('works3')
     }
 
 
     function regPhoneButtonHandle(event) {
         event.preventDefault()
-        console.log('works4')
     }
 
     const isPhoneConfirmed = false

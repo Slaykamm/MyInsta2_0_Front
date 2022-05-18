@@ -42,33 +42,9 @@ function PrivateMessagePage(props) {
     const [usersPrivateMessages, setUsersPrivateMessages] = useState()
     const [replyPrivateMessage, setReplyPrivateMessage] = useState('')
     const [listUsers, setListUsers] = useState()
-    const [messagesMultipleChat, setMessagesMultipleChat] = useState()
 
 
-    // const ws = new WebSocket('ws://127.0.0.1:8000/api/prvatemessages/')
-    
-    // useEffect(()=>{
-    //     ws.onopen = () => {
-    //         // on connecting, do nothing but log it to the console
-    //         console.log('connected')
-    //         }
-    
-    //         ws.onmessage = evt => {
-    //         // listen to data sent from the websocket server
-    //         const message = JSON.parse(evt.data)
-    //         this.setState({dataFromServer: message})
-    //         console.log(message)
-    //         }
-    
-    //         ws.onclose = () => {
-    //         console.log('disconnected')
-    //         // automatically try to reconnect on connection loss
-    //         }
-    
-    // },[])
-    // console.log('WS', ws)    
-
-
+  
     useEffect(()=>{
         props.getUsersDict()
 
@@ -130,12 +106,9 @@ function PrivateMessagePage(props) {
  
 
     // ф-ция отвечает за ответ юзеру 
-    // TODO через websocketОтправку
 //========================REPLY
 
     function privateReply(roomID, newReplyMessage){
-        console.log('TODO через websocketОтправку')
-        console.log('usersPrivateMessages', newReplyMessage)
         setUsersPrivateMessages([...usersPrivateMessages, newReplyMessage])
         setReplyPrivateMessage('')
     }
@@ -183,7 +156,7 @@ function PrivateMessagePage(props) {
         const message = {
             "text": text,
         }
-        props.putToBase(message, id, url)
+        props.putToBase(message, url, id)
     }
 
     useEffect(()=>{
@@ -400,8 +373,8 @@ export default connect(
         postPrivateRoom: (value) => {
             dispatch(postRoomAPI(value))
         },
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },
         deleteFromBase: (id, url) => {
             dispatch(deleteFromBaseAPI(id, url))

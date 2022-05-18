@@ -26,7 +26,7 @@ import { getUserTokenAPI } from '../../API/getUserToken';
 
 
 
-function UserCabinet(props) {
+function _UserCabinet(props) {
 
 //TODO валидацию на инпуты.
  
@@ -42,9 +42,6 @@ const [userPassword, setPassword] = useState('')
 const [oldPassword, setOldPassword] = useState(false)
 
 const [unconfirmedNewEmail, setUnconfirmedNewEmail] = useState('')
-
-
-
 const [avaChanged, setAvaChanged] = useState('')
 
 // ---------если у нас пользак не авторизован - кдиаем его на страницу логина. 
@@ -54,6 +51,7 @@ const navigate = useNavigate()
 //     navigate("/login")
 // }
 
+//console.log('LK render 3 times')
 
 
 useEffect(()=>{
@@ -120,7 +118,6 @@ function onSubmitEmail(formData) {
         "email": formData.lkemail 
     }
     const url = '/users'
-    console.log('1111', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']) )
     props.putToBase(
         message,
         url,
@@ -149,7 +146,6 @@ function onSubmitPassword(formData) {
 }
 
 useEffect(()=>{
-    console.log('props.changePasswordResult', props.changePasswordResult)
     if (props.changePasswordResult.message === 'Password updated successfully')
         serConfirmPasswordChanged(true)
 },[props.changePasswordResult])
@@ -179,13 +175,11 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
 function handleAvatarSubmit(e) {
     e.preventDefault();
     let files = e.target.files
-    console.log('files', files[0])
 
     var formData = new FormData;
     formData.append('imagefile', files[0]);
 
         const url = `http://127.0.0.1:8000/api/author/${get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'userID'])}/`
-        console.log('url', url)
 
         props.postToBaseMedia(formData, url)
 }
@@ -195,14 +189,6 @@ function handleAvatarSubmit(e) {
             window.location.reload();
         }
     }, [props.postToBaseMediaResult])
-
-    console.log('1000123', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
-
-    console.log('1123', localStorage.getItem('SLNUserName'))
-    console.log('1123', {'username':localStorage.getItem('SLNUserName')})
-    console.log('1123', filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}))
-    console.log('1123', get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']))
-
 
     return (
         <>
@@ -283,7 +269,7 @@ function handleAvatarSubmit(e) {
 //     initialValues: state.initialName, // retrieve name from redux store 
 //   })
   
-
+const UserCabinet = React.memo(_UserCabinet)
 
 export default connect(
     //mapStateToProps
@@ -299,8 +285,8 @@ export default connect(
         getUsersDict: () => {
           dispatch(getUserDictAPI())
         },
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },  
         postToBaseMedia: (formData, url) => {
             dispatch(postToBaseMediaAPI(formData, url))

@@ -32,7 +32,6 @@ function MenuNew(props) {
 
     function LeftPanelCall(){
         props.setLeftPanelRedux(true)
-        console.log("wwww", props.sideBarShow)
         return <LeftSideBar/>
     }
 
@@ -42,7 +41,6 @@ function MenuNew(props) {
     }
 
     function NavToUser () {
-        console.log('USER')
         navigate('/lk')
     }
 

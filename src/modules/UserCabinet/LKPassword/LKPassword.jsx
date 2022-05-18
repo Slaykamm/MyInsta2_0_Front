@@ -11,15 +11,11 @@ import MyInput from '../MyInput/MyInput'
 
 function LKPassword({oldPassword, confirmPasswordChanged, ...props}) {
 
-    console.log('confirmPasswordChanged', confirmPasswordChanged)
-
-
     function changePasswordHandle(event) {
         setPassword(event)
 }
 
     function handlePasswordChange(event){
-        console.log('отправляем на Юг', userPassword)
     }
 
 

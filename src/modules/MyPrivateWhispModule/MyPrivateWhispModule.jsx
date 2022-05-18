@@ -21,7 +21,6 @@ import { getPrivateRoomsAPI} from '../../API/getPrivateRoomsAPI'
 function MyPrivateWhispModule(
     {
         userForNewChat,
-        usersDict,
         usersPrivateRooms,
         setUserForNewChat,
         setUserPrivateRooms,
@@ -35,53 +34,44 @@ function MyPrivateWhispModule(
     const [listUsers, setListUsers] = useState()
 
 
-
+    //console.log('RENDERED! MyPrivateWhispModule!!!!!!!!!!!!!!')
+    const usersDict = JSON.parse(window.localStorage.getItem('usersDict')) 
     //при маунте модуля подгружаем словари иполучилаем список юзеров и ай ди юзера
     useEffect(()=>{
 
         if (usersDict){
             setUserID(get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
             setListUsers(usersDict.map(user => pick(user, ['id', 'username'])))
-           // console.log('check1', usersDict.map(user => pick(user, ['id', 'username'])))
-            
         }
-        
     },[usersDict])
 
 
-        //получаем юзера с которому будем писать сообщение и высываем модальный чат.
-      //  console.log('check!', listUsers)
-
-        useEffect(()=>{
-            const user = filter(listUsers, {'id':userForNewChat})
-            callModalForPrivate(get(user,[0]))
-        }, [listUsers])
+    useEffect(()=>{
+        const user = filter(listUsers, {'id':userForNewChat})
+        callModalForPrivate(get(user,[0]))
+    }, [listUsers])
         
         
 
-        // если у нас есть мы (карент юзер) и список всех чатов карент юзера
-        function callModalForPrivate(user) {
-            
-            //если они есть то из айдишников сарент юзера и адресата получаем имя комнаты.
-            
-            console.log('111111111111111111222222222222222222', user, usersPrivateRooms)
-            if (user && usersPrivateRooms){
-                console.log('1', user, '2', usersPrivateRooms)
-
-                const addressatUser = user.id
-                const currentUser = get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id'])
-                const roomName = getPrivateRoomNameFromIndexesService(user.id, get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
+    // если у нас есть мы (карент юзер) и список всех чатов карент юзера
+    function callModalForPrivate(user) {
         
-                if (addressatUser === currentUser) {
-                    return window.alert('Нельзя отправлять сообщения себе!')
-                }
-
-                //проверяем. Если есть такой чат или нет. Да тру - вариант нового чата.
-                setPrivateModal(true)
-                setNewRoomName(roomName)
-
+        //если они есть то из айдишников сарент юзера и адресата получаем имя комнаты.
+        if (user && usersPrivateRooms){
+            const addressatUser = user.id
+            const currentUser = get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id'])
+            const roomName = getPrivateRoomNameFromIndexesService(user.id, get(filter(usersDict, {'username': localStorage.getItem('SLNUserName')}),[0,'id']) )
+    
+            if (addressatUser === currentUser) {
+                return window.alert('Нельзя отправлять сообщения себе!')
             }
+
+            //проверяем. Если есть такой чат или нет. Да тру - вариант нового чата.
+            setPrivateModal(true)
+            setNewRoomName(roomName)
+
         }
+    }
 
         
         // при нажатии кнопки отправить - в танку кидаем имя комнаты. Сообщение и и имя юзера кто пишет
@@ -125,7 +115,7 @@ function MyPrivateWhispModule(
 
 
 
-    
+    console.log('redered MyPrivateWhispModule')
     return (
         <>
         {/* блока приватных сообщений КОТОРЫХ НЕ БЫЛО! */}

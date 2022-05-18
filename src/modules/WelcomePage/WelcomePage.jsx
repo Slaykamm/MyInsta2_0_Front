@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Footer from '../../components/pages/footer/Footer';
 import Header from '../../components/pages/header/Header';
 import cl from './WelcomePage.module.css'
@@ -43,13 +43,15 @@ console.log('token', localStorage.getItem('SLNToken'))
                 props.checkUser(
                     {"username":localStorage.getItem('SLNUserName'), "Authorization":localStorage.getItem('SLNToken')}
                 )
-    
-              //  
             }
         }, 500)
-
-
     },[])
+
+    const memoDict = useMemo(()=>{
+        window.localStorage.setItem('usersDict', JSON.stringify(props.usersDict))
+        console.log('memo render', props.usersDict)
+    }, [props.usersDict])
+
 
 
     useEffect(()=>{

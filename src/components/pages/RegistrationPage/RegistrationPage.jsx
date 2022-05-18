@@ -61,12 +61,12 @@ function RegistrationPage(props) {
     }, [props.usersDict])
     //==================================END
 
-    useEffect(()=>{
-        console.log('userrr', user)
+    // useEffect(()=>{
+    //     console.log('userrr', user)
 
-        // usage props.putToBase(message, id, url)
+    //     // usage props.putToBase(message, url, id)
 
-    },[user])
+    // },[user])
 
 
     // ==============контролируем что в юзере==============
@@ -82,9 +82,6 @@ function RegistrationPage(props) {
 
     
     function submitRegistrationData(formData){
-        console.log("registration Data", formData)
-
-        
 //  тут делаем следующее:
         // 1. Загружаем через putTobase: login, Имя, емаил в putto base user
          
@@ -113,8 +110,6 @@ function RegistrationPage(props) {
     const navigate = useNavigate()
 
     useEffect(()=>{
-        console.log('putNewUserDataResult', props.putNewUserDataResult)
-        console.log('props.putNewUserDataResult?.status', props.putNewUserDataResult?.status)
         if (props.putNewUserDataResult.status === 200){
 
             navigate("/login")
@@ -204,8 +199,8 @@ export default connect(
         getUsersDict: () => {
           dispatch(getUserDictAPI())
         },
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },  
         postToBaseMedia: (formData, url) => {
             dispatch(postToBaseMediaAPI(formData, url))

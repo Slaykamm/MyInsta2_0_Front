@@ -32,11 +32,11 @@ import MyPrivateWhispModule from '../../../modules/MyPrivateWhispModule/MyPrivat
 
 
 
-function VideoPostPage(props) {
+function _VideoPostPage(props) {
     const params = useParams()
     const [videoID, setVideoID] = useState('')
 
-    console.log('Rendered!!!')
+   // console.log('Rendered _VideoPostPage 6 times')
     if (!videoID){
         setVideoID(params.id)
     }
@@ -46,9 +46,11 @@ function VideoPostPage(props) {
     },[videoID])
 
 
-    useEffect(()=>{
-        props.getUsersDict()
-    },[])
+
+    const usersDict = JSON.parse(window.localStorage.getItem('usersDict'))
+    // useEffect(()=>{
+    //     props.getUsersDict()
+    // },[])
 
     const [userForNewChat, setUserForNewChat] = useState()
     const [userPrivateRooms, setUserPrivateRooms] = useState()
@@ -59,16 +61,11 @@ function VideoPostPage(props) {
         setUserForNewChat(user)
     } 
 
-    console.log('userForNewChat', userForNewChat)
 
     useEffect(()=>{
         setUserPrivateRooms(props.usersPrivateRooms)
-        console.log('111111111111usersPrivateRooms', props.usersPrivateRooms)
     }, [props.usersPrivateRooms])
 
-    console.log('props.usersDict', props.usersDict)
-    console.log('props.video.author', props.video.author)
-    console.log('testt', get(filter(props.usersDict, {'id': props.video.author}),[0, 'username']))
     return (
         <>
 
@@ -78,12 +75,11 @@ function VideoPostPage(props) {
 
                 <MyPrivateWhispModule 
                     userForNewChat={userForNewChat}
-                    usersDict={props.usersDict}
+                    usersDict={usersDict}
                     usersPrivateRooms={userPrivateRooms}
                     setUserForNewChat={setUserForNewChat}
                     setUserPrivateRooms={setUserPrivateRooms}
                 />
-                {console.log('module ACTIVATE')}   
                 </div>
                     
             :   <span></span>
@@ -137,7 +133,7 @@ function VideoPostPage(props) {
                                 >
                                     <span 
                                         >Автор: </span> 
-                                    {get(filter(props.usersDict, {'id': props.video.author}),[0, 'username'])}
+                                    {get(filter(usersDict, {'id': props.video.author}),[0, 'username'])}
                                 </p>
                             </div>
                             
@@ -167,7 +163,7 @@ function VideoPostPage(props) {
     )
 }
 
-
+const VideoPostPage = React.memo(_VideoPostPage)
 
 export default connect(
     //mapStateToProps

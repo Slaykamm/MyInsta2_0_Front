@@ -18,7 +18,6 @@ function UserVideoControlButtonForm(
         // ------------Обработка блока кнопок вкл модуля удалить. отменить его. добавить видео и удалить в список. удалить.
 
         function deleteModeEnable(e){
-            console.log('e', e)
             e.preventDefault();
             setDeleteMode(true)
         }

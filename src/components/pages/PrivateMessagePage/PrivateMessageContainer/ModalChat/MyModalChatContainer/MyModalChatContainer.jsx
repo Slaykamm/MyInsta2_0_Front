@@ -7,12 +7,25 @@ import { useState } from 'react'
 import MyModal from '../../../../../../UI/MyModal/MyModal'
 import CommentInput from '../../../../commentOutput/CommentInput/CommentInput'
 
-function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author, create_at, avatar, usersDict, user, roomMessage, roomID, replyPrivateWithQuotation, ...props}) {
+function MyModalChatContainer(
+    {
+        privateMessageEdit, 
+        privateMessageDelete, 
+        author, 
+        create_at, 
+        avatar, 
+        user, 
+        roomMessage, 
+        roomID, 
+        replyPrivateWithQuotation, 
+        ...props
+    }) {
     const [modal, setModal] = useState(false)
-
-
     const [modalEdit, setModalEdit] = useState(false)
     const [editMessage, setEditMessage] = useState(roomMessage.text)
+
+    const usersDict = JSON.parse(window.localStorage.getItem('usersDict')) 
+
 
     function EditTransition(e){
         e.preventDefault();
@@ -24,6 +37,7 @@ function MyModalChatContainer({privateMessageEdit, privateMessageDelete, author,
         e.preventDefault();
         privateMessageDelete(roomMessage.id)
     }
+    //console.log('MyModalChatContainer rendered')
     return (
         <>
                 <div className={cl.commentContainer}>

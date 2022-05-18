@@ -1,8 +1,9 @@
 import React from 'react'
 import cl from './MyModal.module.css'
 
-function MyModal({children, visible, setVisible, ...props}) {
+function _MyModal({children, visible, setVisible, ...props}) {
 
+    //console.log('_MyModal rendered')
     const rootClasses = [cl.MyModal]
 
     if (visible) {
@@ -20,5 +21,7 @@ function MyModal({children, visible, setVisible, ...props}) {
         </div>
     )
 }
+
+const MyModal = React.memo(_MyModal)
 
 export default MyModal

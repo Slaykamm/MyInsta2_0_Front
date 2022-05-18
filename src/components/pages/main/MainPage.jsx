@@ -11,15 +11,15 @@ import { filterQuery } from '../../../services/filterQuery';
 import VideoContainer from './VideoContainer/VideoContainer';
 
 
-const MainPage = (props) => {
+const _MainPage = (props) => {
 
 const [listFiles, setListFiles] = useState()
-
 
 
 //TODO какгохо хрена надо 2 раза дергать
 useEffect(()=>{
     props.getPreviewAPI()
+
 },[])
 
 useEffect(()=>{
@@ -63,7 +63,7 @@ const filteredVideo=filterQuery(listFiles, searchQuery)
     );
 };
 
-
+const MainPage = React.memo(_MainPage)
 
 export default connect(
     // mapStateToProps
@@ -77,6 +77,7 @@ export default connect(
         getPreviewAPI: () =>{
             dispatch(getVideoPreviewsAPI())
         },
+        
     })
 
 )(MainPage); 

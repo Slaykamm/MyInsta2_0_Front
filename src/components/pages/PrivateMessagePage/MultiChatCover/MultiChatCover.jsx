@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import cl from './MultiChatCover.module.css'
 import { 
     get, 
@@ -15,10 +15,11 @@ import CommentInput from '../../../../components/pages/commentOutput/CommentInpu
 import { useState } from 'react'
 import MyModalChatContainer from '../PrivateMessageContainer/ModalChat/MyModalChatContainer/MyModalChatContainer'
 import { getIndexesFromMultyUsersRoomNameService, getMultyUsersRoomNameFromIndexesService } from '../../../../services/roomNamesService'
+import CommentInputRef from '../../../../modules/CommentInputRef/CommentInputRef'
 
  
 
-function MultiChatCover({
+function _MultiChatCover({
     usersDict, 
     user, 
     text, 
@@ -47,6 +48,7 @@ function MultiChatCover({
     const [notGroupMembers, setNotGroupMembers] = useState()
     const [wss, setWss] = useState(null)
     const [wsIncomeMessage, setWsIncomeMessage] = useState()
+    const replyBodyRef = useRef(); 
 
 
     function startChat(id){
@@ -81,8 +83,8 @@ function MultiChatCover({
     useEffect(()=>{
         if (wsIncomeMessage){
             const newReplyMessage = JSON.parse(wsIncomeMessage);
-            console.log('from WS', newReplyMessage);
             privateReply(ID, newReplyMessage) 
+            replyBodyRef.current.value = ''
         }
     },[wsIncomeMessage])
 
@@ -95,7 +97,7 @@ function MultiChatCover({
             user: userID,
             author: userID,
             privateRoom: ID,
-            text: replyPrivateMessage
+            text: replyBodyRef.current.value
             }        
 
         try {
@@ -109,14 +111,9 @@ function MultiChatCover({
 
     function addUserChange(usersArray, value){
 
-        console.log('CHECK', [...usersArray, toNumber(value)].length)
         if ([...usersArray, toNumber(value)].length < 10) {
             const rez = getMultyUsersRoomNameFromIndexesService([...usersArray, toNumber(value), get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])])
-            
             const [newRoomName, newRoomMembers] = rez
-            console.log('newRoomName', newRoomName, ID)
-            console.log('newRoomMembers', newRoomMembers)
-
             let newRoomMembersArray = new Array;
             newRoomMembers.map(user =>{
                 newRoomMembersArray.push(user)
@@ -134,11 +131,9 @@ function MultiChatCover({
         } else {
             window.alert('Вы превысили максимальное значение пользователей в комнате. Максимальное количество 10 человек')
         }
-        console.log('roomName', roomName)
     }
 
     function removeUserChange(userToRemoveId){
-        console.log('111111111', userToRemoveId)
         const groupMembers = getIndexesFromMultyUsersRoomNameService(roomName, ID)
         const newRoomMembers = without(groupMembers, userToRemoveId)
         const newRoomName = getMultyUsersRoomNameFromIndexesService(newRoomMembers)
@@ -163,6 +158,16 @@ function MultiChatCover({
             }
         },[putToBaseResult])
 
+        // этим эффектом рвем сокет соединение, т.к вышли из чат рум
+        useEffect(()=> {
+            if (!modal && wss){
+                wss.close()
+                setWss(null)
+            }
+
+        }, [modal])
+    
+
     return (
         <>
 
@@ -178,7 +183,6 @@ function MultiChatCover({
                     roomMessage={message}
                     create_at={message.create_at}
                     roomID={ID}
-                    usersDict={usersDict}
                     avatar={get(filter(usersDict, {'username': user}),[0, 'avatar'])}
                     author={message.author}
                     privateMessageDelete={privateMessageDelete}
@@ -189,8 +193,8 @@ function MultiChatCover({
                 />
             )}
 
-                <CommentInput
-                    value={replyPrivateMessage}
+                <CommentInputRef
+                    //value={replyPrivateMessage}
                     onChange={e => setReplyPrivate(e.target.value)}
                     onClick={e => ReplyPrivateTransition(e)}
                     isMultipyChat={true}
@@ -199,6 +203,7 @@ function MultiChatCover({
                     groupMembers={groupMembers}
                     notGroupMembers={notGroupMembers}
                     usersArray={usersArray}
+                    ref={replyBodyRef}
                 />
         </MyModalChat>
 
@@ -239,4 +244,5 @@ function MultiChatCover({
     )
 }
 
+const MultiChatCover = React.memo(_MultiChatCover)
 export default MultiChatCover

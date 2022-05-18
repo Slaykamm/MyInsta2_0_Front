@@ -33,6 +33,15 @@ export const getUsersDictFromBase = createSelector(
     
 )
 
+export const getUsersDictFromState = createSelector(
+    getUsersDict,
+    (dict) => {
+        console.log('test',dict)
+        return dict
+    }
+)
+
+
 
 export const getUserToken = (state) => {
     return state.userToken

@@ -33,7 +33,9 @@ import { videoValidator, imageValidator } from '../../../Validators/validators.t
 
 import cl from './userVideoPage.module.css'
 
-function UserVideoPage(props) {
+function _UserVideoPage(props) {
+
+    //console.log('_UserVideoPage render 4 times')
 
     const [userVideoList, setUserVideoList] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
@@ -46,21 +48,29 @@ function UserVideoPage(props) {
     const [queryVideoInput, setQueryVideoInput] = useState('')
     const [queryDescriptionInput, setQueryDescriptionInput] = useState('')
 
-
+    // оптимизирую словари
     // получаем словарь
-    useEffect(()=>{
-        if (!props.usersDict.length){
-           props.getUsersDict() 
-        }
-    },[])
+    // useEffect(()=>{
+    //     if (!props.usersDict.length){
+    //        props.getUsersDict() 
+    //     }
+    // },[])
+
+    // useEffect(()=>{
+    //     setUserID(get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
+    // }, [props.usersDict])
+    // useEffect(()=>{
+    //     props.getUserOwnerPreview(userID)
+    // }, [userID])
+    
+    const usersDict = JSON.parse(window.localStorage.getItem('usersDict')) 
+    const userId = get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id'])
+
+
     
     useEffect(()=>{
-        setUserID(get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
-    }, [props.usersDict])
-    
-    useEffect(()=>{
-        props.getUserOwnerPreview(userID)
-    }, [userID])
+        props.getUserOwnerPreview(userId)
+    }, [userId])
     
     useEffect(()=>{
         setUserVideoList(props.videoUserOwnerPreviews)
@@ -78,14 +88,13 @@ function UserVideoPage(props) {
         e.preventDefault()
         setDeleteMode(false)
         setLoadingVideoActive(true)
-        createNewVideoAction(queryVideoInput, queryDescriptionInput, props.usersDict, props.createNewVideo)
+        createNewVideoAction(queryVideoInput, queryDescriptionInput, usersDict, props.createNewVideo)
     }
 
 // ========================видео сабмит
         function submitVideo(e){
             e.preventDefault();
             let files = e.target.files
-            console.log('1111', files[0].type)
             if (includes(videoValidator, files[0].type)){
                 submitVideoAction(files, props.newVideoResult.id, props.postToBaseMedia)
                 setIsVideoLoaded(true)
@@ -202,6 +211,7 @@ function UserVideoPage(props) {
     )
 }
 
+const UserVideoPage = React.memo(_UserVideoPage)
 
 export default connect(
     state => ({
@@ -231,8 +241,8 @@ export default connect(
         postToBaseMedia: (formData, url) => {
             dispatch(postToBaseMediaAPI(formData, url))
         }, 
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },
         getVideoFile: (id) => {
             dispatch(getVideoAPI(id))

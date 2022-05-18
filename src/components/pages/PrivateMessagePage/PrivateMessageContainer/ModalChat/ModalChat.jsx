@@ -1,7 +1,10 @@
 import React from 'react'
 import cl from './ModalChat.module.css'
 
-function ModalChat({children, visible, setVisible, ...props}) {
+function _ModalChat({children, visible, setVisible, ...props}) {
+
+
+    //console.log('ModalChat rendered2')
 
     const rootClasses = [cl.MyModal]
 
@@ -18,4 +21,5 @@ function ModalChat({children, visible, setVisible, ...props}) {
     )
 }
 
+const ModalChat = React.memo(_ModalChat)
 export default ModalChat

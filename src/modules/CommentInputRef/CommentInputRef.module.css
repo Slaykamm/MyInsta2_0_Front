@@ -1,0 +1,15 @@
+.InputArea {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5); /* Параметры тени */
+    padding: 10px;
+}
+
+
+.InputArea:hover {
+    border: 4px double rgb(109, 109, 109);
+}
+
+.ButtonsGroup {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 4rem;
+}

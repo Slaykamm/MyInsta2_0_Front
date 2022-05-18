@@ -41,8 +41,8 @@ export default connect(
     //mapDispatchToProps
     dispatch => ({
 
-        putToBase: (value, id, url) => {
-            dispatch(putToBaseAPI(value, id, url))
+        putToBase: (value, url, id) => {
+            dispatch(putToBaseAPI(value, url, id))
         },
     })
 

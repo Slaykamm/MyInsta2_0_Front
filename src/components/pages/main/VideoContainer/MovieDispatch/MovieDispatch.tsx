@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useEffect, useState } from 'react';
 import cl from './MovieDispatch.module.css'
 import { connect } from 'react-redux'
@@ -10,6 +10,7 @@ import { filter, get } from 'lodash'
 import MyPrivateWhispModule from '../../../../../modules/MyPrivateWhispModule/MyPrivateWhispModule';
 import { getPrivateRooms } from '../../../../../redux/Selectors/privateRoomsSelector'
 import { getPrivateRoomsAPI } from '../../../../../API/getPrivateRoomsAPI'
+import { getUsersDict } from '../../../../../redux/Selectors/baseSelectors'
 
 
 interface IMovieDispatch {
@@ -24,7 +25,7 @@ interface IMovieDispatch {
     props: object
 }
 
-const movieDispatch = ({
+const _movieDispatch = ({
     url, 
     title, 
     description,
@@ -36,22 +37,26 @@ const movieDispatch = ({
     ...props
 }) => {
 
-    useEffect(()=>{ 
-        props.getUsersDict()
-    },[])
+    //console.log('_movieDispatch 9 RENDERS')
 
-    function addFilesToDeleteHandle(e){
+    const usersDict = JSON.parse(window.localStorage.getItem('usersDict'))
+    
+    // if (!usersDict.length) {
+    //     props.getUsersDict()  
+    // }
+    // useEffect(() => {
+    //     window.localStorage.setItem('usersDict', JSON.stringify(props.usersDict))
+    // }, [props.usersDict])
+
+
+
+    function addFilesToDeleteHandle(e: Event){
         if (e) {
             addToSetListFilesVideosToDelete(id)
         } else {
             deleteFromSetListFilesVideosToDelete(id)
         }
     }
-
-
-
-
-
 
 
     // Private message s
@@ -62,7 +67,6 @@ const movieDispatch = ({
 
         props.getPrivateRooms(user)
         setUserForNewChat(user)
-        console.log('testtest', user)
 
     } 
 
@@ -74,10 +78,9 @@ const movieDispatch = ({
 
                 <MyPrivateWhispModule 
                 userForNewChat={userForNewChat}
-                usersDict={props.usersDict}
+                usersDict={usersDict}
                 usersPrivateRooms={props.usersPrivateRooms}
                 />  
-                {console.log('aaaaaaaaa')}     
                 </div>
             :   <span></span>
             }
@@ -118,7 +121,7 @@ const movieDispatch = ({
                         onClick={() => callModalForPrivate(author)}
                         className={cl.AuthorHover}
                     ><span
-                    >Автор: </span>{get(filter(props.usersDict, {'id': author}),[0, 'username'])}</h5> 
+                    >Автор: </span>{get(filter(usersDict, {'id': author}),[0, 'username'])}</h5> 
                 </div>
                 <div className={cl.InnerText}>   
                     <div >
@@ -131,21 +134,22 @@ const movieDispatch = ({
     );
 };
 
+const movieDispatch = React.memo(_movieDispatch)
 export default connect(
     state => ({
        videoObject: state.getVideo,
-       usersDict: state.usersDict,
+       usersDict: getUsersDict(state),
        usersPrivateRooms: getPrivateRooms(state),
     }),
     dispatch => ({
         getVideoFile: () => {
             dispatch(getVideoAPI(id))
         },
-        getUsersDict: () => {
-            dispatch(getUserDictAPI())
-        },
         getPrivateRooms: (value) => {
             dispatch(getPrivateRoomsAPI(value))
+        },
+        getUsersDict: () => {
+            dispatch(getUserDictAPI())
         },
         
     })

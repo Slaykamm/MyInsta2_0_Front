@@ -2,7 +2,7 @@ import React from 'react'
 import cl from './NameForm.module.css'
 import Form from 'react-bootstrap/Form'
 
-function NameForm({handleSubmit, ...props}) {
+function _NameForm({handleSubmit, ...props}) {
     return (
         // <div>
         //     <input 
@@ -25,4 +25,5 @@ function NameForm({handleSubmit, ...props}) {
     )
 }
 
+const NameForm = React.memo(_NameForm)
 export default NameForm
