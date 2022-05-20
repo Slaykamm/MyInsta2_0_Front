@@ -26,6 +26,7 @@ import createNewVideoReducer from "./createNewVideoReducer";
 import putNewUserDataReducer from "./putNewUserDataReducer";
 import getPrivateRoomsMultyUsersReducer from "./getPrivateRoomsMultyUsersReducer";
 import setWsReducer from "./setWsReducer";
+import getUserAvatarReducer from "./getUserAvatarReducer";
 import {reducer as formReducer} from 'redux-form'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -59,6 +60,7 @@ const rootReducer = combineReducers({
     setWsReducer,
     IsErrorAPI,  //так и не нашел применения пока. потом можно удалить TODO
     UserToken,
+    getUserAvatarReducer,
     
     form: formReducer
 })

@@ -37,3 +37,5 @@ export const PUT_NEW_USER_CREATE_DATA = 'PUT_NEW_USER_CREATE_DATA'
 
 // WS contants
 export const SET_WS = 'SET_WS'
+
+export const GET_USER_AVATAR = 'GET_USER_AVATAR'

@@ -12,7 +12,8 @@ import {
     getPutToBaseResult, 
     getPostToBaseMediaResult, 
     getCreateEmptyUserResult, 
-    getPutNewUserDataResult
+    getPutNewUserDataResult,
+    getUserAvatarResult
 } from '../../../redux/Selectors/baseSelectors'
 import { putNewUserDataAPI } from '../../../API/putNewUserDataAPI';
 import Header from '../header/Header'
@@ -20,6 +21,7 @@ import RegistrationForm from './RegistrationForm/RegistrationForm';
 import NameForm from '../../../UI/LoadFIlesForm/NameForm';
 
 import cl from './RegistrationPage.module.css'
+import { getUserAvatarAPI } from '../../../API/getUserAvatarAPI';
 
 
 function RegistrationPage(props) {
@@ -27,6 +29,7 @@ function RegistrationPage(props) {
     const [editUser, setEditUser] = useState({})
     const [aaa, setAaa] = useState()
     const [newUserToken, setNewUserToken] = useState()
+    
     const [user, setUser] = useState({
         userID: null,
         authorID: null,
@@ -36,6 +39,8 @@ function RegistrationPage(props) {
         authorAvatar: null,
     }
 )
+    const [userAvatar, setUserAvatar] = useState()
+
     //============после создания нового будущего юзера. присваиваем юзеру в стейте: id USER и id Author
 
 
@@ -124,10 +129,6 @@ function RegistrationPage(props) {
     }) (RegistrationForm)
 
 
-    //==============заглушка на ререндер
-
-
-
     // обработка загрузки аватарки========================+
     function handleAvatarSubmit(e) {
         e.preventDefault();
@@ -136,18 +137,22 @@ function RegistrationPage(props) {
             var formData = new FormData;
             formData.append('imagefile', files[0]);
             const url = `http://127.0.0.1:8000/api/author/${userForEdit.id}/`
+
             props.postToBaseMedia(formData, url)
             }
         }
 
-
     useEffect(()=> {
         if (props.postToBaseMediaResult.status === 200){
-            props.getUsersDict()
-            setUser({...user, ...{authorAvatar: get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])}})
-            //window.location.reload();
+                props.getUserAvatar(user.authorID)
         }
     }, [props.postToBaseMediaResult])
+
+    useEffect(()=>{
+        if (props.getUserAvatarResult.status === 200){
+            setUserAvatar(props.getUserAvatarResult.avatar)
+        }
+    }, [props.getUserAvatarResult])
 
     return (
         <>
@@ -163,10 +168,11 @@ function RegistrationPage(props) {
                             />
                         </div>
 
+                        {console.log('URL2', get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar']))}
 
                         <div className={cl.UserInfoViewImage}>
-                            {get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])
-                                ? <span><img src={get(filter(props.usersDict, {'userID': userForEdit.id}),['0', 'avatar'])} alt='avatar'/></span>
+                            {userAvatar
+                                ? <span><img src={userAvatar} alt='avatar'/></span>
                                 : <span><img src='http://127.0.0.1:8000/media/avatar/default.jpg' alt='avatar'/></span>
                             }
 
@@ -176,7 +182,6 @@ function RegistrationPage(props) {
                                     handleSubmit={handleAvatarSubmit}  
                                     />                           
                             </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -191,7 +196,8 @@ export default connect(
         putToBaseResult: getPutToBaseResult(state),
         postToBaseMediaResult: getPostToBaseMediaResult(state),
         createEmpyUserResult: getCreateEmptyUserResult(state),
-        putNewUserDataResult: getPutNewUserDataResult(state)
+        putNewUserDataResult: getPutNewUserDataResult(state),
+        getUserAvatarResult: getUserAvatarResult(state)
     }),
 
     //mapDispatchToProps
@@ -211,6 +217,9 @@ export default connect(
         putNewUserData: (message, url, id, userToken, password, authorID, phoneData) => {
             dispatch(putNewUserDataAPI(message, url, id, userToken, password, authorID, phoneData))
         },
+        getUserAvatar: (id) => {
+            dispatch(getUserAvatarAPI(id))
+        }, 
         
     })
 )(RegistrationPage);

@@ -14,6 +14,7 @@ import { SET_WS } from "../constants/constants";
 
 
 
+
 export const setLeftSideBarShowAction = (payload) => ({type: LEFT_SIDEBAR_SHOW, payload})
 export const setLeftSideBarHideAction = (payload) => ({type: LEFT_SIDEBAR_HIDE, payload})
 
@@ -37,6 +38,4 @@ export const getVideoOwnerUserAction = (payload) => ({type: VIDEO_OWNER_USER, pa
 export const getPrivateRoomsAction = (payload) => {
     return ({type: GET_PRIVATE_ROOMS, payload})
 }
-
-
 export const setWsAction = (payload) => ({type: SET_WS, payload})

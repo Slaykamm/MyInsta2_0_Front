@@ -97,3 +97,7 @@ export const getWs = (state) => {
 } 
 
 
+export const getUserAvatarResult = (state) => {
+    return state.getUserAvatarReducer
+} 
+

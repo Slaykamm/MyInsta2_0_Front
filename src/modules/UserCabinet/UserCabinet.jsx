@@ -21,6 +21,7 @@ import cl from './UserCabinet.module.css'
 import NameForm from '../../UI/LoadFIlesForm/NameForm';
 
 import { getUserTokenAPI } from '../../API/getUserToken';
+import LkAvatarContainer from './LkAvatarContainer/LkAvatarContainer';
 
 
 
@@ -36,13 +37,14 @@ const [unconfirmedNewLogin, setUnconfirmedNewLogin] = useState('')
 const [confirmLoginChanged, serConfirmLoginChanged] = useState(false)
 const [confirmEmailChanged, serConfirmEmailChanged] = useState(false)
 const [confirmPasswordChanged, serConfirmPasswordChanged] = useState(false)
+const [avatarDitry, setAvatarDirty] = useState('')
+const [avatarImage, setAvatarImage] = useState(get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']) )
 
 const [userEmail, setUserEmail] = useState('aa')
 const [userPassword, setPassword] = useState('')
 const [oldPassword, setOldPassword] = useState(false)
 
-const [unconfirmedNewEmail, setUnconfirmedNewEmail] = useState('')
-const [avaChanged, setAvaChanged] = useState('')
+
 
 // ---------если у нас пользак не авторизован - кдиаем его на страницу логина. 
 const navigate = useNavigate()
@@ -182,15 +184,24 @@ function handleAvatarSubmit(e) {
         const url = `http://127.0.0.1:8000/api/author/${get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'userID'])}/`
 
         props.postToBaseMedia(formData, url)
+        //setAvatarDirty()
+        console.log('1111', formData,files)
 }
+
+const [unconfirmedNewEmail, setUnconfirmedNewEmail] = useState('')
+const [avaChanged, setAvaChanged] = useState('')
+
 
     useEffect(()=> {
         if (props.postToBaseMediaResult.status === 200){
-            window.location.reload();
+           props.getUsersDict()
         }
     }, [props.postToBaseMediaResult])
 
+
+
     return (
+
         <>
 
         
@@ -232,8 +243,12 @@ function handleAvatarSubmit(e) {
                     />
 
 
+                <LkAvatarContainer
+                avatarImage={get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar'])}
+                />
 
                 </div>
+
 
                 <div className={cl.UserInfoViewImage}>
                         {get(filter(props.usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'avatar']) 
