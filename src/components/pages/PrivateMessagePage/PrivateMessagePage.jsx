@@ -178,7 +178,11 @@ function PrivateMessagePage(props) {
 
         useEffect(()=>{
             if (filteredUsersProcess){
-                setFilteredUsers(filteredUsersProcess.filter(user => user.username !== localStorage.getItem('SLNUserName')))
+                setFilteredUsers(filteredUsersProcess.filter(user => (
+                    user.username !== localStorage.getItem('SLNUserName') 
+                 && user.username.slice(0,7) !== 'empty16'
+                    )
+                ))
             }
         },[filteredUsersProcess])
 

@@ -36,10 +36,12 @@ function MyPrivateWhispModule(
 
     //console.log('RENDERED! MyPrivateWhispModule!!!!!!!!!!!!!!')
     const usersDict = JSON.parse(window.localStorage.getItem('usersDict')) 
+    console.log('userDuct', usersDict)
+
     //при маунте модуля подгружаем словари иполучилаем список юзеров и ай ди юзера
     useEffect(()=>{
 
-        if (usersDict){
+        if (usersDict && !userID){
             setUserID(get(filter(usersDict, {'username':localStorage.getItem('SLNUserName')}),[0, 'id']))
             setListUsers(usersDict.map(user => pick(user, ['id', 'username'])))
         }
